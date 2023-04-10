@@ -1,0 +1,127 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../../dist/app');
+var http = require('http');
+var logger = require('../../dist/logger/');
+var dbConfig = require('../../dist/config/db');
+const { default: appConfig } = require('../../src/config');
+var { closeDbConnection, quitRedisClient } = dbConfig;
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(appConfig.port || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      logger.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      logger.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  logger.info('Listening on ' + bind);
+}
+
+/**
+ * Gracefully shutdown the server and close database connection.
+ */
+function gracefulShutdown() {
+  logger.info('\nReceived signal to terminate, shutting down gracefully...');
+
+  server.close(() => {
+    logger.info('Server closed');
+
+    closeDbConnection()
+        .then(() => {
+          logger.info('Database connection closed');
+        })
+        .catch((error) => {
+          logger.error('Error while closing database connection:', error);
+        })
+        .finally(() => {
+          quitRedisClient()
+              .then(() => {
+                logger.info('Redis client closed');
+                process.exit(0);
+              })
+              .catch((error) => {
+                logger.error('Error while closing Redis client:', error);
+                process.exit(1);
+              });
+        });
+  });
+}
+
+// Add event listeners for SIGINT and SIGTERM signals
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
