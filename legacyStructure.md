@@ -3,9 +3,9 @@ import { prop, Ref } from "@typegoose/typegoose";
 import { Schema, Document, Model, Types } from "mongoose";
 
 type timestampTypes = {
-  deleted_at: boolean;
-  created_at: boolean;
-  updated_at: boolean;
+  deleted_at?: boolean | Date | null;
+  created_at: boolean | Date;
+  updated_at: boolean | Date;
 };
 
 interface Category {
@@ -23,15 +23,23 @@ interface Category {
   icon_id: number;
   is_birthday: boolean;
 }
-interface CategoryIcons {
-  id: number;
-  enabled: boolean;
-  name: string;
-  deleted_at: Date | null;
-  created_at: Date;
-  updated_at: Date;
-  icon: string;
+
+interface ICategoryIcons extends Document, timestampTypes {
+    name: string;
+    icon: string;
+    enabled: boolean;
+    promoted: boolean;
+    supplier_list: boolean;
+    main: boolean;
+    getAllActive(): Promise<ICategoryIcons[]>;
+    getAllActiveNotEmpty(): Promise<ICategoryIcons[]>;
+    getAll(): Promise<ICategoryIcons[]>;
+    getAllDataTable(data: any, columns: any, order: any): Promise<ICategoryIcons[]>;
+    getIconById(iconId: string): Promise<ICategoryIcons | null>;
+    getCountAllDataTable(): Promise<number>;
+    getCountDataTable(data: any, column?: any): Promise<number>;
 }
+
 interface CategoryLang {
   id: number;
   category_id: number;
@@ -510,7 +518,6 @@ interface IUserPifChats extends Document {
   created_at: Date;
   updated_at: Date;
   deleted_at?: Date;
-
   sender: UserPif["_id"];
   recipient: UserPif["_id"];
   contact: UserPifContact["_id"];
@@ -546,5 +553,182 @@ interface UserPifDetails {
   deleted_at?: Date;
   created_at?: Date;
   updated_at?: Date;
+}
+
+
+interface IUserPifDevices extends Document,Omit<timestampTypes, "deleted_at"> {
+  user_id: number;
+  phone_number_prefix: string;
+  phone_number: string;
+  country: string;
+  pin: string;
+  blocked: boolean;
+  confirmed: boolean;
+  sms_code: string;
+  device_id: string;
+  soft: string;
+  uuid: string;
+  registration_step: boolean;
+  process_change_number: boolean;
+  process_change_pin: boolean;
+  last_log_in_at?: string;
+  app_rated: boolean;
+  locale?: string;
+  os_user_id?: string;
+}
+
+export interface IUserPifFavorite extends Document, Omit<timestampTypes, "deleted_at"> {
+  user_id: number;
+  favoriteable_id: number;
+  favoriteable_type: string;
+  user: UserPif;
+  partners: any;
+  products: any;
+}
+
+interface IUserPifKickbackPoints extends Document,Omit<timestampTypes, "deleted_at"> {
+  user_id: number;
+  marketplace: string;
+  points: number;
+}
+
+export interface IUserPifNetAxeptPaymentMethods extends Document, timestampTypes {
+  user_id: number;
+  name: string;
+  issuer: string;
+  expiry_date: string;
+  pan_hash: string;
+}
+
+interface IUserPifPaymentMethods extends Document, timestampTypes {
+  name: string;
+  user_id: number;
+  token: string;
+  driver: string;
+  method: string;
+  user?: UserPif;
+}
+
+export interface IUserPifProportions extends Document, timestampTypes {
+  partner_id: number;
+  purchase_id: number;
+  proportion_start: number;
+  proportion_finish: number;
+  proportion_pif: number;
+  fixed_fee: number;
+  purchase(): Promise<IUserPifPurchase>;
+  partner(): Promise<IUserPifPurchase>;
+  getProportionId(): number;
+}
+
+interface IUserPifPurchase extends Document, timestampTypes {
+  user_id: number;
+  product_id: number;
+  contact_id: number;
+  recipient_user_id: number;
+  transaction_id: number;
+  transaction_fee: number;
+  reward_system_points: number;
+  price: number;
+  price_start: number;
+  price_finish: number;
+  message: string;
+  code: string;
+  code_type: string;
+  share_message: boolean;
+  settlements_details_start_id: number;
+  settlements_details_finish_id: number;
+  unwraped_at: string;
+  redeemed_at: string;
+  api_redeemed_process_at: string;
+  api_redeemed_user_confirm_at: string;
+  expired_at: string;
+  hide_validation_code_at: Date;
+  pos_id: number;
+  share_networks: string;
+  criteria_id: number;
+  sent: boolean;
+  fixed_fee: number;
+  proportion_id: number;
+  is_passon: boolean;
+  is_delayed: boolean;
+  delivery_at: string;
+  is_charity: boolean;
+  settlements_start_status: boolean;
+  settlements_finish_status: boolean;
+  expiry_notify_at: string;
+
+  user: IUserPif;
+  product: IProduct;
+   productAlways: IProduct;
+  contact: IUserPifContacts;
+  recipient: IUserPif;
+  transaction: IUserPifTransactions;
+  pos: IPos;
+}
+
+interface IUserPifRequest extends Document, timestampTypes {
+  user_id: number;
+  product_id: number;
+  contact_id: number;
+  quantity: number;
+  recipient_user_id: number;
+  message: string;
+  accepted_at: string;
+
+  user: IUserPif;
+  product: IProduct;
+  contact: IUserPifContacts;
+  recipient: IUserPif;
+}
+
+export interface IUserPifRewardSystemPoints extends Document, Omit<timestampTypes, "deleted_at"> {
+  user_id: number;
+  partner_id: number;
+  points: number;
+}
+
+interface IUserPifSocials extends Document, timestampTypes {
+  user_id: number;
+  social_type: number;
+  social_user_id: string;
+  user: UserPif;
+}
+
+export interface IUserPifStripePaymentMethods extends Document, timestampTypes {
+    user_id: number;
+    name: string;
+    issuer: string;
+    expiry_date: string;
+    pan_hash: string;
+    user?: IUserPif;
+    paymentMethod?: IUserPifPaymentMethods;
+}
+
+interface IUserPifTransactions extends Document, timestampTypes {
+ user_id: number;
+  price: number;
+  currency: string;
+  driver: string;
+  method: string;
+  marketplace: string;
+  proportion_start: number;
+  proportion_finish: number;
+  proportion_pif: number;
+  trans_id: string;
+  payment_method_id: number;
+  kickback_points: number;
+  paid: boolean;
+  payment_details: string[];
+  payment_status: boolean;
+  paid_at: string;
+  transaction_fee: number;
+  fixed_fee: number;
+  save_payment: boolean;
+
+  user: IUserPif;
+  paymentMethod: IUserPifPaymentMethods;
+  purchases: IUserPifPurchase[];
+  purchasesAll: IUserPifPurchase[];
 }
 ```
