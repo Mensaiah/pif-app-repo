@@ -8,20 +8,23 @@ type timestampTypes = {
   updated_at: boolean;
 };
 
-interface Category {
-  id: number;
+interface ICategory extends Document, timestampTypes {
   enabled: boolean;
   promoted: boolean;
   supplier_list: boolean;
   main: boolean;
-  deleted_at: Date | null;
-  created_at: Date;
-  updated_at: Date;
   icon: string;
   is_functional: boolean;
   type: number;
   icon_id: number;
   is_birthday: boolean;
+  deleted_at?: Date;
+  created_at?: Date;
+  updated_at?: Date;
+  langs: Array<CategoryLang & Document>;
+  marketplaces: Array<CategoryMarketplace & Document>;
+  products: Array<Product & Document>;
+  productCategory: Array<ProductCategory & Document>;
 }
 interface CategoryIcons {
   id: number;
