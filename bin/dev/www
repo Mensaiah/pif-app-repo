@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 /**
  * Module dependencies.
@@ -7,10 +8,9 @@
 var app = require('../../src/app');
 var http = require('http');
 var logger = require('../../src/logger/');
-var appConfig = require('../../src/config')
+var appConfig = require('../../src/config');
 // var dbConfig = require('../../src/config/database');
 // var { closeDbConnection, quitRedisClient } = dbConfig;
-
 
 /**
  * Get port from environment and store in Express.
@@ -62,9 +62,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -87,9 +85,7 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   logger.info('Listening on ' + bind);
 }
 

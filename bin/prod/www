@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 /**
  * Module dependencies.
@@ -61,9 +62,7 @@ function onError(error) {
     throw error;
   }
 
-  var bind = typeof port === 'string'
-    ? 'Pipe ' + port
-    : 'Port ' + port;
+  var bind = typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
@@ -86,9 +85,7 @@ function onError(error) {
 
 function onListening() {
   var addr = server.address();
-  var bind = typeof addr === 'string'
-    ? 'pipe ' + addr
-    : 'port ' + addr.port;
+  var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port;
   logger.info('Listening on ' + bind);
 }
 
@@ -102,23 +99,23 @@ function gracefulShutdown() {
     logger.info('Server closed');
 
     closeDbConnection()
-        .then(() => {
-          logger.info('Database connection closed');
-        })
-        .catch((error) => {
-          logger.error('Error while closing database connection:', error);
-        })
-        .finally(() => {
-          quitRedisClient()
-              .then(() => {
-                logger.info('Redis client closed');
-                process.exit(0);
-              })
-              .catch((error) => {
-                logger.error('Error while closing Redis client:', error);
-                process.exit(1);
-              });
-        });
+      .then(() => {
+        logger.info('Database connection closed');
+      })
+      .catch((error) => {
+        logger.error('Error while closing database connection:', error);
+      })
+      .finally(() => {
+        quitRedisClient()
+          .then(() => {
+            logger.info('Redis client closed');
+            process.exit(0);
+          })
+          .catch((error) => {
+            logger.error('Error while closing Redis client:', error);
+            process.exit(1);
+          });
+      });
   });
 }
 
