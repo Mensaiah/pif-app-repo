@@ -1,0 +1,16 @@
+@startuml Login flow
+actor User
+
+User -> System: Enter username and password
+System -> Database: Verify user credentials
+Database --> System: Authentication result
+System --> User: Display result
+@enduml
+
+@startsalt hello core
+{
+  Login<&person> | "MyName   "
+  Password<&key> | "****     "
+  [Cancel <&circle-x>] | [OK <&account-login>]
+}
+@endsalt
