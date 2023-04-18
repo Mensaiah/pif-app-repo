@@ -2,6 +2,7 @@ import cors from 'cors';
 import express, { Application } from 'express';
 import Fingerprint from 'express-fingerprint';
 import helmet from 'helmet';
+import appConfig from './config';
 
 class App {
   public app: Application;
@@ -24,7 +25,7 @@ class App {
   private initializeRoutes(): void {
     // Add your routes here
     this.app.get('/', (req, res) => {
-      res.send('Hello world');
+      res.json({ message: 'Hello people from ' + appConfig.environment });
     });
   }
 }
