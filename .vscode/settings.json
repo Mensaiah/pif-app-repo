@@ -1,8 +1,9 @@
 {
-  "editor.formatOnPaste": true,
+  "editor.formatOnPaste": false,
+  "editor.tabSize": 2,
+  "editor.wordWrap": "bounded",
   "prettier.singleQuote": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  },
-  "editor.formatOnSave": false
+  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+  "prettier.configPath": ".prettierrc.js",
+  "editor.formatOnSave": true
 }

@@ -6,6 +6,9 @@ dist/
 
 # Environment variables
 .env
+.env.test
+.env.staging
+.env.prod
 
 # Logs
 logs/

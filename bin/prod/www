@@ -9,7 +9,7 @@ var http = require('http');
 var app = require('../../dist/app');
 var logger = require('../../dist/logger/');
 var appConfig = require('../../dist/config');
-// var dbConfig = require('../../src/config/database');
+var { closeDb } = require('../../dist/utils/database');
 // var { closeDbConnection, quitRedisClient } = dbConfig;
 
 /**
@@ -98,13 +98,13 @@ function gracefulShutdown() {
   server.close(() => {
     logger.info('Server closed');
 
-    // closeDbConnection()
-    //     .then(() => {
-    //       logger.info('Database connection closed');
-    //     })
-    //     .catch((error) => {
-    //       logger.error('Error while closing database connection:', error);
-    //     })
+    closeDb()
+      .then(() => {
+        logger.info('Database connection closed');
+      })
+      .catch((error) => {
+        logger.error('Error while closing database connection:', error);
+      });
     //     .finally(() => {
     //       quitRedisClient()
     //           .then(() => {
