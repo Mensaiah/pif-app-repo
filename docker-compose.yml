@@ -1,0 +1,25 @@
+version: '3'
+services:
+  mongo:
+    container_name: pif-mongo
+    image: 'mongo:latest'
+  redis:
+    container_name: pif-redis
+    image: 'redis:latest'
+  app:
+    restart: always
+    build:
+      context: .
+      args:
+        - NODE_ENV=dev
+    links:
+      - redis
+      - mongo
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+    # environment:
+    #   - NODE_ENV=development
+    command: ['npm', 'run', 'dev']

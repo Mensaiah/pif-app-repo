@@ -578,12 +578,15 @@ interface IUserPifDevices extends Document,Omit<timestampTypes, "deleted_at"> {
   app_rated: boolean;
   locale?: string;
   os_user_id?: string;
+
+  user: IUserPif;
 }
 
 export interface IUserPifFavorite extends Document, Omit<timestampTypes, "deleted_at"> {
   user_id: number;
   favoriteable_id: number;
   favoriteable_type: string;
+
   user: UserPif;
   partners: any;
   products: any;
@@ -601,6 +604,9 @@ export interface IUserPifNetAxeptPaymentMethods extends Document, timestampTypes
   issuer: string;
   expiry_date: string;
   pan_hash: string;
+
+  user: UserPif;
+  paymentMethod: IUserPifPaymentMethods;
 }
 
 interface IUserPifPaymentMethods extends Document, timestampTypes {
@@ -609,6 +615,7 @@ interface IUserPifPaymentMethods extends Document, timestampTypes {
   token: string;
   driver: string;
   method: string;
+
   user?: UserPif;
 }
 
@@ -619,6 +626,11 @@ export interface IUserPifProportions extends Document, timestampTypes {
   proportion_finish: number;
   proportion_pif: number;
   fixed_fee: number;
+
+  purchase: IUserPifPurchase;
+  partner: IUserPifPurchase;
+
+ //method
   purchase(): Promise<IUserPifPurchase>;
   partner(): Promise<IUserPifPurchase>;
   getProportionId(): number;
@@ -663,11 +675,11 @@ interface IUserPifPurchase extends Document, timestampTypes {
 
   user: IUserPif;
   product: IProduct;
-   productAlways: IProduct;
+  productAlways: IProduct;
   contact: IUserPifContacts;
   recipient: IUserPif;
   transaction: IUserPifTransactions;
-  pos: IPos;
+  pos: IPartnerPos;
 }
 
 interface IUserPifRequest extends Document, timestampTypes {
@@ -733,5 +745,8 @@ interface IUserPifTransactions extends Document, timestampTypes {
   paymentMethod: IUserPifPaymentMethods;
   purchases: IUserPifPurchase[];
   purchasesAll: IUserPifPurchase[];
+
+  calculateFeePurchases(): number[];
+  getTransactionFee(type: string): number | false;
 }
 ```
