@@ -1,0 +1,31 @@
+export interface IMailgunEmailParams {
+  from?: string;
+  to: string;
+  cc?: string;
+  bcc?: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  'amp-html'?: string;
+  attachment?: string;
+  inline?: string;
+  template?: string;
+  't:version'?: string;
+  't:text'?: string;
+  't:variables'?: string;
+  'o:tag'?: string;
+  'o:dkim'?: string;
+  'o:deliverytime'?: string;
+  'o:time-zone-localize'?: string;
+  'o:testmode'?: string;
+  'o:tracking'?: string;
+  'o:tracking-clicks'?: string;
+  'o:tracking-opens'?: string;
+  'o:require-tls'?: string;
+  'o:skip-verification'?: string;
+  'h:X-My-Header'?: string;
+  'v:my-var'?: string;
+  'o:recipient-variables'?: string;
+  // 'o:reply-to'?: string;
+  // 'h:Reply-To'?: string;
+}

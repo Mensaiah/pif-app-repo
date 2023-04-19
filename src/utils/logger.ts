@@ -18,7 +18,7 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.colorize({ all: true }),
     winston.format.timestamp(),
-    winston.format.label({ label: 'SMS API' }),
+    winston.format.label({ label: 'PIF API' }),
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     winston.format.printf(({ timestamp, label, level, message }: any) => {
       return `${timestamp} [${label}] ${level}: ${message}`;

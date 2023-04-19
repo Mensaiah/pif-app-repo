@@ -7,12 +7,12 @@
 
 var http = require('http');
 var app = require('../../dist/app');
-var logger = require('../../dist/logger/');
+var logger = require('../../dist/utils/logger');
 var appConfig = require('../../dist/config');
-var { closeMongoDb } = require('../../dist/utils/persistence/database');
+var { closeMongoDb } = require('../../dist/config/persistence/database');
 var {
   closeRedisConnection,
-} = require('../../dist/utils/persistence/redisClient');
+} = require('../../dist/config/persistence/redisClient');
 
 /**
  * Get port from environment and store in Express.

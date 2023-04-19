@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-// import { consoleLog } from './utils/helpers';
-
 /* eslint-disable @typescript-eslint/no-var-requires */
+const chalk = require('chalk');
 const ms = require('ms');
 const path = require('path');
 const fs = require('fs');
@@ -33,7 +32,15 @@ const result = dotenv.config({
 });
 
 if (result.error) {
-  console.log('Error loading environment variables: ' + result.error, 'error');
+  console.error('Error loading environment variables: ' + result.error);
+  console.error(
+    chalk.hex('#4527a0')(
+      "\nIf .env doesn't exist at the root, simply;\n \n1) duplicate .env.example \n2) rename to .env \n3) Set environment variable. \n\n"
+    ) +
+      chalk.bgWhite(
+        'Reach out to the team lead if you have any further questions.'
+      )
+  );
   process.exit(1);
 }
 const env = process.env;
@@ -69,7 +76,7 @@ const appConfig = {
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
   },
-  supportedLanguages: ['en', 'da'] as const,
+  supportedLanguages: ['en', 'da', 'fr'] as const,
   paginationConfig: {
     perPage: 20,
     allowedPerPageValues: [20, 30, 50, 100],
