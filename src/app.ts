@@ -1,11 +1,20 @@
 import cors from 'cors';
-import express, { Application } from 'express';
+import express, {
+  Application,
+  ErrorRequestHandler,
+  NextFunction,
+  Response,
+} from 'express';
 import Fingerprint from 'express-fingerprint';
 import helmet from 'helmet';
 import appConfig from './config';
-import { connectDb } from './utils/database';
 import { consoleLog, handleResponse } from './utils/helpers';
-import { seedNow } from './utils/seeding';
+import { IRequest, LanguageCode } from './types/global';
+import { useWord } from './utils/wordSheet';
+import { connectMongoDb } from './config/persistence/database';
+import { seedNow } from './config/persistence/seeder';
+import httpRequestLogger from './utils/httpRequestLogger';
+import routesV1 from './components/v1/routes.v1';
 
 class App {
   public app: Application;
@@ -18,7 +27,7 @@ class App {
   }
 
   private initializePersistenceAndSeeding() {
-    connectDb()
+    connectMongoDb()
       .then(() => {
         seedNow();
       })
@@ -42,7 +51,8 @@ class App {
         }
 
         return next();
-      });
+      })
+      .use(httpRequestLogger);
 
     // if (appConfig.isDev) this.app.use() // dev middlewares
     // if (appConfig.isProd) this.app.use() // production middlewares
@@ -50,17 +60,33 @@ class App {
     // pass lang as part of the request
     this.app.use('/v1/:lang', (req: IRequest, _res, next: NextFunction) => {
       let lang = String(req.params.lang).toLowerCase();
-      if (!appConfig.supportedLanguages.includes(lang)) lang = 'en';
-      req.lang = lang as ISupportedLang;
+      if (!appConfig.supportedLanguages.includes(lang as LanguageCode))
+        lang = 'en';
+      req.lang = lang as LanguageCode;
 
       return next();
     });
   }
 
   private initializeRoutes(): void {
-    // Add your routes here
+    this.app.use('/v1/:lang/', routesV1);
     this.app.get('/', (req, res) => {
-      res.json({ message: 'Hello people from ' + appConfig.environment });
+      res.json({ message: 'Up and running in ' + appConfig.environment });
+    });
+    this.app.all('*', (_req, res: Response) =>
+      handleResponse(
+        res,
+        'You have used an invalid method or hit an invalid route',
+        404
+      )
+    );
+    this.app.use((err: ErrorRequestHandler, req: IRequest, res: Response) => {
+      return handleResponse(
+        res,
+        { message: useWord('internalServerError', req.lang), err: err },
+        500,
+        err
+      );
     });
   }
 }

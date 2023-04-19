@@ -9,8 +9,10 @@ var http = require('http');
 var app = require('../../dist/app');
 var logger = require('../../dist/logger/');
 var appConfig = require('../../dist/config');
-var { closeDb } = require('../../dist/utils/database');
-// var { closeDbConnection, quitRedisClient } = dbConfig;
+var { closeMongoDb } = require('../../dist/utils/persistence/database');
+var {
+  closeRedisConnection,
+} = require('../../dist/utils/persistence/redisClient');
 
 /**
  * Get port from environment and store in Express.
@@ -98,24 +100,24 @@ function gracefulShutdown() {
   server.close(() => {
     logger.info('Server closed');
 
-    closeDb()
+    closeMongoDb()
       .then(() => {
         logger.info('Database connection closed');
       })
       .catch((error) => {
         logger.error('Error while closing database connection:', error);
+      })
+      .finally(() => {
+        closeRedisConnection()
+          .then(() => {
+            logger.info('Redis client closed');
+            process.exit(0);
+          })
+          .catch((error) => {
+            logger.error('Error while closing Redis client:', error);
+            process.exit(1);
+          });
       });
-    //     .finally(() => {
-    //       quitRedisClient()
-    //           .then(() => {
-    //             logger.info('Redis client closed');
-    //             process.exit(0);
-    //           })
-    //           .catch((error) => {
-    //             logger.error('Error while closing Redis client:', error);
-    //             process.exit(1);
-    //           });
-    //     });
   });
 }
 

@@ -5,11 +5,14 @@
  * Module dependencies.
  */
 
-var app = require('../../src/app');
 var http = require('http');
-var logger = require('../../src/logger/');
-var appConfig = require('../../src/config');
-var { closeDb } = require('../../src/utils/database');
+var app = require('../../src/app');
+var logger = require('../../src/utils/logger');
+var appConfig = require('../../src/config/');
+var { closeMongoDb } = require('../../src/config/persistence/database');
+var {
+  closeRedisConnection,
+} = require('../../src/config/persistence/redisClient');
 // var { closeDbConnection, quitRedisClient } = dbConfig;
 
 /**
@@ -98,24 +101,24 @@ function gracefulShutdown() {
   server.close(() => {
     logger.info('Server closed');
 
-    closeDb()
+    closeMongoDb()
       .then(() => {
         logger.info('Database connection closed');
       })
       .catch((error) => {
         logger.error('Error while closing database connection:', error);
+      })
+      .finally(() => {
+        closeRedisConnection()
+          .then(() => {
+            logger.info('Redis client closed');
+            process.exit(0);
+          })
+          .catch((error) => {
+            logger.error('Error while closing Redis client:', error);
+            process.exit(1);
+          });
       });
-    //     .finally(() => {
-    //       quitRedisClient()
-    //           .then(() => {
-    //             logger.info('Redis client closed');
-    //             process.exit(0);
-    //           })
-    //           .catch((error) => {
-    //             logger.error('Error while closing Redis client:', error);
-    //             process.exit(1);
-    //           });
-    //     });
   });
 }
 

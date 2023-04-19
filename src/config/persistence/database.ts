@@ -1,8 +1,9 @@
 import mongoose from 'mongoose';
-import appConfig from '../config';
-import { consoleLog } from './helpers';
 
-export async function connectDb(): Promise<void> {
+import { consoleLog } from 'src/utils/helpers';
+import appConfig from '..';
+
+export async function connectMongoDb(): Promise<void> {
   try {
     await mongoose.connect(appConfig.mongoDbURI);
 
@@ -18,7 +19,7 @@ export async function connectDb(): Promise<void> {
   });
 }
 
-export async function closeDb(): Promise<void> {
+export async function closeMongoDb(): Promise<void> {
   await mongoose.disconnect();
   consoleLog('Database disconnected');
 }

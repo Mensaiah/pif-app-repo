@@ -9,6 +9,7 @@ export type LanguageValuePair = {
 };
 
 export type SupportedLangType = typeof appConfig.supportedLanguages;
+export type LanguageCode = SupportedLangType[number];
 
 export interface SessionI {
   used: number;
@@ -47,7 +48,7 @@ export interface IPageMeta {
   prevPage: number | null;
 }
 export interface IRequest extends Request {
-  lang?: SupportedLangType;
+  lang?: LanguageCode;
   userId?: ObjectId;
   fingerprint?: FingerprintResult;
   paginationData?: IPaginationData;

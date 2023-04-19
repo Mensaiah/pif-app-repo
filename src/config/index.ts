@@ -12,11 +12,11 @@ let envFile = '.env';
 let nodeEnv = process.env.NODE_ENV;
 
 if (nodeEnv === 'prod' || nodeEnv === 'production') {
-  if (fs.existsSync(path.resolve(__dirname, '..', '.env.prod'))) {
+  if (fs.existsSync(path.resolve(__dirname, '..', '..', '.env.prod'))) {
     envFile = '.env.prod';
   }
 } else if (nodeEnv === 'staging') {
-  if (fs.existsSync(path.resolve(__dirname, '..', '.env.staging'))) {
+  if (fs.existsSync(path.resolve(__dirname, '..', '..', '.env.staging'))) {
     envFile = '.env.staging';
   }
 } else if (nodeEnv === 'test') {
@@ -28,7 +28,9 @@ if (nodeEnv === 'prod' || nodeEnv === 'production') {
 console.log(`Using ${envFile} for environment variables`);
 
 // Load environment variables from the specified file
-const result = dotenv.config({ path: path.resolve(__dirname, '..', envFile) });
+const result = dotenv.config({
+  path: path.resolve(__dirname, '..', '..', envFile),
+});
 
 if (result.error) {
   console.log('Error loading environment variables: ' + result.error, 'error');

@@ -5,13 +5,14 @@
   "main": "src/app.ts",
   "scripts": {
     "start": "node bin/prod/www",
-    "dev": "ts-node-dev --respawn --transpile-only --exit-child --clear bin/dev/www",
+    "dev": "ts-node-dev -r tsconfig-paths/register --respawn --transpile-only --exit-child --clear bin/dev/www",
     "build": "tsc -p tsconfig.prod.json",
     "lint": "eslint 'src/**/*.{js,ts}' --fix",
     "test": "jest src",
     "docker:build": "docker build -t pif-api-img .",
     "docker:run": "docker run -d -p 3000:3000 --name pif-container pif-api-img",
-    "docker:dev": "docker-compose up --build"
+    "docker:dev": "docker-compose up --build",
+    "start:redis": "docker run -p 6379:6379 -it redis/redis-stack-server:latest"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

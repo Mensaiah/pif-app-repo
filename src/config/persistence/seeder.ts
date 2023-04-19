@@ -1,4 +1,4 @@
-import { consoleLog } from './helpers';
+import { consoleLog } from 'src/utils/helpers';
 
 export const seedNow = () => {
   consoleLog('Seeding...(WIP)');
