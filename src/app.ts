@@ -5,7 +5,6 @@ import express, {
   NextFunction,
   Response,
 } from 'express';
-import Fingerprint from 'express-fingerprint';
 import helmet from 'helmet';
 import appConfig from './config';
 import { consoleLog, handleResponse } from './utils/helpers';
@@ -15,6 +14,7 @@ import { connectMongoDb } from './config/persistence/database';
 import { seedNow } from './config/persistence/seeder';
 import httpRequestLogger from './utils/httpRequestLogger';
 import routesV1 from './components/v1/routes.v1';
+import fingerprintMiddleware from './appMiddlewares/fingerprint.middleware';
 
 const app: Application = express();
 
@@ -32,7 +32,7 @@ const initializeMiddlewares = () => {
     .use(express.urlencoded({ limit: '1kb', extended: false }))
     .use(cors())
     .use(helmet())
-    .use(Fingerprint())
+    .use(fingerprintMiddleware)
     .use((req, res, next) => {
       if (req.method === 'OPTIONS') {
         res.header(
@@ -53,7 +53,6 @@ const initializeMiddlewares = () => {
   // pass lang as part of the request
   app.use('/v1/:lang', (req: IRequest, _res, next: NextFunction) => {
     let lang = String(req.params.lang).toLowerCase();
-    consoleLog(`${lang} detected`);
     if (!appConfig.supportedLanguages.includes(lang as LanguageCode))
       lang = 'en';
     req.lang = lang as LanguageCode;
@@ -64,7 +63,7 @@ const initializeMiddlewares = () => {
 
 const initializeRoutes = () => {
   app.use('/v1/:lang/', routesV1);
-  app.get('/', (req, res) => {
+  app.get('/', (_req, res) => {
     res.json({ message: 'Up and running in ' + appConfig.environment });
   });
   app.all('*', (_req, res: Response) =>

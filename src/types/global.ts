@@ -1,15 +1,16 @@
 import { Request } from 'express';
-import { FingerprintResult } from 'express-fingerprint';
 import { Document, ObjectId } from 'mongoose';
 import appConfig from '../config';
-
-export type LanguageValuePair = {
-  language: (typeof appConfig.supportedLanguages)[number];
-  value: string;
-};
+import { UserType } from 'src/components/v1/user/user.types';
+import { FingerprintResult } from 'src/appMiddlewares/fingerprint.middleware';
 
 export type SupportedLangType = typeof appConfig.supportedLanguages;
 export type LanguageCode = SupportedLangType[number];
+
+export type LanguageValuePair = {
+  lang: LanguageCode;
+  value: string;
+};
 
 export interface SessionI {
   used: number;
@@ -54,6 +55,6 @@ export interface IRequest extends Request {
   paginationData?: IPaginationData;
   decoded?: any;
   role?: string;
-  userType?: 'customer' | 'admin' | 'supplier';
+  userType?: UserType;
   permissions?: string[];
 }

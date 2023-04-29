@@ -96,7 +96,7 @@ export const langDbStructure = (
   const langObj: Record<string, string> = {};
 
   langArray.forEach((item) => {
-    langObj[item.language] = item.value;
+    langObj[item.lang] = item.value;
   });
 
   return langObj;
@@ -164,7 +164,7 @@ export const handleReqSearch = (req: Request, keys: string[]) => {
 export const cleanLangArray = (arr: LanguageValuePair[]) => {
   return arr
     .filter((arr) => arr.value)
-    .filter((arr) => appConfig.supportedLanguages.includes(arr.language));
+    .filter((arr) => appConfig.supportedLanguages.includes(arr.lang));
 };
 
 export const deNormalizeLangObject = (
@@ -179,7 +179,7 @@ export const deNormalizeLangObject = (
   return values
     ? cleanLangArray(
         Object.keys(values).map((key) => ({
-          language: key as (typeof appConfig.supportedLanguages)[number],
+          lang: key as (typeof appConfig.supportedLanguages)[number],
           value: values[key],
         }))
       )

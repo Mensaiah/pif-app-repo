@@ -1,10 +1,11 @@
 import { createClient } from 'redis';
 import { consoleLog } from 'src/utils/helpers';
 import { promisify } from 'util';
+import appConfig from '..';
 
 const client = createClient({
   socket: {
-    port: 6379,
+    port: +appConfig.redisPort,
   },
 });
 

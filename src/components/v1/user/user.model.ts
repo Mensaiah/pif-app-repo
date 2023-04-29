@@ -1,8 +1,8 @@
 import { Schema, model } from 'mongoose';
 import bcrypt from 'bcryptjs';
-import { IUser } from './user.types';
+import { UserAttributes } from './user.types';
 
-const userSchema = new Schema<IUser>(
+const userSchema = new Schema<UserAttributes>(
   {
     name: {
       type: String,
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>(
 );
 
 // Hash password before saving to database
-userSchema.pre<IUser>('save', async function (next) {
+userSchema.pre<UserAttributes>('save', async function (next) {
   if (!this.isModified('password')) return next();
   try {
     const salt = await bcrypt.genSalt(10);
@@ -44,6 +44,6 @@ userSchema.methods.comparePassword = async function (
   return bcrypt.compare(password, this.password);
 };
 
-const User = model<IUser>('User', userSchema);
+const User = model<UserAttributes>('User', userSchema);
 
 export default User;

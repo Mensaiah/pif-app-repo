@@ -54,6 +54,7 @@ const appConfig = {
   isTesting: env.NODE_ENV === 'testing',
   mongoDbURI: env.MONGODB_URL || '',
   redisUrl: env.REDIS_URL || '',
+  redisPort: env.REDIS_PORT || '',
   firebaseConfig: {
     apiKey: env.FIREBASE_API_KEY || '',
     authDomain: env.FIREBASE_AUTH_DOMAIN || '',
@@ -70,8 +71,8 @@ const appConfig = {
   },
   firebaseDatabaseUrl: env.FIREBASE_DATABASE_URL || '',
   authConfigs: {
-    saltRounds: env.SALT_ROUNDS || 10,
-    tokenLifespan: env.TOKEN_LIFESPAN || ms('3 days'),
+    saltRounds: 10,
+    tokenLifespan: ms('3 days'),
     maxInactivity: '30 mins',
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
