@@ -1,8 +1,21 @@
 import { Document, Schema, model } from 'mongoose';
-import bcrypt from 'bcryptjs';
+import bcrypt from 'bcrypt';
 import { UserAccessAttributes } from './auth.types';
 import { permissions } from 'src/config/rolesAndPermissions';
+import { consoleLog } from 'src/utils/helpers';
 
+const roleAndPermissionSchema = new Schema(
+  {
+    role: String,
+    permissions: [
+      {
+        type: String,
+        enum: [...permissions.map((p) => p.capabilities).flat(), 'supreme'],
+      },
+    ],
+  },
+  { _id: false }
+);
 const userAccessSchema = new Schema<UserAccessAttributes>({
   User: {
     type: Schema.Types.ObjectId,
@@ -14,21 +27,10 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
   },
   pin: String,
   password: String,
-  rolesAndPermissions: [
-    {
-      role: String,
-      permissions: {
-        type: [
-          {
-            type: String,
-            enum: [...permissions.map((p) => p.capabilities).flat(), 'supreme'],
-          },
-        ],
-        required: true,
-      },
-    },
-  ],
+  securityCode: String,
+  rolesAndPermissions: [roleAndPermissionSchema],
   isBlocked: Boolean,
+  lastLoginAttempt: Date,
   lastLoginAt: Date,
   lastEventTime: Date,
   failedLoginAttempts: { type: Number, required: true },
@@ -54,6 +56,8 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
     },
   ],
 });
+
+userAccessSchema.path('rolesAndPermissions').schema.set('autoIndex', false);
 
 // Hash password before saving to database
 userAccessSchema.pre<UserAccessAttributes & Document>(
@@ -82,10 +86,10 @@ userAccessSchema.pre<UserAccessAttributes & Document>(
 );
 
 // Compare password with hashed password
-userAccessSchema.methods.comparePassword = async function (
+userAccessSchema.methods.comparePassword = function (
   password: string
-): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
+): boolean {
+  return bcrypt.compareSync(password, this.password);
 };
 
 export const UserAccessModel = model<UserAccessAttributes>(

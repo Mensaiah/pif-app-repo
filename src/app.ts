@@ -1,15 +1,10 @@
 import cors from 'cors';
-import express, {
-  Application,
-  ErrorRequestHandler,
-  NextFunction,
-  Response,
-} from 'express';
+import express, { Application, NextFunction, Response } from 'express';
 import helmet from 'helmet';
+import cookieParser from 'cookie-parser';
 import appConfig from './config';
 import { consoleLog, handleResponse } from './utils/helpers';
 import { IRequest, LanguageCode } from './types/global';
-import { useWord } from './utils/wordSheet';
 import { connectMongoDb } from './config/persistence/database';
 import { seedNow } from './config/persistence/seeder';
 import httpRequestLogger from './utils/httpRequestLogger';
@@ -43,6 +38,7 @@ const initializeMiddlewares = () => {
 
   app
     .use(cors(corsOptions))
+    .use(cookieParser())
     .use(express.json({ limit: '1kb' }))
     .use(express.urlencoded({ limit: '1kb', extended: false }))
     .use(helmet())
@@ -87,14 +83,14 @@ const initializeRoutes = () => {
       404
     )
   );
-  app.use((err: ErrorRequestHandler, req: IRequest, res: Response) => {
-    return handleResponse(
-      res,
-      { message: useWord('internalServerError', req.lang), err: err },
-      500,
-      err
-    );
-  });
+  // app.use((err: ErrorRequestHandler, req: IRequest, res: Response) => {
+  //   return handleResponse(
+  //     res,
+  //     { message: useWord('internalServerError', req.lang), err: err },
+  //     500,
+  //     err
+  //   );
+  // });
 };
 
 initializePersistenceAndSeeding();

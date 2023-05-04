@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { Document, ObjectId } from 'mongoose';
+import { Document, ObjectId, Types } from 'mongoose';
 import appConfig from '../config';
 import { UserType } from 'src/components/v1/user/user.types';
 import { FingerprintResult } from 'src/appMiddlewares/fingerprint.middleware';
@@ -57,4 +57,12 @@ export interface IRequest extends Request {
   role?: string;
   userType?: UserType;
   permissions?: string[];
+}
+
+export interface IToken {
+  deviceId: string;
+  sessionId: string;
+  ref: Types.ObjectId;
+  authKey: string;
+  userType: UserType;
 }

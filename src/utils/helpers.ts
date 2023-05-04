@@ -49,7 +49,7 @@ export const handleResponse = (
   return res.status(status).send(data);
 };
 
-export const uid = (): string => uuidv4();
+export const uuid = (): string => uuidv4();
 
 export const generateNos = (len = 6) => {
   const max = Math.pow(10, len) - 1;

@@ -6,11 +6,13 @@ export interface UserAccessAttributes {
   PartnerPosUser?: ObjectId;
   pin?: string; // hashedPin
   password?: string; // hashedPassword
+  securityCode?: string;
   rolesAndPermissions: {
     role: string;
     permissions: (PermissionCapabilities | 'supreme')[];
   }[];
   isBlocked?: boolean;
+  lastLoginAttempt?: Date | null;
   lastLoginAt?: Date;
   lastEventTime?: Date;
   failedLoginAttempts: number;

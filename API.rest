@@ -1,0 +1,17 @@
+@server = http://localhost:3030
+@api = {{server}}/v1/en
+
+###
+GET {{server}}
+
+### API
+GET {{api}}
+
+### dashboard login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "piftech@pif-app.com",
+  "password": "Password_1s"
+}

@@ -74,6 +74,7 @@ export const seedNow = async () => {
       email: seedData.email,
       userType: 'admin',
       contact: seedData.contact,
+      isConfirmed: true,
     });
     await seeduser.save();
     await new UserAccessModel({

@@ -1,3 +1,7 @@
+import jwt from 'jsonwebtoken';
+import appConfig from '../../../config';
+import { IToken } from 'src/types/global';
+
 export const calculateLoginWaitingTime = (failedAttempts: number) => {
   if (failedAttempts < 5) {
     return { allowedAttempts: 5, waitingTime: 0 };
@@ -9,3 +13,12 @@ export const calculateLoginWaitingTime = (failedAttempts: number) => {
 
   return { allowedAttempts: 3, waitingTime: 3 * 60 * 60 * 1000 }; // 3 hours
 };
+
+export const generateToken = (
+  data: IToken,
+  expiresIn = appConfig.authConfigs.sessionLivespan
+): string =>
+  jwt.sign(data, appConfig.authConfigs.jwtSecret, {
+    expiresIn: expiresIn,
+    issuer: `PIF-${appConfig.environment}`,
+  });
