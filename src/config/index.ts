@@ -77,21 +77,19 @@ const appConfig = {
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
   },
-  supportedLanguages: ['en', 'da', 'fr'] as const,
+  supportedLanguages: ['en', 'da'] as const,
   paginationConfig: {
     perPage: 20,
     allowedPerPageValues: [20, 30, 50, 100],
   },
   seedData: {
-    firstName: env.SEED_USER_FIRSTNAME,
-    lastName: env.SEED_USER_LASTNAME,
+    name: env.SEED_USER_NAME,
     email: env.SEED_USER_EMAIL,
     contact: {
+      phonePrefix: env.SEED_USER_PHONE_PREFIX,
       phone: env.SEED_USER_PHONE,
-      country: env.SEED_USER_COUNTRY,
-      city: env.SEED_USER_CITY,
-      callingCode: env.SEED_USER_CALLING_CODE,
     },
+    password: env.SEED_USER_PASSWORD,
   },
   mailgunConfigs: {
     apiKey: env.MAILGUN_API_KEY || '',

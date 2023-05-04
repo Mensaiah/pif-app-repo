@@ -26,7 +26,7 @@ export interface FingerprintResult {
 
 const fingerprintMiddleware = (
   req: IRequest,
-  res: Response,
+  _res: Response,
   next: NextFunction
 ) => {
   const userAgent = req.headers['user-agent'] || '';

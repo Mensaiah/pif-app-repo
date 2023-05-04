@@ -27,10 +27,24 @@ const initializePersistenceAndSeeding = () => {
 };
 
 const initializeMiddlewares = () => {
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'https://pif-dashboard.web.app/',
+  ];
+  const corsOptions = {
+    origin: function (origin: string, callback: (err: Error) => void) {
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+        callback(null);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+  };
+
   app
+    .use(cors(corsOptions))
     .use(express.json({ limit: '1kb' }))
     .use(express.urlencoded({ limit: '1kb', extended: false }))
-    .use(cors())
     .use(helmet())
     .use(fingerprintMiddleware)
     .use((req, res, next) => {
