@@ -95,6 +95,8 @@ const appConfig = {
     apiKey: env.MAILGUN_API_KEY || '',
     url: 'https://api.mailgun.net/v3/auto.pi-app.asia',
   },
+  infobipBaseUrl: env.INFOBIP_BASE_URL || '',
+  infoBipApiKey: env.INFOBIP_API_KEY || '',
 };
 
 export default appConfig;

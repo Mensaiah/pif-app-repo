@@ -13,5 +13,14 @@ Content-Type: application/json
 
 {
   "email": "piftech@pif-app.com",
-  "password": "Password_1s"
+  "password": "Password_1"
+}
+
+### mobile login
+POST {{api}}/auth/m-login
+Content-Type: application/json
+
+{
+  "phonePrefix": "+234",
+  "phone": "8083923993"
 }

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { IRequest } from 'src/types/global';
-import { consoleLog, handleResponse, uuid } from 'src/utils/helpers';
-import { dashLoginSchema } from './auth.policy';
+import { handleResponse, uuid } from 'src/utils/helpers';
+import { dashLoginSchema, mobileLoginSchema } from './auth.policy';
 import { z } from 'zod';
 import { UserModel } from '../user/user.model';
 import { useWord } from 'src/utils/wordSheet';
@@ -9,10 +9,12 @@ import { UserAccessModel } from './auth.models';
 import { calculateLoginWaitingTime, generateToken } from './auth.utils';
 import appConfig from 'src/config';
 import ms from 'ms';
+import { UserSessionAttributes } from './auth.types';
+import '../../../services/infobipService';
 
 export const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;
-  consoleLog(JSON.stringify(req.body));
+
   const { email, password }: LoginDatatype = req.body;
 
   try {
@@ -42,17 +44,18 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
       await userAccess.save();
     }
 
-    const { allowedAttempts, waitingTime } = calculateLoginWaitingTime(
-      userAccess.failedLoginAttempts
+    const { allowedAttempts, remainingTime } = calculateLoginWaitingTime(
+      userAccess.failedLoginAttempts,
+      userAccess.lastLoginAttempt
     );
     const now = Date.now();
 
     if (
       userAccess.failedLoginAttempts >= allowedAttempts &&
       userAccess.lastLoginAttempt &&
-      now - userAccess.lastLoginAttempt.getTime() < waitingTime
+      remainingTime > 0
     ) {
-      const waitMinutes = Math.ceil(waitingTime / (60 * 1000));
+      const waitMinutes = Math.ceil(remainingTime / (60 * 1000));
       return handleResponse(
         res,
         `Too many failed login attempts. Please wait for ${waitMinutes} minutes and try again.`,
@@ -72,6 +75,47 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
       userAccess.lastLoginAt = new Date(now);
       await userAccess.save();
     }
+
+    // find session index, if it exists, update it, if not create it
+    const currentSessionIndex: number = userAccess.sessions?.findIndex(
+      (session) => session.deviceHash === req.fingerprint.hash
+    );
+
+    let currentSession: UserSessionAttributes = userAccess.sessions?.find(
+      (session) => session.deviceHash === req.fingerprint.hash
+    );
+
+    if (currentSessionIndex !== -1) {
+      // updated session if found
+      currentSession.used += 1;
+      currentSession.lastEventTime = new Date();
+      currentSession.maxLivespan = ms(appConfig.authConfigs.sessionLivespan);
+      currentSession.maxInactivity = ms(appConfig.authConfigs.maxInactivity);
+      currentSession.lastEventTime = new Date();
+      userAccess.sessions[currentSessionIndex] = currentSession;
+    } else {
+      // new session if none is found
+
+      currentSession = {
+        used: 1,
+        deviceHash: req.fingerprint.hash,
+        sessionId: uuid(),
+        lastEventTime: new Date(),
+        maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
+        maxInactivity: ms(appConfig.authConfigs.maxInactivity),
+        device: {
+          info: `${req.fingerprint.components.userAgent}`,
+          geoip: {
+            lat: null,
+            long: null,
+          },
+        },
+      };
+
+      userAccess.sessions.push(currentSession);
+    }
+
+    await userAccess.save();
 
     const token = generateToken({
       authKey: userAccess.securityCode,
@@ -95,11 +139,33 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
         userType: existingUser.userType,
         roleAndPermissions: userAccess.rolesAndPermissions,
       },
-      userAccess,
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
+};
+
+export const doMobileSignup = async (req: IRequest, res: Response) => {
+  type signUpDatatype = z.infer<typeof mobileLoginSchema>;
+
+  const { phone, phonePrefix }: signUpDatatype = req.body;
+
+  try {
+    return handleResponse(res, { phonePrefix, phone });
+  } catch (error) {}
+};
+
+export const doMobileLogin = async (req: IRequest, res: Response) => {
+  type LoginDatatype = z.infer<typeof mobileLoginSchema>;
+
+  const { phone, phonePrefix }: LoginDatatype = req.body;
+
+  try {
+    // await sendSms();
+    // const checkOtpExists = await UserModel.findOne({});
+
+    return handleResponse(res, { phonePrefix, phone });
+  } catch (error) {}
 };
 
 export const doLogout = (req: IRequest, res: Response) => {

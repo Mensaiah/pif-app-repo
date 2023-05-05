@@ -2,6 +2,7 @@ import { NextFunction, Response } from 'express';
 import crypto from 'crypto';
 import geoip from 'geoip-lite';
 import { IRequest } from 'src/types/global';
+import { consoleLog } from 'src/utils/helpers';
 
 export interface GeoInfo {
   range: [number, number];
@@ -38,7 +39,9 @@ const fingerprintMiddleware = (
     req.socket.remoteAddress ||
     ((req.headers['x-forwarded-for'] as string) || '').split(',').pop() ||
     '';
+
   const geo: Partial<GeoInfo> = geoip.lookup(ipAddress) || {};
+  consoleLog({ geo });
 
   const components = [
     userAgent,

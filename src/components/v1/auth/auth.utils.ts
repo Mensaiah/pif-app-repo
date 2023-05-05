@@ -2,16 +2,35 @@ import jwt from 'jsonwebtoken';
 import appConfig from '../../../config';
 import { IToken } from 'src/types/global';
 
-export const calculateLoginWaitingTime = (failedAttempts: number) => {
+export const calculateLoginWaitingTime = (
+  failedAttempts: number,
+  lastLoginAttempt: Date
+) => {
+  const now = Date.now();
+
+  const timePassed = lastLoginAttempt ? now - lastLoginAttempt.getTime() : 0;
+
   if (failedAttempts < 5) {
-    return { allowedAttempts: 5, waitingTime: 0 };
+    return { allowedAttempts: 5, remainingTime: 0 };
   } else if (failedAttempts < 8) {
-    return { allowedAttempts: 3, waitingTime: 30 * 60 * 1000 }; // 30 minutes
+    const waitingTime = 30 * 60 * 1000; // 30 minutes
+    return {
+      allowedAttempts: 3,
+      remainingTime: Math.max(waitingTime - timePassed, 0),
+    };
   } else if (failedAttempts < 11) {
-    return { allowedAttempts: 3, waitingTime: 60 * 60 * 1000 }; // 1 hour
+    const waitingTime = 60 * 60 * 1000; // 1 hour
+    return {
+      allowedAttempts: 3,
+      remainingTime: Math.max(waitingTime - timePassed, 0),
+    };
   }
 
-  return { allowedAttempts: 3, waitingTime: 3 * 60 * 60 * 1000 }; // 3 hours
+  const waitingTime = 3 * 60 * 60 * 1000; // 3 hours
+  return {
+    allowedAttempts: 3,
+    remainingTime: Math.max(waitingTime - timePassed, 0),
+  };
 };
 
 export const generateToken = (

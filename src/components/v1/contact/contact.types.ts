@@ -1,5 +1,4 @@
 import { Document, ObjectId } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
 
 export interface ContactAttributes extends Document {
   User: ObjectId;

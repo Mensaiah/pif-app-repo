@@ -18,7 +18,8 @@ export interface UserAccessAttributes {
   failedLoginAttempts: number;
   sessions: Array<UserSessionAttributes>;
 
-  comparePassword(password: string): Promise<boolean>;
+  // methods
+  comparePassword(password: string): boolean;
 }
 
 export interface UserSessionAttributes {
@@ -32,8 +33,8 @@ export interface UserSessionAttributes {
   device: {
     info: string;
     geoip: {
-      lat: string;
-      long: string;
+      lat: number | null;
+      long: number | null;
     };
   };
 }

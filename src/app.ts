@@ -83,14 +83,6 @@ const initializeRoutes = () => {
       404
     )
   );
-  // app.use((err: ErrorRequestHandler, req: IRequest, res: Response) => {
-  //   return handleResponse(
-  //     res,
-  //     { message: useWord('internalServerError', req.lang), err: err },
-  //     500,
-  //     err
-  //   );
-  // });
 };
 
 initializePersistenceAndSeeding();
