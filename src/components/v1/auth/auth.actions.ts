@@ -162,7 +162,10 @@ export const doMobileLogin = async (req: IRequest, res: Response) => {
   const { phone, phonePrefix }: LoginDatatype = req.body;
 
   try {
-    await sendSms();
+    await sendSms({
+      to: '2348168861541',
+      text: 'Your one time PIF OTP code is 09876',
+    });
     // const checkOtpExists = await UserModel.findOne({});
 
     return handleResponse(res, { phonePrefix, phone });
