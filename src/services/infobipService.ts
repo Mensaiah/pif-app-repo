@@ -1,6 +1,5 @@
 import { consoleLog } from 'src/utils/helpers';
 import appConfig from '../config';
-// import { consoleLog } from '../utils/helpers';
 import axios from 'axios';
 
 const sendSms = async () => {
@@ -13,24 +12,49 @@ const sendSms = async () => {
             {
               destinations: [
                 {
-                  to: '41793026727',
+                  to: 2348103498784,
                 },
               ],
-              from: 'InfoSMS',
-              text: 'This is a sample message',
+              from: 'Aweds',
+              text: 'Hello Sir, If you get this it is from Aweds, it means infobip is working',
             },
           ],
         }),
         headers: {
-          Authorization: `${appConfig.infoBipApiKey}`,
+          Authorization: `Basic ${appConfig.infoBipApiKey}`,
           'Content-Type': 'application/json',
-          Accept: 'application/json',
         },
       }
     );
-    consoleLog(response);
+
+    const res = await response.data;
+    consoleLog(res);
   } catch (err) {
     consoleLog(err);
   }
 };
-sendSms();
+
+//working
+async function sendSms2() {
+  const url = 'https://9ry5jr.api.infobip.com/sms/2/text/single';
+  const headers = {
+    Authorization: `App ${appConfig.infoBipApiKey}`,
+    'Content-Type': 'application/json',
+  };
+  const data = {
+    from: 'Aweds',
+    to: 2348103498784,
+    text: 'Hello Sir, If you get this it is from Aweds, it means infobip is working',
+  };
+
+  try {
+    const response = await axios.post(url, data, { headers });
+    consoleLog(response.data);
+    consoleLog(
+      `SMS sent to ${data.to}. Message ID: ${response.data.messages[0].messageId}`
+    );
+  } catch (error) {
+    consoleLog('Error sending SMS:', error);
+  }
+}
+sendSms2();
