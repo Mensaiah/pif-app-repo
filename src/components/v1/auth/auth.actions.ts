@@ -11,6 +11,7 @@ import appConfig from 'src/config';
 import ms from 'ms';
 import { UserSessionAttributes } from './auth.types';
 import '../../../services/infobipService';
+import { sendSms } from '../../../services/infobipService';
 
 export const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;
@@ -161,7 +162,7 @@ export const doMobileLogin = async (req: IRequest, res: Response) => {
   const { phone, phonePrefix }: LoginDatatype = req.body;
 
   try {
-    // await sendSms();
+    await sendSms();
     // const checkOtpExists = await UserModel.findOne({});
 
     return handleResponse(res, { phonePrefix, phone });

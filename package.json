@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@types/bcrypt": "^5.0.0",
-    "axios": "^1.4.0",
+    "axios": "^0.24.0",
     "bcrypt": "^5.1.0",
     "bson": "^5.2.0",
     "chalk": "^4.1.2",

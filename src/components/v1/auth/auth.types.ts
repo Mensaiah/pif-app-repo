@@ -42,7 +42,6 @@ export interface UserSessionAttributes {
 export interface OtpAttributes {
   code: string;
   purpose: 'signup' | 'pass-reset';
-  createdAt: Date;
   expiresAt: Date;
   phone: string;
   phonePrefix: string;
