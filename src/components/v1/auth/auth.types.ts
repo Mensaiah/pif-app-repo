@@ -20,6 +20,7 @@ export interface UserAccessAttributes {
 
   // methods
   comparePassword(password: string): boolean;
+  comparePin(pin: string): boolean;
 }
 
 export interface UserSessionAttributes {
@@ -46,4 +47,5 @@ export interface OtpAttributes {
   phone: string;
   phonePrefix: string;
   isConfirmed: boolean;
+  lastSent: Date;
 }

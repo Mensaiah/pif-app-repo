@@ -1,7 +1,8 @@
 import { Request } from 'express';
-import { Document, ObjectId, Types } from 'mongoose';
+import { Document, Types } from 'mongoose';
 import appConfig from '../config';
 import { UserType } from 'src/components/v1/user/user.types';
+import { UserAccessAttributes } from '../components/v1/auth/auth.types';
 import { FingerprintResult } from 'src/appMiddlewares/fingerprint.middleware';
 
 export type SupportedLangType = typeof appConfig.supportedLanguages;
@@ -50,13 +51,14 @@ export interface IPageMeta {
 }
 export interface IRequest extends Request {
   lang?: LanguageCode;
-  userId?: ObjectId;
+  userId?: Types.ObjectId;
   fingerprint?: FingerprintResult;
   paginationData?: IPaginationData;
-  decoded?: any;
+  decoded?: IToken;
   role?: string;
-  userType?: UserType;
+  userType?: UserType | 'pos-user';
   permissions?: string[];
+  userAccess: Document & UserAccessAttributes;
 }
 
 export interface IToken {
@@ -64,5 +66,5 @@ export interface IToken {
   sessionId: string;
   ref: Types.ObjectId;
   authKey: string;
-  userType: UserType;
+  userType: UserType | 'pos-user';
 }

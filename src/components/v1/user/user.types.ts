@@ -4,12 +4,13 @@ import { PartnerAttributes } from '../partner/partner.types';
 
 export type UserType = 'customer' | 'admin' | 'partner-admin';
 export interface UserAttributes {
-  name: string;
-  email: string;
+  name?: string;
+  email?: string;
   timezone?: string;
   Partner?: ObjectId;
   userType: UserType;
   username?: string;
+  pifId?: string;
   avatar?: string;
   sex?: string;
   dob?: Date;
@@ -55,6 +56,7 @@ export interface UserAttributes {
   };
   favoriteProducts?: Array<ObjectId>;
   isConfirmed?: boolean;
+  isSignupComplete?: boolean;
   currentMarketplace?: string;
   lastSelectedPartnerId?: ObjectId;
   configs?: {

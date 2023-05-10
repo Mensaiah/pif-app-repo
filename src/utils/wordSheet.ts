@@ -62,9 +62,9 @@ const wordSheet = {
     fr: 'Session invalide. Veuillez vous connecter',
   },
   loggedOut: {
-    en: 'Session logged out, kindly login',
-    da: 'Session logget ud, log venligst ind',
-    fr: 'Session déconnectée, veuillez vous connecter',
+    en: "It's not bye bye but see you again",
+    da: 'Det er ikke farvel, men vi ses igen',
+    fr: "Ce n'est pas au revoir, mais à bientôt",
   },
   cityAlreadyExists: {
     en: 'City already exists',

@@ -1,6 +1,8 @@
 import jwt from 'jsonwebtoken';
 import appConfig from '../../../config';
 import { IToken } from 'src/types/global';
+import { text } from 'express';
+import { sendSms } from 'src/services/infobipService';
 
 export const calculateLoginWaitingTime = (
   failedAttempts: number,
@@ -41,3 +43,18 @@ export const generateToken = (
     expiresIn: expiresIn,
     issuer: `PIF-${appConfig.environment}`,
   });
+
+export const generateRandomCode = (length = 5): string => {
+  const min = Math.pow(10, length - 1);
+  const max = Math.pow(10, length) - 1;
+  const randomCode = Math.floor(Math.random() * (max - min + 1) + min);
+  return randomCode.toString();
+};
+
+export const sendOTP = (to: string, code: string) =>
+  sendSms({ to, text: `Your one time PIF OTP code is ${code}` });
+
+export const isDateLessThanXMinutesAgo = (date: Date, min = 1): boolean => {
+  const minutesAgo = new Date(Date.now() - min * 60 * 1000);
+  return date > minutesAgo;
+};

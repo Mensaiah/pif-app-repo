@@ -1,8 +1,8 @@
 import { Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { UserAccessAttributes } from './auth.types';
+import { OtpAttributes, UserAccessAttributes } from './auth.types';
+
 import { permissions } from 'src/config/rolesAndPermissions';
-import { consoleLog } from 'src/utils/helpers';
 
 const roleAndPermissionSchema = new Schema(
   {
@@ -91,8 +91,27 @@ userAccessSchema.methods.comparePassword = function (
 ): boolean {
   return bcrypt.compareSync(password, this.password);
 };
+// Compare pin with hashed pin
+userAccessSchema.methods.comparePin = function (pin: string): boolean {
+  return bcrypt.compareSync(pin, this.pin);
+};
 
 export const UserAccessModel = model<UserAccessAttributes>(
   'UserAccess',
   userAccessSchema
 );
+
+// OTP
+const OtpCodeSchema = new Schema<OtpAttributes>({
+  code: String,
+  purpose: {
+    type: String,
+    enum: ['signup', 'pass-reset'],
+    expiresAt: Date,
+    phone: String,
+    phonePrefix: String,
+    isConfirmed: Boolean,
+    lastSent: Date,
+  },
+});
+export const OtpCodeModel = model<OtpAttributes>('OtpCode', OtpCodeSchema);

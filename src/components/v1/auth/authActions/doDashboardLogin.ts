@@ -1,19 +1,21 @@
 import { Response } from 'express';
 import { IRequest } from 'src/types/global';
 import { handleResponse, uuid } from 'src/utils/helpers';
-import { dashLoginSchema, mobileLoginSchema } from './auth.policy';
+import { dashLoginSchema } from '../auth.policy';
+
 import { z } from 'zod';
-import { UserModel } from '../user/user.model';
+import { UserModel } from '../../user/user.model';
 import { useWord } from 'src/utils/wordSheet';
-import { UserAccessModel } from './auth.models';
-import { calculateLoginWaitingTime, generateToken } from './auth.utils';
+import { UserAccessModel } from '../auth.models';
+
+import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
+
 import appConfig from 'src/config';
 import ms from 'ms';
-import { UserSessionAttributes } from './auth.types';
-import '../../../services/infobipService';
-import { sendSms } from '../../../services/infobipService';
+import { UserSessionAttributes } from '../auth.types';
+import '../../../../services/infobipService';
 
-export const doDashboardLogin = async (req: IRequest, res: Response) => {
+const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;
 
   const { email, password }: LoginDatatype = req.body;
@@ -35,7 +37,7 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
     if (userAccess.isBlocked) {
       return handleResponse(
         res,
-        'Your account has been disabled.  If you think this was a mistake, please contact us',
+        'Your account has been disabled. If you think this was a mistake, please contact us',
         401
       );
     }
@@ -105,10 +107,10 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
         maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
         maxInactivity: ms(appConfig.authConfigs.maxInactivity),
         device: {
-          info: `${req.fingerprint.components.userAgent}`,
+          info: req.fingerprint.components.userAgent,
           geoip: {
-            lat: null,
-            long: null,
+            lat: req.fingerprint.components?.geo?.ll[0],
+            long: req.fingerprint.components?.geo?.ll[1],
           },
         },
       };
@@ -145,34 +147,4 @@ export const doDashboardLogin = async (req: IRequest, res: Response) => {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };
-
-export const doMobileSignup = async (req: IRequest, res: Response) => {
-  type signUpDatatype = z.infer<typeof mobileLoginSchema>;
-
-  const { phone, phonePrefix }: signUpDatatype = req.body;
-
-  try {
-    return handleResponse(res, { phonePrefix, phone });
-  } catch (error) {}
-};
-
-export const doMobileLogin = async (req: IRequest, res: Response) => {
-  type LoginDatatype = z.infer<typeof mobileLoginSchema>;
-
-  const { phone, phonePrefix }: LoginDatatype = req.body;
-
-  try {
-    await sendSms({
-      to: '2348168861541',
-      text: 'Your one time PIF OTP code is 09876',
-    });
-    // const checkOtpExists = await UserModel.findOne({});
-
-    return handleResponse(res, { phonePrefix, phone });
-  } catch (error) {}
-};
-
-export const doLogout = (req: IRequest, res: Response) => {
-  res.clearCookie('jwt');
-  handleResponse(res, useWord('loggedOut', req.lang));
-};
+export default doDashboardLogin;

@@ -5,13 +5,9 @@ import appConfig from 'src/config';
 
 const userSchema = new Schema<UserAttributes>(
   {
-    name: {
-      type: String,
-      required: true,
-    },
+    name: String,
     email: {
       type: String,
-      required: true,
       unique: true,
       lowercase: true,
     },
@@ -26,6 +22,7 @@ const userSchema = new Schema<UserAttributes>(
       required: true,
     },
     username: String,
+    pifId: String,
     avatar: String,
     sex: String,
     dob: Date,
@@ -87,6 +84,7 @@ const userSchema = new Schema<UserAttributes>(
       },
     ],
     isConfirmed: Boolean,
+    isSignupComplete: Boolean,
     currentMarketplace: String,
     lastSelectedPartnerId: { type: ObjectId, ref: 'Partner' },
     configs: {
