@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { IRequest } from 'src/types/global';
-import { handleResponse } from 'src/utils/helpers';
+import { consoleLog, handleResponse } from 'src/utils/helpers';
 import { useWord } from 'src/utils/wordSheet';
 import { z } from 'zod';
 import { UserModel } from '../../user/user.model';
@@ -27,11 +27,12 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
     if (!existingUser) return handleResponse(res, 'Invalid request', 401);
 
     const otpExists = await OtpCodeModel.findOne({
-      phone,
-      phonePrefix,
       code,
       purpose: 'signup',
+      phone,
+      phonePrefix,
     });
+
     if (!otpExists) return handleResponse(res, 'Invalid request', 401);
 
     if (isDateLessThanXMinutesAgo(otpExists.lastSent))

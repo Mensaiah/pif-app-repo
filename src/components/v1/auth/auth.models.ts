@@ -107,11 +107,11 @@ const OtpCodeSchema = new Schema<OtpAttributes>({
   purpose: {
     type: String,
     enum: ['signup', 'pass-reset'],
-    expiresAt: Date,
-    phone: String,
-    phonePrefix: String,
-    isConfirmed: Boolean,
-    lastSent: Date,
   },
+  expiresAt: Date,
+  phone: String,
+  phonePrefix: String,
+  isConfirmed: Boolean,
+  lastSent: Date,
 });
 export const OtpCodeModel = model<OtpAttributes>('OtpCode', OtpCodeSchema);

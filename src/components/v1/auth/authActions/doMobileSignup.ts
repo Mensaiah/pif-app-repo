@@ -34,6 +34,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       currentMarketplace: marketplace,
       userType: 'customer',
     }).save();
+
     const newOtpCode = await new OtpCodeModel({
       code: generateRandomCode(),
       purpose: 'signup',
@@ -42,6 +43,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       phonePrefix,
       lastSent: new Date(),
     }).save();
+
     await sendOTP(phonePrefix + phone, newOtpCode.code);
 
     return handleResponse(res, 'Enter OTP to proceed');

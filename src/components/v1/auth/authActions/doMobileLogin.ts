@@ -86,13 +86,15 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       (session) => session.deviceHash === req.fingerprint.hash
     );
 
+    const currentDate = new Date(now);
+
     if (currentSessionIndex !== -1) {
       // updated session if found
       currentSession.used += 1;
-      currentSession.lastEventTime = new Date();
+      currentSession.lastEventTime = currentDate;
       currentSession.maxLivespan = ms(appConfig.authConfigs.sessionLivespan);
       currentSession.maxInactivity = ms(appConfig.authConfigs.maxInactivity);
-      currentSession.lastEventTime = new Date();
+      currentSession.lastEventTime = currentDate;
       userAccess.sessions[currentSessionIndex] = currentSession;
     } else {
       // new session if none is found
@@ -101,7 +103,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
         used: 1,
         deviceHash: req.fingerprint.hash,
         sessionId: uuid(),
-        lastEventTime: new Date(),
+        lastEventTime: currentDate,
         maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
         maxInactivity: ms(appConfig.authConfigs.maxInactivity),
         device: {
@@ -125,6 +127,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       sessionId: '11',
       ref: existingUser._id,
     });
+
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: appConfig.isProd,

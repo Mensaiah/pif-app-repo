@@ -5,5 +5,8 @@
   "prettier.singleQuote": true,
   "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
   "prettier.configPath": ".prettierrc.js",
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }

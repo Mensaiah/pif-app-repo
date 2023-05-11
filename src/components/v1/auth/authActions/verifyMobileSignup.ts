@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { IRequest } from 'src/types/global';
-import { handleResponse } from 'src/utils/helpers';
+import { consoleLog, handleResponse } from 'src/utils/helpers';
 import { useWord } from 'src/utils/wordSheet';
 import { z } from 'zod';
 import { UserModel } from '../../user/user.model';
@@ -23,11 +23,12 @@ const verifyMobileSignup = async (req: IRequest, res: Response) => {
       return handleResponse(res, 'Account does not exist', 401);
 
     const otpExists = await OtpCodeModel.findOne({
-      phone,
-      phonePrefix,
       code,
       purpose: 'signup',
+      phone,
+      phonePrefix,
     });
+
     if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
 
     if (otpExists.expiresAt < new Date()) {

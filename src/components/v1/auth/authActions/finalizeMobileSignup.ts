@@ -39,11 +39,12 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       );
 
     const otpExists = await OtpCodeModel.findOne({
-      phone,
-      phonePrefix,
       code: otpCode,
       purpose: 'signup',
+      phone,
+      phonePrefix,
     });
+
     if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
 
     if (!otpExists.isConfirmed) {
@@ -51,7 +52,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
     }
 
     existingUser.name = name;
-    existingUser.dob = dob;
+    existingUser.dob = new Date(dob);
     existingUser.pifId = pifId;
     existingUser.contact.zip = zipCode;
     existingUser.isSignupComplete = true;

@@ -16,11 +16,65 @@ Content-Type: application/json
   "password": "Password_1"
 }
 
+### mobile signup
+POST {{api}}/auth/m-signup
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784",
+  "marketplace": "Nigeria"
+}
+
+### mobile - verify otp
+POST {{api}}/auth/verify-m-signup
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784",
+  "code": "14469"
+}
+
+### mobile resend otp
+POST {{api}}/auth/resend-otp
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784",
+  "code": "14469"
+}
+
+
+### mobile finalize signup
+POST {{api}}/auth/finalize-m-signup
+Content-Type: application/json
+
+{
+ "name": "Aweds",
+ "dob": "2021-02-20",
+ "phonePrefix": "234",
+ "phone": "8103498784",
+ "pifId":"aweds",
+ "zipCode":"223343",
+ "otpCode":"14469"
+}
+
+### mobile set pin
+POST {{api}}/auth/m-pin
+Content-Type: application/json
+
+{
+  "pin": "1234",
+}
+
+
 ### mobile login
 POST {{api}}/auth/m-login
 Content-Type: application/json
 
 {
-  "phonePrefix": "+234",
-  "phone": "8083923993"
+  "phonePrefix": "234",
+  "phone": "8103498784"
 }

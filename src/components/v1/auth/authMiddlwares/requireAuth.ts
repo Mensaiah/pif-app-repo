@@ -35,6 +35,14 @@ const requireAuth = async (
 
     // TODO: if user neither has password nor pin, he should get this => if (path is for mobile: Set pin first) and if (else: set password first)
 
+    // if user is a customer and have not set pin
+    if (userType === 'customer' && !userAccess.pin)
+      return handleResponse(res, 'Set your pin.', 403);
+
+    // if user is not a customer and have not set password
+    if (userType !== 'customer' && !userAccess.password)
+      return handleResponse(res, 'Set your password.', 403);
+
     // find session index
     const sessionIndex = userAccess.sessions.findIndex(
       (sesn) => sesn.sessionId === sessionId

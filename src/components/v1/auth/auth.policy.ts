@@ -27,7 +27,7 @@ export const finalizeMobileSignupSchema = z.object({
   phone: z.string(),
   name: z.string(),
   zipCode: z.string(),
-  dob: z.date(),
+  dob: z.string(),
   pifId: z.string(),
   otpCode: z.string(),
 });
