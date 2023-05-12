@@ -1,48 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const fs = require('fs');
-const path = require('path');
-
-const chalk = require('chalk');
-const dotenv = require('dotenv');
 const ms = require('ms');
 
-// Determine the appropriate .env file based on NODE_ENV
-let envFile = '.env';
-let nodeEnv = process.env.NODE_ENV;
+require('dotenv/config');
 
-if (nodeEnv === 'prod' || nodeEnv === 'production') {
-  if (fs.existsSync(path.resolve(__dirname, '..', '..', '.env.prod'))) {
-    envFile = '.env.prod';
-  }
-} else if (nodeEnv === 'staging') {
-  if (fs.existsSync(path.resolve(__dirname, '..', '..', '.env.staging'))) {
-    envFile = '.env.staging';
-  }
-} else if (nodeEnv === 'test') {
-  envFile = '.env.test';
-} else {
-  nodeEnv = 'dev';
-}
-
-console.log(`Using ${envFile} for environment variables`);
-
-// Load environment variables from the specified file
-const result = dotenv.config({
-  path: path.resolve(__dirname, '..', '..', envFile),
-});
-
-if (result.error) {
-  console.error('Error loading environment variables: ' + result.error);
-  console.error(
-    chalk.hex('#4527a0')(
-      "\nIf .env doesn't exist at the root, simply;\n \n1) duplicate .env.example \n2) rename to .env \n3) Set environment variable. \n\n"
-    ) +
-      chalk.bgWhite(
-        'Reach out to the team lead if you have any further questions.'
-      )
-  );
-}
 const env = process.env;
 
 const appConfig = {
