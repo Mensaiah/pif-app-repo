@@ -42,7 +42,6 @@ if (result.error) {
         'Reach out to the team lead if you have any further questions.'
       )
   );
-  process.exit(1);
 }
 const env = process.env;
 
