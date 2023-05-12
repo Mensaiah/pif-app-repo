@@ -8,7 +8,7 @@ WORKDIR /usr/src/app
 
 COPY package.json ./
 # RUN npm i -g pnpm
-RUN npm i
+RUN NODE_ENV=development npm i
 
 # Audit Packages
 # RUN pnpm audit fix
