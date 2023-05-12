@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const chalk = require('chalk');
-const ms = require('ms');
-const path = require('path');
 const fs = require('fs');
+const path = require('path');
+
+const chalk = require('chalk');
 const dotenv = require('dotenv');
+const ms = require('ms');
 
 // Determine the appropriate .env file based on NODE_ENV
 let envFile = '.env';

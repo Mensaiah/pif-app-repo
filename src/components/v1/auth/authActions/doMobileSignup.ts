@@ -1,16 +1,15 @@
 import { Response } from 'express';
-import { IRequest } from 'src/types/global';
-import { handleResponse } from 'src/utils/helpers';
-import { mobileSignupSchema } from '../auth.policy';
-
+import ms from 'ms';
 import { z } from 'zod';
-import { UserModel } from '../../user/user.model';
-import { useWord } from 'src/utils/wordSheet';
-import { OtpCodeModel } from '../auth.models';
 
+import { IRequest } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
+import { UserModel } from '../../user/user.model';
+import { OtpCodeModel } from '../auth.models';
+import { mobileSignupSchema } from '../auth.policy';
 import { generateRandomCode, sendOTP } from '../auth.utils';
 
-import ms from 'ms';
 import '../../../../services/infobipService';
 
 const doMobileSignup = async (req: IRequest, res: Response) => {

@@ -1,8 +1,7 @@
-import { Document } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
+import { Document, Types } from 'mongoose';
 
 export interface TransactionAttributes extends Document {
-  User: UserAttributes['_id'];
+  User: Types.ObjectId;
   price: number;
   currency: number;
   driver: string;

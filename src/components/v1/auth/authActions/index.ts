@@ -1,6 +1,7 @@
 import { Response } from 'express';
-import { IRequest } from 'src/types/global';
-import { handleResponse } from 'src/utils/helpers';
+
+import { IRequest } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 
 export { default as doMobileSignup } from './doMobileSignup';

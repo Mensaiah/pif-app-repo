@@ -1,10 +1,11 @@
 import { Router } from 'express';
 
+import { IRequest } from '../../types/global';
+import { handleResponse } from '../../utils/helpers';
+import { useWord } from '../../utils/wordSheet';
+
 import authRoutesV1 from './auth/auth.routes';
 import userRoutesV1 from './user/user.routes';
-import { handleResponse } from 'src/utils/helpers';
-import { useWord } from 'src/utils/wordSheet';
-import { IRequest } from 'src/types/global';
 
 const router = Router();
 

@@ -1,4 +1,15 @@
 import { Router } from 'express';
+
+import policyMiddleware from '../../../appMiddlewares/policy.middleware';
+
+import {
+  dashLoginSchema,
+  finalizeMobileSignupSchema,
+  mobileLoginSchema,
+  mobileSignupSchema,
+  setPinSchema,
+  verifyMobileSignupSchema,
+} from './auth.policy';
 import {
   doDashboardLogin,
   doLogout,
@@ -9,15 +20,6 @@ import {
   resendOtpCode,
   verifyMobileSignup,
 } from './authActions';
-import policyMiddleware from 'src/appMiddlewares/policy.middleware';
-import {
-  dashLoginSchema,
-  finalizeMobileSignupSchema,
-  mobileLoginSchema,
-  mobileSignupSchema,
-  setPinSchema,
-  verifyMobileSignupSchema,
-} from './auth.policy';
 import {
   requireAuthMiddleware,
   validateTokenMiddleware,

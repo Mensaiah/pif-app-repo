@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongoose';
-import { LanguageCode } from 'src/types/global';
-import { PartnerAttributes } from '../partner/partner.types';
+
+import { LanguageCode } from '../../../types/global';
 
 export type UserType = 'customer' | 'admin' | 'partner-admin';
 export interface UserAttributes {

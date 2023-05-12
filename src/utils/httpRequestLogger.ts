@@ -1,7 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import { isArray } from 'src/utils/validators';
-import appConfig from 'src/config';
-import { consoleLog } from 'src/utils/helpers';
+
+import appConfig from '../config';
+
+import { consoleLog } from './helpers';
+import { isArray } from './validators';
 
 const httpRequestLogger = (req: Request, res: Response, next: NextFunction) => {
   const startTime = new Date().getTime();

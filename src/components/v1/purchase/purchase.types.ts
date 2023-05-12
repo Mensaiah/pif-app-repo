@@ -1,14 +1,12 @@
-import { Document, ObjectId } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
-import { ContactAttributes } from '../contact/contact.types';
+import { Document, ObjectId, Types } from 'mongoose';
 
 export interface PurchaseAttributes extends Document {
-  User: UserAttributes['_id'];
+  User: Types.ObjectId;
   Product: ObjectId;
   username: string;
   Partner: ObjectId;
-  Contact?: ContactAttributes['_id'];
-  Recipient?: UserAttributes['_id'];
+  Contact?: Types.ObjectId;
+  Recipient?: Types.ObjectId;
   recipientPhonePrefix: string;
   recipientPhoneNumber: string;
   Transaction: ObjectId;
@@ -21,15 +19,15 @@ export interface PurchaseAttributes extends Document {
   message: string;
   code: string;
   codeType: string;
-  SettlementsDetailsStart: ObjectId;
-  SettlementsDetailsFinish: ObjectId;
+  SettlementsDetailsStart: Types.ObjectId;
+  SettlementsDetailsFinish: Types.ObjectId;
   unwrapedAt: Date;
   redeemedAt: Date;
   apiRedeemedProcessAt: Date;
   apiRedeemedUserConfirmAt: Date;
   expiredAt: Date;
   hideValidationCodeAt: Date;
-  Pos: ObjectId;
+  Pos: Types.ObjectId;
   shareNetworks?: string;
   criteriaId: number;
   sent: boolean;

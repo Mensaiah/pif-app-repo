@@ -1,8 +1,9 @@
-import { Document, Schema, model } from 'mongoose';
 import bcrypt from 'bcrypt';
-import { OtpAttributes, UserAccessAttributes } from './auth.types';
+import { Document, Schema, model } from 'mongoose';
 
-import { permissions } from 'src/config/rolesAndPermissions';
+import { permissions } from '../../../config/rolesAndPermissions';
+
+import { OtpAttributes, UserAccessAttributes } from './auth.types';
 
 const roleAndPermissionSchema = new Schema(
   {

@@ -1,17 +1,14 @@
-import { Document } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
-import { PurchaseAttributes } from '../purchase/purchase.types';
-import { ProductAttributes } from '../product/product.types';
+import { Document, Types } from 'mongoose';
 
 export interface SettlementAttributes extends Document {
   totalAmount: number;
   currency: string;
   proportionStart: number | null;
   proportionEnd: number | null;
-  Purchase: PurchaseAttributes['_id'];
-  Product: ProductAttributes['_id'];
+  Purchase: Types.ObjectId;
+  Product: Types.ObjectId;
   status: 'pending' | 'ready' | 'paid' | 'canceled';
-  settledBy: UserAttributes['_id'] | 'system';
+  settledBy: Types.ObjectId | 'system';
   paymentInfo?: {
     bankName: string;
     accountNumber: string;

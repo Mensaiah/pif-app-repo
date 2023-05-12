@@ -1,9 +1,10 @@
 import { Request } from 'express';
 import { Document, Types } from 'mongoose';
-import appConfig from '../config';
-import { UserType } from 'src/components/v1/user/user.types';
+
+import { FingerprintResult } from '../appMiddlewares/fingerprint.middleware';
 import { UserAccessAttributes } from '../components/v1/auth/auth.types';
-import { FingerprintResult } from 'src/appMiddlewares/fingerprint.middleware';
+import { UserType } from '../components/v1/user/user.types';
+import appConfig from '../config';
 
 export type SupportedLangType = typeof appConfig.supportedLanguages;
 export type LanguageCode = SupportedLangType[number];

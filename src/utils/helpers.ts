@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
 import { Request, Response } from 'express';
-import { isArray, isObject } from './validators';
-import appConfig from '../config';
 import { v4 as uuidv4 } from 'uuid';
+
+import appConfig from '../config';
 import { IRequest, IPaginationData, LanguageValuePair } from '../types/global';
+
 import normalizeLang from './normalizeLang';
+import { isArray, isObject } from './validators';
 
 export const consoleLog = (
   data: any,

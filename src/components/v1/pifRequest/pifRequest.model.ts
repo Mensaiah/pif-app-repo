@@ -1,13 +1,11 @@
-import { Document, ObjectId } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
-import { ContactAttributes } from '../contact/contact.types';
+import { Document, Types } from 'mongoose';
 
 export interface PifRequestAttributes extends Document {
-  User: UserAttributes['_id'];
-  Product: ObjectId;
-  Contact: ContactAttributes['_id'];
+  User: Types.ObjectId;
+  Product: Types.ObjectId;
+  Contact: Types.ObjectId;
   quantity: number;
-  Recipient?: UserAttributes['_id'];
+  Recipient?: Types.ObjectId;
   recipientPhonePrefix: string;
   recipientPhoneNumber: string;
   message: string;

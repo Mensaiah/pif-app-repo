@@ -1,8 +1,8 @@
 import jwt from 'jsonwebtoken';
+
 import appConfig from '../../../config';
-import { IToken } from 'src/types/global';
-import { text } from 'express';
-import { sendSms } from 'src/services/infobipService';
+import { sendSms } from '../../../services/infobipService';
+import { IToken } from '../../../types/global';
 
 export const calculateLoginWaitingTime = (
   failedAttempts: number,

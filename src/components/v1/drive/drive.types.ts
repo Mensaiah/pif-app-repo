@@ -1,5 +1,4 @@
 import { Document } from 'mongoose';
-import { LanguageValuePair } from 'src/types/global';
 
 export interface DriveFileAttributes extends Document {
   ParentFolder: DriveFolderAttributes['_id'];

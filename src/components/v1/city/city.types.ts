@@ -1,5 +1,6 @@
 import { Document, ObjectId } from 'mongoose';
-import { LanguageValuePair } from 'src/types/global';
+
+import { LanguageValuePair } from '../../../types/global';
 
 export interface CityAttributes extends Document {
   name: Array<LanguageValuePair>;

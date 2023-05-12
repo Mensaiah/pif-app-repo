@@ -1,10 +1,11 @@
-import fingerprintMiddleware, {
-  FingerprintResult,
-  GeoInfo,
-} from 'src/appMiddlewares/fingerprint.middleware';
-import geoip from 'geoip-lite';
 import { Response } from 'express';
-import { IRequest } from 'src/types/global';
+import geoip from 'geoip-lite';
+
+import fingerprintMiddleware, {
+  GeoInfo,
+  FingerprintResult,
+} from '../../appMiddlewares/fingerprint.middleware';
+import { IRequest } from '../../types/global';
 
 jest.mock('geoip-lite');
 

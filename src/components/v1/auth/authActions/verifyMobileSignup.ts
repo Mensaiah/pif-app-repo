@@ -1,8 +1,9 @@
 import { Response } from 'express';
-import { IRequest } from 'src/types/global';
-import { consoleLog, handleResponse } from 'src/utils/helpers';
-import { useWord } from 'src/utils/wordSheet';
 import { z } from 'zod';
+
+import { IRequest } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { verifyMobileSignupSchema } from '../auth.policy';

@@ -1,10 +1,10 @@
-import PlatformModel from 'src/components/v1/platform/platform.model';
-import { PlatformAttributes } from 'src/components/v1/platform/platform.types';
-import { UserModel } from 'src/components/v1/user/user.model';
-import { UserAttributes } from 'src/components/v1/user/user.types';
-import { consoleLog } from 'src/utils/helpers';
 import appConfig from '..';
-import { UserAccessModel } from 'src/components/v1/auth/auth.models';
+import { UserAccessModel } from '../../components/v1/auth/auth.models';
+import PlatformModel from '../../components/v1/platform/platform.model';
+import { PlatformAttributes } from '../../components/v1/platform/platform.types';
+import { UserModel } from '../../components/v1/user/user.model';
+import { UserAttributes } from '../../components/v1/user/user.types';
+import { consoleLog } from '../../utils/helpers';
 
 const { seedData } = appConfig;
 

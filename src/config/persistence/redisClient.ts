@@ -1,7 +1,9 @@
-import { createClient } from 'redis';
-import { consoleLog } from 'src/utils/helpers';
 import { promisify } from 'util';
+
+import { createClient } from 'redis';
+
 import appConfig from '..';
+import { consoleLog } from '../../utils/helpers';
 
 const client = createClient({
   socket: {

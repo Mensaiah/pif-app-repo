@@ -1,10 +1,11 @@
 import { Response, NextFunction } from 'express';
-import { IRequest } from 'src/types/global';
-import { consoleLog, handleResponse } from 'src/utils/helpers';
-import { useWord } from 'src/utils/wordSheet';
+
+import { FingerprintResult } from '../../../../appMiddlewares/fingerprint.middleware';
+import { IRequest } from '../../../../types/global';
+import { handleResponse, consoleLog } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
 import { PartnerPosUserModel, UserModel } from '../../user/user.model';
 import { UserAccessModel } from '../auth.models';
-import { FingerprintResult } from 'src/appMiddlewares/fingerprint.middleware';
 
 const requireAuth = async (
   req: IRequest,

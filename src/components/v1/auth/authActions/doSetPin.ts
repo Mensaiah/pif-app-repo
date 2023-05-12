@@ -1,9 +1,10 @@
-import { IRequest } from 'src/types/global';
-import { setPinSchema } from '../auth.policy';
-import { handleResponse } from 'src/utils/helpers';
 import { Response } from 'express';
 import { z } from 'zod';
-import { useWord } from 'src/utils/wordSheet';
+
+import { IRequest } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
+import { setPinSchema } from '../auth.policy';
 
 const doSetPin = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof setPinSchema>;

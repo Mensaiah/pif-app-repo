@@ -1,15 +1,16 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Response } from 'express';
 import helmet from 'helmet';
-import cookieParser from 'cookie-parser';
+
+import fingerprintMiddleware from './appMiddlewares/fingerprint.middleware';
+import routesV1 from './components/v1/routes.v1';
 import appConfig from './config';
-import { consoleLog, handleResponse } from './utils/helpers';
-import { IRequest, LanguageCode } from './types/global';
 import { connectMongoDb } from './config/persistence/database';
 import { seedNow } from './config/persistence/seeder';
+import { IRequest, LanguageCode } from './types/global';
+import { consoleLog, handleResponse } from './utils/helpers';
 import httpRequestLogger from './utils/httpRequestLogger';
-import routesV1 from './components/v1/routes.v1';
-import fingerprintMiddleware from './appMiddlewares/fingerprint.middleware';
 
 const app: Application = express();
 

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongoose';
+
 import { PermissionCapabilities } from '../../../config/rolesAndPermissions';
 
 export interface UserAccessAttributes {

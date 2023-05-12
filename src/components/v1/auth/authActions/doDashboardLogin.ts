@@ -1,19 +1,17 @@
 import { Response } from 'express';
-import { IRequest } from 'src/types/global';
-import { handleResponse, uuid } from 'src/utils/helpers';
-import { dashLoginSchema } from '../auth.policy';
-
-import { z } from 'zod';
-import { UserModel } from '../../user/user.model';
-import { useWord } from 'src/utils/wordSheet';
-import { UserAccessModel } from '../auth.models';
-
-import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
-
-import appConfig from 'src/config';
 import ms from 'ms';
-import { UserSessionAttributes } from '../auth.types';
+import { z } from 'zod';
+
 import '../../../../services/infobipService';
+import appConfig from '../../../../config';
+import { IRequest } from '../../../../types/global';
+import { handleResponse, uuid } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
+import { UserModel } from '../../user/user.model';
+import { UserAccessModel } from '../auth.models';
+import { dashLoginSchema } from '../auth.policy';
+import { UserSessionAttributes } from '../auth.types';
+import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
 
 const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;

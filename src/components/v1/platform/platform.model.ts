@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+
 import { MarketplaceAttributes, PlatformAttributes } from './platform.types';
 
 const marketplaceSchema = new Schema<MarketplaceAttributes>({

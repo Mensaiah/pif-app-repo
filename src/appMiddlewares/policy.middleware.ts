@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { handleResponse } from 'src/utils/helpers';
 import { Schema } from 'zod';
+
+import { handleResponse } from '../utils/helpers';
 
 const policyMiddleware =
   (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {

@@ -1,6 +1,7 @@
-import { consoleLog } from 'src/utils/helpers';
-import appConfig from '../config';
 import axios from 'axios';
+
+import appConfig from '../config';
+import { consoleLog } from '../utils/helpers';
 
 type SendSmsArgs = {
   to: string | number;

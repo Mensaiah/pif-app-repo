@@ -1,10 +1,11 @@
 import { Response } from 'express';
 import ms from 'ms';
-import appConfig from 'src/config';
-import { IRequest } from 'src/types/global';
-import { handleResponse, uuid } from 'src/utils/helpers';
-import { useWord } from 'src/utils/wordSheet';
 import { z } from 'zod';
+
+import appConfig from '../../../../config';
+import { IRequest } from '../../../../types/global';
+import { handleResponse, uuid } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { finalizeMobileSignupSchema } from '../auth.policy';

@@ -1,11 +1,12 @@
 import { Document, ObjectId } from 'mongoose';
-import { PartnerAttributes } from '../partner/partner.types';
-import { LanguageValuePair } from 'src/types/global';
+
+import { LanguageValuePair } from '../../../types/global';
 import {
   CategoryAttributes,
   InterCategoryAttributes,
 } from '../cageory/category.types';
 import { CityAttributes } from '../city/city.types';
+import { PartnerAttributes } from '../partner/partner.types';
 
 export interface ProductAttributes extends Document {
   name: LanguageValuePair[];

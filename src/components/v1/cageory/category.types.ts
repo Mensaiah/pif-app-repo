@@ -1,6 +1,6 @@
-import { Document, ObjectId } from 'mongoose';
-import { LanguageValuePair } from 'src/types/global';
-import { UserAttributes } from '../user/user.types';
+import { Document, Types } from 'mongoose';
+
+import { LanguageValuePair } from '../../../types/global';
 
 export interface CategoryAttributes extends Document {
   name: LanguageValuePair[];
@@ -13,12 +13,12 @@ export interface CategoryAttributes extends Document {
   Icon: CategoryIconAttributes['_id'];
   isBirthday: boolean;
   deletedAt?: Date;
-  marketplaces: Array<ObjectId>;
+  marketplaces: Array<Types.ObjectId>;
 }
 export interface InterCategoryAttributes extends Document {
   name: LanguageValuePair[];
   deletedAt?: boolean;
-  addedBy: UserAttributes['_id'];
+  addedBy: Types.ObjectId;
 }
 
 export interface CategoryIconAttributes extends Document {

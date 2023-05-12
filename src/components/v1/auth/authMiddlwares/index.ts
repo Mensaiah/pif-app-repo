@@ -1,9 +1,10 @@
 import { Response, NextFunction } from 'express';
-import { IRequest, IToken } from 'src/types/global';
-import { handleResponse } from 'src/utils/helpers';
-import { useWord } from 'src/utils/wordSheet';
 import jwt from 'jsonwebtoken';
-import appConfig from 'src/config';
+
+import appConfig from '../../../../config';
+import { IRequest, IToken } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
 
 export { default as requireAuthMiddleware } from './requireAuth';
 

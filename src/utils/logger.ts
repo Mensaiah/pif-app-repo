@@ -1,5 +1,6 @@
-import winston from 'winston';
 import path from 'path';
+
+import winston from 'winston';
 
 const transports: winston.transport[] = [
   new winston.transports.Console(),

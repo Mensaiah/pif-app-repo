@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-import { consoleLog } from 'src/utils/helpers';
 import appConfig from '..';
+import { consoleLog } from '../../utils/helpers';
 
 export async function connectMongoDb(): Promise<void> {
   try {

@@ -1,11 +1,10 @@
-import { Document } from 'mongoose';
-import { UserAttributes } from '../user/user.types';
-import { PartnerAttributes } from '../partner/partner.types';
+import { Document, Types } from 'mongoose';
 
 export interface PushMessageAttributes extends Document {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   criteria: any;
   message: string;
   numberOfRecipients: number;
-  sender: UserAttributes['_id'] | string;
-  Partner?: PartnerAttributes['_id'];
+  sender: Types.ObjectId | string;
+  Partner?: Types.ObjectId;
 }

@@ -1,7 +1,9 @@
-import { Schema, model } from 'mongoose';
-import { PartnerPosUserAttributes, UserAttributes } from './user.types';
 import { ObjectId } from 'bson';
-import appConfig from 'src/config';
+import { Schema, model } from 'mongoose';
+
+import appConfig from '../../../config';
+
+import { PartnerPosUserAttributes, UserAttributes } from './user.types';
 
 const userSchema = new Schema<UserAttributes>(
   {

@@ -1,6 +1,7 @@
 import { Document } from 'mongoose';
-import { PartnerAttributes } from '../partner/partner.types';
+
 import { CityAttributes } from '../city/city.types';
+import { PartnerAttributes } from '../partner/partner.types';
 
 export interface PartnerPosAttributes extends Document {
   Partner: PartnerAttributes['_id'];

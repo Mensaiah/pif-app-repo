@@ -1,4 +1,5 @@
 import { Document } from 'mongoose';
+
 import { PermissionCapabilities } from '../../../config/rolesAndPermissions';
 
 export interface PartnerAttributes extends Document {
