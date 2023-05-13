@@ -6,8 +6,5 @@
   "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
   "prettier.configPath": ".prettierrc.js",
   "editor.formatOnSave": true,
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
   "typescript.preferences.importModuleSpecifier": "project-relative"
 }

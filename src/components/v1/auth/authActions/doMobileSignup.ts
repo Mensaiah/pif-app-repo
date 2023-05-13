@@ -3,7 +3,7 @@ import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
@@ -16,6 +16,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
   type signUpDatatype = z.infer<typeof mobileSignupSchema>;
 
   const { phone, phonePrefix, marketplace }: signUpDatatype = req.body;
+  consoleLog({ phone, phonePrefix, marketplace });
 
   try {
     const existingUser = await UserModel.findOne({
@@ -23,7 +24,9 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
     });
-    if (existingUser) return handleResponse(res, 'Login instead, please', 409);
+    consoleLog({ existingUser });
+    if (existingUser)
+      return handleResponse(res, 'Account exists, please Login instead', 409);
 
     await new UserModel({
       contact: {
@@ -47,6 +50,9 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
 
     return handleResponse(res, 'Enter OTP to proceed');
   } catch (err) {
+    if (err.code === '11000')
+      return handleResponse(res, 'Account exists, please Login instead', 409);
+
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

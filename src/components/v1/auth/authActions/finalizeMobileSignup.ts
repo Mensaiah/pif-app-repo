@@ -78,8 +78,8 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       device: {
         info: req.fingerprint.components.userAgent,
         geoip: {
-          lat: req.fingerprint.components?.geo?.ll[0],
-          long: req.fingerprint.components?.geo?.ll[1],
+          lat: null,
+          long: null,
         },
       },
     };

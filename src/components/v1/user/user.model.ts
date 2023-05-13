@@ -10,7 +10,6 @@ const userSchema = new Schema<UserAttributes>(
     name: String,
     email: {
       type: String,
-      unique: true,
       lowercase: true,
     },
     timezone: String,
