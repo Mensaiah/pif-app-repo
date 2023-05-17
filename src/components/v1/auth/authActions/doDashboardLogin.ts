@@ -64,6 +64,8 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
       );
     }
 
+    // TODO: send OTP to user logging in from a strange location
+
     if (!userAccess.comparePassword(password)) {
       userAccess.failedLoginAttempts += 1;
       userAccess.lastLoginAttempt = new Date(now);

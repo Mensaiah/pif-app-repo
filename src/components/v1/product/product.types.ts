@@ -4,7 +4,7 @@ import { LanguageValuePair } from '../../../types/global';
 import {
   CategoryAttributes,
   InterCategoryAttributes,
-} from '../cageory/category.types';
+} from '../category/category.types';
 import { CityAttributes } from '../city/city.types';
 import { PartnerAttributes } from '../partner/partner.types';
 
