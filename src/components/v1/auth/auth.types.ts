@@ -12,6 +12,7 @@ export interface UserAccessAttributes {
     role: string;
     permissions: (PermissionCapabilities | 'supreme')[];
   }[];
+  markeplaces?: Array<string>;
   isBlocked?: boolean;
   lastLoginAttempt?: Date | null;
   lastLoginAt?: Date;

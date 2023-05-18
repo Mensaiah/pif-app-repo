@@ -30,6 +30,11 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
   password: String,
   securityCode: String,
   rolesAndPermissions: [roleAndPermissionSchema],
+  markeplaces: [
+    {
+      type: String,
+    },
+  ],
   isBlocked: Boolean,
   lastLoginAttempt: Date,
   lastLoginAt: Date,

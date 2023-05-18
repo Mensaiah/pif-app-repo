@@ -43,6 +43,9 @@ dependencies:
   jsonwebtoken:
     specifier: ^9.0.0
     version: 9.0.0
+  mime:
+    specifier: ^3.0.0
+    version: 3.0.0
   module-alias:
     specifier: ^2.2.2
     version: 2.2.2
@@ -93,6 +96,9 @@ devDependencies:
   '@types/jsonwebtoken':
     specifier: ^8.5.9
     version: 8.5.9
+  '@types/mime':
+    specifier: ^3.0.1
+    version: 3.0.1
   '@types/ms':
     specifier: ^0.7.31
     version: 0.7.31
@@ -4951,7 +4957,6 @@ packages:
     engines: {node: '>=10.0.0'}
     hasBin: true
     dev: false
-    optional: true
 
   /mimic-fn@2.1.0:
     resolution: {integrity: sha512-OqbOk5oEQeAZ8WXWydlu9HJjz9WVdEIvamMCcXmuqUYjTknH/sqsWvhQ3vgwKFRR1HpjvNBKQ37nbJgYzGqGcg==}

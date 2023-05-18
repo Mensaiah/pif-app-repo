@@ -9,7 +9,8 @@ const env = process.env;
 const appConfig = {
   port: env.PORT || 3000,
   environment: env.NODE_ENV || 'dev',
-  isDev: env.NODE_ENV === 'dev' || env.NODE_ENV === 'dev',
+  isDev:
+    env.NODE_ENV === 'dev' || env.NODE_ENV === 'development' || !env.NODE_ENV,
   isProd: env.NODE_ENV === 'prod' || env.NODE_ENV === 'production',
   isStaging: env.NODE_ENV === 'staging',
   isTesting: env.NODE_ENV === 'testing',
@@ -54,10 +55,12 @@ const appConfig = {
   },
   mailgunConfigs: {
     apiKey: env.MAILGUN_API_KEY || '',
-    url: 'https://api.mailgun.net/v3/auto.pi-app.asia',
+    url: env.MAILGUN_DOMAIN || '',
   },
   infobipBaseUrl: env.INFOBIP_BASE_URL || '',
   infoBipApiKey: env.INFOBIP_API_KEY || '',
+  reCaptchaPublicKey: env.reCAPTCHA_PUBLIC_KEY || '',
+  reCaptchaSecretKey: env.reCAPTCHA_SECRET_KEY || '',
 };
 
 export default appConfig;

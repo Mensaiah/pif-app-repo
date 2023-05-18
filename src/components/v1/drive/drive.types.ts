@@ -1,7 +1,7 @@
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export interface DriveFileAttributes extends Document {
-  ParentFolder: DriveFolderAttributes['_id'];
+  ParentFolder: Types.ObjectId;
   name: string;
   mimeType: string; // should change to supported mime types
   extension: string;
@@ -11,11 +11,11 @@ export interface DriveFileAttributes extends Document {
   createdBy: string;
   updatedBy: string;
   deletedAt: Date;
-  canbeAccessedBy: string[]; // e.g superAdmin, admin, customerAgent
+  canBeAccessedBy: string[]; // e.g superAdmin, admin, customerAgent
 }
 
 export interface DriveFolderAttributes extends Document {
-  ParentFolder: DriveFolderAttributes['_id'];
+  ParentFolder: Types.ObjectId;
   name: string;
   fullPath: string;
   contentCounts: { files: number; folders: number };
