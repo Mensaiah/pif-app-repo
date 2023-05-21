@@ -3,8 +3,8 @@
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "prettier.singleQuote": true,
-  "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
-  "prettier.configPath": ".prettierrc.js",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "prettier.configPath": ".prettierrc",
   "editor.formatOnSave": true,
   "typescript.preferences.importModuleSpecifier": "project-relative"
 }
