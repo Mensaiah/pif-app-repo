@@ -6,7 +6,7 @@ import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
-import { verifyMobileSignupSchema } from '../auth.policy';
+import { resendOTPSchema } from '../auth.policy';
 import {
   isDateLessThanXMinutesAgo,
   generateRandomCode,
@@ -14,9 +14,9 @@ import {
 } from '../auth.utils';
 
 const resendOtpcode = async (req: IRequest, res: Response) => {
-  type verifyDataType = z.infer<typeof verifyMobileSignupSchema>;
+  type verifyDataType = z.infer<typeof resendOTPSchema>;
 
-  const { phone, phonePrefix, code }: verifyDataType = req.body;
+  const { phone, phonePrefix, purpose }: verifyDataType = req.body;
 
   try {
     const existingUser = await UserModel.findOne({
@@ -28,8 +28,7 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
     if (!existingUser) return handleResponse(res, 'Invalid request', 401);
 
     const otpExists = await OtpCodeModel.findOne({
-      code,
-      purpose: 'signup',
+      purpose,
       phone,
       phonePrefix,
     });

@@ -34,11 +34,15 @@ const requireAuth = async (
     if (userAccess.isBlocked)
       return handleResponse(res, 'You have been banned. Contact us', 401);
 
-    // TODO: if user neither has password nor pin, he should get this => if (path is for mobile: Set pin first) and if (else: set password first)
+    // TODO: if user is not customer and has no password, he should get this => if (set password first)
 
     // if user is a customer and have not set pin
-    // if (userType === 'customer' && !userAccess.pin)
-    //   return handleResponse(res, 'Set your pin.', 403);
+    if (
+      userType === 'customer' &&
+      !userAccess.pin &&
+      req.originalUrl !== '/v1/en/auth/m-pin'
+    )
+      return handleResponse(res, 'You need to set your pin first!', 403);
 
     // // if user is not a customer and have not set password
     // if (userType !== 'customer' && !userAccess.password)
@@ -95,13 +99,14 @@ const requireAuth = async (
         401
       );
 
-    req.userId = user._id;
-    req.userType = req.decoded.userType;
-
     userAccess.lastEventTime = now;
     userAccess.sessions[sessionIndex].lastEventTime = now;
-    await user.save();
+
+    req.userType = req.decoded.userType;
     req.userAccess = userAccess;
+    req.user = user;
+
+    consoleLog({ url: req.originalUrl, path: req.path });
 
     return next();
   } catch (err) {

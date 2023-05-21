@@ -3,7 +3,11 @@ import { Document, Types } from 'mongoose';
 
 import { FingerprintResult } from '../appMiddlewares/fingerprint.middleware';
 import { UserAccessAttributes } from '../components/v1/auth/auth.types';
-import { UserType } from '../components/v1/user/user.types';
+import {
+  PartnerPosUserAttributes,
+  UserAttributes,
+  UserType,
+} from '../components/v1/user/user.types';
 import appConfig from '../config';
 
 export type SupportedLangType = typeof appConfig.supportedLanguages;
@@ -52,7 +56,7 @@ export interface IPageMeta {
 }
 export interface IRequest extends Request {
   lang?: LanguageCode;
-  userId?: Types.ObjectId;
+  user?: Document & (UserAttributes | PartnerPosUserAttributes);
   fingerprint?: FingerprintResult;
   paginationData?: IPaginationData;
   decoded?: IToken;

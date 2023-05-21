@@ -22,6 +22,10 @@ export const verifyMobileSignupSchema = z.object({
   code: z.string(),
 });
 
+export const resendOTPSchema = verifyMobileSignupSchema
+  .extend({ purpose: z.string() })
+  .omit({ code: true });
+
 export const finalizeMobileSignupSchema = z.object({
   phonePrefix: z.string(),
   phone: z.string(),

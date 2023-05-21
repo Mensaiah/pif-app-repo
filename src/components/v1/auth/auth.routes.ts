@@ -7,6 +7,7 @@ import {
   finalizeMobileSignupSchema,
   mobileLoginSchema,
   mobileSignupSchema,
+  resendOTPSchema,
   setPinSchema,
   verifyMobileSignupSchema,
 } from './auth.policy';
@@ -35,11 +36,7 @@ router.post(
   policyMiddleware(finalizeMobileSignupSchema),
   finalizeMobileSignup
 );
-router.post(
-  '/resend-otp',
-  policyMiddleware(verifyMobileSignupSchema),
-  resendOtpCode
-);
+router.post('/resend-otp', policyMiddleware(resendOTPSchema), resendOtpCode);
 router.post(
   '/verify-m-signup',
   policyMiddleware(verifyMobileSignupSchema),

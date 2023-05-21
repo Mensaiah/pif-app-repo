@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "7065516083",
+  "phone": "7032434744",
   "marketplace": "Nigeria"
 }
 
@@ -32,8 +32,8 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "7065516083",
-  "code": "44273"
+  "phone": "7032434744",
+  "code": "86173"
 }
 
 ### mobile resend otp
@@ -42,8 +42,8 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "7065516083",
-  "code": "16983"
+  "phone": "7032434744",
+  "purpose": "signup"
 }
 
 
@@ -52,13 +52,13 @@ POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Rabiah Mohammed",
+ "name": "Muzammil Opayemi",
  "dob": "1990-02-20",
  "phonePrefix": "234",
- "phone": "7065516083",
- "pifId":"samrab",
+ "phone": "7032434744",
+ "pifId":"semo",
  "zipCode":"12345",
- "otpCode":"44273"
+ "otpCode":"86173"
 }
 
 ### mobile set pin
