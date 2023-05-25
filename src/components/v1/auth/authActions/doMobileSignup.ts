@@ -48,7 +48,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
 
     await sendOTP(phonePrefix + phone, newOtpCode.code);
 
-    return handleResponse(res, 'Enter OTP to proceed');
+    return handleResponse(res, 'Enter OTP to proceed', 201);
   } catch (err) {
     if (err.code === '11000')
       return handleResponse(res, 'Account exists, please Login instead', 409);

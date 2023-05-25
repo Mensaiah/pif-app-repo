@@ -8,6 +8,7 @@ import routesV1 from './components/v1/routes.v1';
 import appConfig from './config';
 import { connectMongoDb } from './config/persistence/database';
 import { seedNow } from './config/persistence/seeder';
+import swaggerApp from './swagger';
 import { IRequest, LanguageCode } from './types/global';
 import { consoleLog, handleResponse } from './utils/helpers';
 import httpRequestLogger from './utils/httpRequestLogger';
@@ -45,6 +46,7 @@ const initializeMiddlewares = () => {
     .use(express.urlencoded({ limit: '1kb', extended: false }))
     .use(helmet())
     .use(fingerprintMiddleware)
+    .use(swaggerApp)
     .use((req, res, next) => {
       if (req.method === 'OPTIONS') {
         res.header(

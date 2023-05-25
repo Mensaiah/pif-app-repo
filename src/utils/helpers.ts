@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-console */
+
+import fs from 'fs';
+import path from 'path';
+
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -199,8 +203,43 @@ export const translateWordArray = (
   return normalizeLang(data)[lang];
 };
 
-// export const generateOrderNo = async () => {
-//   const count = await Order.count();
-//   const twoDigitRandom = generateNos(2);
-//   return `HK${twoDigitRandom}${count.toString().padStart(6, '0')}`;
-// };
+export function searchFiles(startPath: string, filter: string): string[] {
+  // Initialize an array to store the found file paths
+  const foundFiles: string[] = [];
+
+  // Check if the start path directory exists
+  if (!fs.existsSync(startPath)) {
+    return foundFiles;
+  }
+
+  const queue: string[] = [startPath];
+
+  while (queue.length > 0) {
+    // Get the current directory path from the queue
+
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const currentPath = queue.shift()!;
+
+    // Read the files in the current directory
+    const files = fs.readdirSync(currentPath);
+
+    for (const file of files) {
+      // Get the full file path
+      const filePath = path.join(currentPath, file);
+
+      // Get the file's status (whether it's a directory or a file)
+      const stat = fs.lstatSync(filePath);
+
+      if (stat.isDirectory()) {
+        // Add the directory path to the queue for further processing
+        queue.push(filePath);
+      } else if (file.endsWith(filter)) {
+        // File with the desired extension found, add it to the foundFiles array
+        foundFiles.push(filePath);
+      }
+    }
+  }
+
+  // Return the array of found file paths
+  return foundFiles;
+}

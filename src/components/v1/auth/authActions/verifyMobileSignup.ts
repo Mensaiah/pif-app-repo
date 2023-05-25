@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
@@ -33,7 +33,7 @@ const verifyMobileSignup = async (req: IRequest, res: Response) => {
     if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
 
     if (otpExists.expiresAt < new Date()) {
-      return handleResponse(res, 'OTP has expired');
+      return handleResponse(res, 'OTP has expired', 401);
     }
 
     existingUser.isConfirmed = true;

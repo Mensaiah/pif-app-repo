@@ -34,6 +34,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       User: existingUser._id,
     });
     if (!userAccess) return handleResponse(res, 'Invalid credentials', 401);
+
     if (userAccess.isBlocked)
       return handleResponse(
         res,
@@ -143,8 +144,8 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
         pifId: existingUser.pifId,
         avatar: existingUser.avatar,
         currentMarketplace: existingUser.currentMarketplace,
-        phone: existingUser.contact.phone,
         phonePrefix: existingUser.contact.phonePrefix,
+        phone: existingUser.contact.phone,
       },
     });
   } catch (err) {

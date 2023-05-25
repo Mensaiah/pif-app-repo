@@ -1,0 +1,507 @@
+/auth/login:
+  post:
+    tags:
+      - Dashboard Authentication
+    summary: Dashboard Login
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                default: xyx@mail.com
+              password:
+                type: string
+                default: xxxx xxxx
+    responses:
+      200:
+        description: Login successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Login successful, Welcome 🤗
+                data:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: John Doe
+                    avatar:
+                      type: string
+                      example: http://url.com
+                    userType:
+                      type: string
+                      example: sample-user-type
+                    roleAndPermissions:
+                      type: array
+                      example:
+                        [{ role: sample-role, permissions: sample-permissions }]
+
+      401:
+        description: Unauthorized (if the account has been blocked / if the wrong user type is sent / Invalid login credentials )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Your account has been disabled. If you think this was a mistake, please contact us / Login on the mobile app instead (for wrong user type)
+      429:
+        description: Too many requests
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Too many failed login attempts. Please wait for specified minutes and try again.
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/m-signup:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Mobile signup
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - phone
+              - phonePrefix
+              - marketplace
+            properties:
+              phone:
+                type: string
+                default: 9023012121
+              phonePrefix:
+                type: string
+                default: 234
+              marketplace:
+                type: string
+                default: nigeria
+    responses:
+      201:
+        description: Signup successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Enter OTP to proceed
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Account exists, please Login instead
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/verify-m-signup:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Verify mobile OTP
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - phone
+              - phonePrefix
+              - code
+            properties:
+              phone:
+                type: string
+                default: 8012345678
+              phonePrefix:
+                type: string
+                default: 234
+              code:
+                type: string
+                default: 123456
+    responses:
+      200:
+        description: Verification successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Verification successful
+
+      401:
+        description: Unauthorized (If OTP has expired or invalid / or account does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: OTP has expired / OTP is invalid / Account does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/finalize-m-signup:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Finalize mobile signup
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - dob
+              - phone
+              - phonePrefix
+              - pifId
+              - zipCode
+              - otpCode
+            properties:
+              name:
+                type: string
+                default: John Doe
+              dob:
+                type: string
+                default: 2022-09-12
+              phone:
+                type: string
+                default: 8012345678
+              phonePrefix:
+                type: string
+                default: 234
+              pifId:
+                type: string
+                default: JohnnyDoe
+              zipCode:
+                type: string
+                default: 241201
+              otpCode:
+                type: string
+                default: 123456
+    responses:
+      200:
+        description: Finalizing signup successfully / existing user has completed signup process
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Verification successful
+                data:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: John Doe
+                    pifId:
+                      type: string
+                      example: JohnnyDoe
+                    avatar:
+                      type: string
+                      example: http://image-url.com
+                    currentMarketplace:
+                      type: string
+                      example: nigeria
+                    phonePrefix:
+                      type: string
+                      example: 234
+                    phone:
+                      type: string
+                      example: 8012345678
+
+      401:
+        description: Unauthorized (If OTP has not been verified / invalid / the credentials sent are invalid)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: You need to verify your OTP first / OTP is invalid / Invalid credentials / Invalid operation. Please, let us know if you think this is an error
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/m-pin:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Set user pin for mobile
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - pin
+            properties:
+              pin:
+                type: string
+                default: 1234
+    responses:
+      200:
+        description: Operation successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Operation successful
+
+      409:
+        description: When user pin is already set.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Pin is already set
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/m-login:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Mobile Login
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - phone
+              - phonePrefix
+              - pin
+            properties:
+              phone:
+                type: string
+                default: 9023012121
+              phonePrefix:
+                type: string
+                default: 234
+              pin:
+                type: string
+                default: xxxx
+    responses:
+      200:
+        description: Login successful.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Login successful, Welcome 🤗
+                data:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: John Doe
+                    pifId:
+                      type: string
+                      example: JohnDoe
+                    avatar:
+                      type: string
+                      example: http://url.com
+                    currentMarketplace:
+                      type: string
+                      example: nigeria
+                    phonePrefix:
+                      type: string
+                      example: 234
+                    phone:
+                      type: string
+                      example: 80x xxxx xxx
+
+      401:
+        description: Unauthorized (if the account has not been confirmed and signup is not complete / if account has been blocked / invalid credentials )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: You need to confirm your OTP / Your account has been disabled. If you think this was a mistake, please contact us / You need to signup first
+      429:
+        description: Too many requests
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Too many failed login attempts. Please wait for specified minutes and try again.
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/resend-otp:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: resend OTP code
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - phone
+              - phonePrefix
+              - purpose
+            properties:
+              phone:
+                type: string
+                default: 8012345678
+              phonePrefix:
+                type: string
+                default: 234
+              purpose:
+                type: string
+                default: signup
+    responses:
+      200:
+        description: OTP code sent successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: OTP code has been sent
+
+      401:
+        description: Unauthorized (If requested time to resend OTP is not upto 1 minute / the signup has been completed / user or otp is not found)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Please wait for at least 1 minute before you try again / Signup completed. You do not need OTP anymore / Invalid request
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/logout:
+  get:
+    tags:
+      - Mobile / Dashboard Authentication
+    summary: Logout
+    responses:
+      200:
+        description: Logging out successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: It's not bye bye but see you again

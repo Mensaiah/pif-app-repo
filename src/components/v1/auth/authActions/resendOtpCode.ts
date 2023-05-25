@@ -38,13 +38,14 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
     if (isDateLessThanXMinutesAgo(otpExists.lastSent))
       return handleResponse(
         res,
-        'Please wait for at least 1 minute before you try again'
+        'Please wait for at least 1 minute before you try again',
+        401
       );
 
     if (existingUser.isSignupComplete)
       return handleResponse(
         res,
-        'Signup comple. You do not need OTP anymore',
+        'Signup completed. You do not need OTP anymore',
         401
       );
 

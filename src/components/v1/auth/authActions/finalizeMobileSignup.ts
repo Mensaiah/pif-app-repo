@@ -107,8 +107,8 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
         pifId: existingUser.pifId,
         avatar: existingUser.avatar,
         currentMarketplace: existingUser.currentMarketplace,
-        phone: existingUser.contact.phone,
         phonePrefix: existingUser.contact.phonePrefix,
+        phone: existingUser.contact.phone,
       },
     });
   } catch (err) {
