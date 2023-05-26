@@ -22,7 +22,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "7032434744",
+  "phone": "8168861541",
   "marketplace": "Nigeria"
 }
 
