@@ -24,20 +24,23 @@ const initializePersistenceAndSeeding = () => {
 };
 
 const initializeMiddlewares = () => {
-  // const allowedOrigins = [
-  //   'http://localhost:5173',
-  //   'https://pif-dashboard.web.app/',
-  // ];
+  const allowedOrigins = [
+    'http://localhost:5173',
+    `http:localhost:${appConfig.port}`,
+    'https://pif-dashboard.web.app',
+  ];
   const corsOptions = {
-    origin: true,
+    origin: function (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
-    // origin: function (origin: string, callback: (err: Error) => void) {
-    //   if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-    //     callback(null);
-    //   } else {
-    //     callback(new Error('Not allowed by CORS'));
-    //   }
-    // },
   };
 
   app
