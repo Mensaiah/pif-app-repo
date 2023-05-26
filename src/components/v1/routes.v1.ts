@@ -11,7 +11,7 @@ const router = Router();
 
 // Routes for different components
 router.use('/auth', authRoutesV1);
-router.use('/users', userRoutesV1);
+router.use('/user', userRoutesV1);
 
 // Add more routes for other components here.
 // router.use('/accounts', accountRoutesV1);

@@ -19,8 +19,8 @@ export interface UserAttributes {
   hasChildren?: boolean;
   interests?: string[];
   contact?: {
-    phone: string;
-    phonePrefix: string;
+    phone?: string;
+    phonePrefix?: string;
     city?: string;
     zip?: string;
     street?: string;
@@ -80,4 +80,16 @@ export interface PartnerPosUserAttributes {
   Partner: ObjectId;
   name: string;
   isActive: boolean;
+}
+
+export interface InviteUserAttributes {
+  code: string;
+  role: string;
+  email: string;
+  invitedBy: ObjectId;
+  currentMarketplace?: string;
+  Partner?: ObjectId;
+  expiresAt?: Date;
+  isConfirmed?: boolean;
+  lastSent?: Date;
 }

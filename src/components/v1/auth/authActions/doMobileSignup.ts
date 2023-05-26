@@ -24,7 +24,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
     });
-    consoleLog({ existingUser });
+
     if (existingUser)
       return handleResponse(res, 'Account exists, please Login instead', 409);
 

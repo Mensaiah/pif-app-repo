@@ -3,7 +3,11 @@ import { Schema, model } from 'mongoose';
 
 import appConfig from '../../../config';
 
-import { PartnerPosUserAttributes, UserAttributes } from './user.types';
+import {
+  InviteUserAttributes,
+  PartnerPosUserAttributes,
+  UserAttributes,
+} from './user.types';
 
 const userSchema = new Schema<UserAttributes>(
   {
@@ -19,7 +23,7 @@ const userSchema = new Schema<UserAttributes>(
     },
     userType: {
       type: String,
-      enum: ['customer', 'admin', 'partner-admin'],
+      enum: ['admin', 'country-admin', 'partner-admin', 'local-partner'],
       required: true,
     },
     username: String,
@@ -35,8 +39,8 @@ const userSchema = new Schema<UserAttributes>(
     hasChildren: Boolean,
     interests: [String],
     contact: {
-      phone: { type: String, required: true },
-      phonePrefix: { type: String, required: true },
+      phone: { type: String },
+      phonePrefix: { type: String },
       city: String,
       zip: String,
       street: String,
@@ -104,6 +108,7 @@ const userSchema = new Schema<UserAttributes>(
   },
   { timestamps: true }
 );
+
 const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
   Partner: { type: ObjectId, ref: 'Partner', required: true },
   name: { type: String, required: true },
@@ -114,4 +119,21 @@ export const UserModel = model<UserAttributes>('User', userSchema);
 export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
   'PartnerPosUser',
   partnerPosUserSchema
+);
+
+export const InviteUserSchema = new Schema<InviteUserAttributes>({
+  code: { type: String, required: true },
+  role: { type: String, required: true },
+  email: { type: String, required: true },
+  invitedBy: { type: ObjectId, ref: 'User' },
+  Partner: { type: ObjectId, ref: 'Partner' },
+  currentMarketplace: String,
+  expiresAt: Date,
+  isConfirmed: Boolean,
+  lastSent: Date,
+});
+
+export const InviteUserModel = model<InviteUserAttributes>(
+  'InviteUser',
+  InviteUserSchema
 );
