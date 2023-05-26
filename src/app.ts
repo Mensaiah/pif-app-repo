@@ -30,6 +30,7 @@ const initializeMiddlewares = () => {
   // ];
   const corsOptions = {
     origin: true,
+    credentials: true,
     // origin: function (origin: string, callback: (err: Error) => void) {
     //   if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
     //     callback(null);
