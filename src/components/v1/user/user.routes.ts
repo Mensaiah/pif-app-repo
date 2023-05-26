@@ -14,6 +14,7 @@ import {
   doInviteUser,
   doVerifyUserInvite,
 } from './userActions';
+import getMyProfile from './userActions/getMyProfile';
 
 const router = Router();
 
@@ -35,6 +36,13 @@ router.post(
   '/accept-invite',
   policyMiddleware(acceptUserInviteSchema),
   doAcceptUserInvite
+);
+
+router.get(
+  '/my-profile',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  getMyProfile
 );
 
 export default router;

@@ -15,7 +15,8 @@ Content-Type: application/json
   "email": "piftech@pif-app.com",
   "password": "Password_1"
 }
-
+### my profile
+GET {{api}}/user/my-profile
 
 ### invite user
 POST {{api}}/user/invite
