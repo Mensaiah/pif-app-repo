@@ -22,7 +22,7 @@ POST {{api}}/user/invite
 Content-Type: application/json
 
 {
-  "email": "jimohafeez738@gmail.com",
+  "email": "kgasta@gmail.com",
   "role": "admin"
 }
 

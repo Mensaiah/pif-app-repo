@@ -10,44 +10,62 @@ import { sendVerificationMail } from '../../auth/auth.utils';
 import { InviteUserModel, UserModel } from '../user.model';
 import { inviteUserSchema } from '../user.policy';
 
+const createInviteLink = (req: IRequest, code: string) =>
+  `${req.protocol}://${req.get('host')}${req.baseUrl}/invitation/${code}`;
+
 const doInviteUser = async (req: IRequest, res: Response) => {
   type inviteUserType = z.infer<typeof inviteUserSchema>;
 
-  const { _id } = req.user;
   const { email, role, marketplace, partnerId }: inviteUserType = req.body;
 
   try {
     const existingUser = await UserModel.findOne(
       partnerId
-        ? { email, userType: role, Partner: partnerId }
-        : { email, userType: role }
+        ? { email, userType: { $ne: 'customer' }, Partner: partnerId }
+        : { email, userType: { $ne: 'customer' } }
     );
 
     if (existingUser)
       return handleResponse(res, 'Account already exists.', 409);
 
-    const newInviteCode = await new InviteUserModel({
+    const invitationData = await InviteUserModel.findOne({ email });
+
+    if (invitationData) {
+      // TODO: check if it has expired
+      await sendVerificationMail({
+        to: email,
+        url: createInviteLink(req, invitationData.code),
+        role,
+      });
+
+      return handleResponse(
+        res,
+        'User has already been invited but another email has been sent'
+      );
+    }
+
+    const newInvite = await new InviteUserModel({
       code: uuid(),
       email,
       role,
-      invitedBy: _id,
+      invitedBy: req.user._id,
       currentMarketplace: marketplace,
       Partner: partnerId,
       expiresAt: new Date(Date.now() + ms('30 mins')),
       lastSent: new Date(),
     }).save();
 
-    const verificationLink = `${req.protocol}://${req.get('host')}${
-      req.baseUrl
-    }/invitation/${newInviteCode.code}`;
+    // const verificationLink = `${req.protocol}://${req.get('host')}${
+    //   req.baseUrl
+    // }/invitation/${newInviteCode.code}`;
 
     await sendVerificationMail({
       to: email,
-      url: verificationLink,
+      url: createInviteLink(req, newInvite.code),
+      role,
     });
 
-    consoleLog(verificationLink);
-    return handleResponse(res, verificationLink);
+    return handleResponse(res, 'Invite sent ✉️');
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }

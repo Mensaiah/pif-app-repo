@@ -16,6 +16,7 @@ const requireAuth = async (
     return handleResponse(res, useWord('authIsRequired', req.lang), 401);
 
   const { sessionId, ref, authKey, userType } = req.decoded;
+  consoleLog(JSON.stringify({ sessionId, ref, authKey, userType }, null, 2));
   const currentUserIsUser = ['admin', 'customer', 'partner-admin'].includes(
     userType
   );
@@ -53,6 +54,7 @@ const requireAuth = async (
       (sesn) => sesn.sessionId === sessionId
     );
     const session = userAccess.sessions[sessionIndex];
+    consoleLog(JSON.stringify({ sessions: userAccess.sessions }, null, 2));
 
     if (!session)
       return handleResponse(res, useWord('invalidSession', req.lang), 401);

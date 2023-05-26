@@ -4,6 +4,7 @@ import appConfig from '../../../config';
 import { sendSms } from '../../../services/infobipService';
 import { sendMail } from '../../../services/mailgunService';
 import { IToken } from '../../../types/global';
+import { capitalize } from '../../../utils/helpers';
 
 export const calculateLoginWaitingTime = (
   failedAttempts: number,
@@ -58,9 +59,11 @@ export const sendOTP = (to: string, code: string) =>
 export const sendVerificationMail = ({
   to,
   url,
+  role,
 }: {
   to: string;
   url: string;
+  role: string;
 }) =>
   sendMail({
     to,
@@ -68,7 +71,9 @@ export const sendVerificationMail = ({
     content: `Hello,
     <br>
     <br>
-You've been invited to join the PIF Platform as an admin. Click the link below to join <br>
+You've been invited to join the PIF Platform as an ${capitalize(
+      role
+    )}. Click the link below to join <br>
 ${url} <br><br>
 If you think this is a mistake, please ignore this email.
 <br>

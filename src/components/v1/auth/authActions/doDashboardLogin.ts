@@ -5,7 +5,7 @@ import { z } from 'zod';
 import '../../../../services/infobipService';
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { handleResponse, uuid } from '../../../../utils/helpers';
+import { consoleLog, handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { UserAccessModel } from '../auth.models';
@@ -119,12 +119,12 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     }
 
     await userAccess.save();
-
+    consoleLog(JSON.stringify({ deviceHash: req.fingerprint.hash }, null, 2));
     const token = generateToken({
       authKey: userAccess.securityCode,
       deviceId: req.fingerprint.hash,
       userType: existingUser.userType,
-      sessionId: '11',
+      sessionId: currentSession.sessionId,
       ref: existingUser._id,
     });
     res.cookie('jwt', token, {

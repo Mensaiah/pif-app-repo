@@ -23,7 +23,7 @@ const userSchema = new Schema<UserAttributes>(
     },
     userType: {
       type: String,
-      enum: ['admin', 'country-admin', 'partner-admin', 'local-partner'],
+      enum: ['customer', 'admin', 'partner-admin'],
       required: true,
     },
     username: String,
