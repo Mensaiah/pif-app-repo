@@ -16,6 +16,7 @@ export const mobileSignupSchema = z.object({
   phone: z.string(),
   marketplace: z.string(),
 });
+
 export const verifyMobileSignupSchema = z.object({
   phonePrefix: z.string(),
   phone: z.string(),
@@ -39,36 +40,3 @@ export const finalizeMobileSignupSchema = z.object({
 export const setPinSchema = z.object({
   pin: z.string().length(4, 'Four digit pin is required'),
 });
-
-const Role = z.enum([
-  'admin',
-  'country admin',
-  'partner admin',
-  'local partner',
-]);
-
-const User = z.object({
-  email: z.string().email(),
-  role: Role,
-  marketplace: z.string().optional(),
-  partnerId: z.string().optional(),
-});
-
-export const inviteUserSchema = User.refine(
-  (data) => {
-    if (data.role !== 'admin' && !data.marketplace) {
-      return false;
-    }
-    if (
-      data.role !== 'admin' &&
-      data.role !== 'country admin' &&
-      !data.partnerId
-    ) {
-      return false;
-    }
-    return true;
-  },
-  {
-    message: 'Invalid combination of role, marketplace, and partnerId',
-  }
-);

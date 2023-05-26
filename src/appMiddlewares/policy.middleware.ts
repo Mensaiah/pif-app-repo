@@ -4,10 +4,21 @@ import { Schema } from 'zod';
 import { handleResponse } from '../utils/helpers';
 
 const policyMiddleware =
-  (schema: Schema) => (req: Request, res: Response, next: NextFunction) => {
+  (schema: Schema, type: 'body' | 'params' | 'query' = 'body') =>
+  (req: Request, res: Response, next: NextFunction) => {
     try {
-      const parsedBody = schema.parse(req.body);
-      req.body = parsedBody;
+      let parsedData;
+
+      if (type === 'body') {
+        parsedData = schema.parse(req.body);
+        req.body = parsedData;
+      } else if (type === 'params') {
+        parsedData = schema.parse(req.params);
+        req.params = parsedData;
+      } else if (type === 'query') {
+        parsedData = schema.parse(req.query);
+        req.query = parsedData;
+      }
 
       return next();
     } catch (err) {

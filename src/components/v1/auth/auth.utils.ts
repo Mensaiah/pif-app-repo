@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import appConfig from '../../../config';
 import { sendSms } from '../../../services/infobipService';
+import { sendMail } from '../../../services/mailgunService';
 import { IToken } from '../../../types/global';
 
 export const calculateLoginWaitingTime = (
@@ -53,6 +54,31 @@ export const generateRandomCode = (length = 5): string => {
 
 export const sendOTP = (to: string, code: string) =>
   sendSms({ to, text: `Your one time PIF OTP code is ${code}` });
+
+export const sendVerificationMail = ({
+  to,
+  url,
+}: {
+  to: string;
+  url: string;
+}) =>
+  sendMail({
+    to,
+    subject: 'PIF Invitation',
+    content: `Hello,
+    <br>
+    <br>
+You've been invited to join the PIF Platform as an admin. Click the link below to join <br>
+${url} <br><br>
+If you think this is a mistake, please ignore this email.
+<br>
+<br>
+<br>
+Regards,
+<br>
+Pif Team.
+  `,
+  });
 
 export const isDateLessThanXMinutesAgo = (date: Date, min = 1): boolean => {
   const minutesAgo = new Date(Date.now() - min * 60 * 1000);

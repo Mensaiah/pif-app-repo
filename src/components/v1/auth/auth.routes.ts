@@ -49,6 +49,7 @@ router.post(
   requireAuthMiddleware,
   doSetPin
 );
+
 router.get('/logout', validateTokenMiddleware, requireAuthMiddleware, doLogout);
 
 export default router;

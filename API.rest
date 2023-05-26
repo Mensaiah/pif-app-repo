@@ -16,6 +16,19 @@ Content-Type: application/json
   "password": "Password_1"
 }
 
+
+### invite user
+POST {{api}}/user/invite
+Content-Type: application/json
+
+{
+  "email": "jimohafeez738@gmail.com",
+  "role": "admin"
+}
+
+### invite user
+GET {{api}}/user/invite/893675a2-0e60-47f2-9e71-274d31270096
+
 ### mobile signup
 POST {{api}}/auth/m-signup
 Content-Type: application/json

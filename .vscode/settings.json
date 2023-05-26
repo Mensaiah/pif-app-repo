@@ -1,10 +1,16 @@
 {
-  "editor.formatOnPaste": false,
+  "editor.formatOnPaste": true,
   "editor.tabSize": 2,
   "editor.wordWrap": "bounded",
   "prettier.singleQuote": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "prettier.configPath": ".prettierrc",
   "editor.formatOnSave": true,
-  "typescript.preferences.importModuleSpecifier": "project-relative"
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
 }
