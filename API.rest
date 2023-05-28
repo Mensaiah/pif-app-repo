@@ -1,6 +1,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
+GET {{server}}/timeout
 ###
 GET {{server}}
 

@@ -130,7 +130,8 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: appConfig.isProd,
-      sameSite: 'lax',
+      // sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: ms(appConfig.authConfigs.sessionLivespan),
     });
 
