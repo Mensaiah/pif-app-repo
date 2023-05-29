@@ -5,14 +5,14 @@ import { validateTokenMiddleware } from '../auth/authMiddlwares';
 import { requireAuthMiddleware } from '../auth/authMiddlwares';
 
 import {
-  acceptUserInviteSchema,
-  inviteUserSchema,
-  verifyInviteSchema,
+  acceptPlatformInviteSchema,
+  createPlatformInviteSchema,
+  verifyPlatformInviteSchema,
 } from './user.policy';
 import {
-  doAcceptUserInvite,
-  doInviteUser,
-  doVerifyUserInvite,
+  acceptPlatformInvite,
+  createPlatformInvite,
+  verifyPlatformInvite,
 } from './userActions';
 import getMyProfile from './userActions/getMyProfile';
 
@@ -20,22 +20,22 @@ const router = Router();
 
 router.post(
   '/invite',
-  policyMiddleware(inviteUserSchema),
+  policyMiddleware(createPlatformInviteSchema),
   validateTokenMiddleware,
   requireAuthMiddleware,
-  doInviteUser
+  createPlatformInvite
 );
 
 router.get(
   '/verify-invite/:code',
-  policyMiddleware(verifyInviteSchema, 'params'),
-  doVerifyUserInvite
+  policyMiddleware(verifyPlatformInviteSchema, 'params'),
+  verifyPlatformInvite
 );
 
 router.post(
   '/accept-invite',
-  policyMiddleware(acceptUserInviteSchema),
-  doAcceptUserInvite
+  policyMiddleware(acceptPlatformInviteSchema),
+  acceptPlatformInvite
 );
 
 router.get(

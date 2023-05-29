@@ -1,3 +1,3 @@
-export { default as doInviteUser } from './doInviteUser';
-export { default as doVerifyUserInvite } from './doVerifyUserInvite';
-export { default as doAcceptUserInvite } from './doAcceptUserInvite';
+export { default as createPlatformInvite } from './createPlatformInvite';
+export { default as verifyPlatformInvite } from './verifyPlatformInvite';
+export { default as acceptPlatformInvite } from './acceptPlatformInvite';

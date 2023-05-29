@@ -8,13 +8,13 @@ import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendVerificationMail } from '../../auth/auth.utils';
 import { InviteUserModel, UserModel } from '../user.model';
-import { inviteUserSchema } from '../user.policy';
+import { createPlatformInviteSchema } from '../user.policy';
 
 const createInviteLink = (req: IRequest, code: string) =>
   `${req.protocol}://${req.get('host')}${req.baseUrl}/invitation/${code}`;
 
-const doInviteUser = async (req: IRequest, res: Response) => {
-  type inviteUserType = z.infer<typeof inviteUserSchema>;
+const createPlatformInvite = async (req: IRequest, res: Response) => {
+  type inviteUserType = z.infer<typeof createPlatformInviteSchema>;
 
   const { email, role, marketplace, partnerId }: inviteUserType = req.body;
 
@@ -69,4 +69,4 @@ const doInviteUser = async (req: IRequest, res: Response) => {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };
-export default doInviteUser;
+export default createPlatformInvite;

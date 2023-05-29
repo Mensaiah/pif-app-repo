@@ -14,10 +14,10 @@ const User = z.object({
   partnerId: z.string().optional(),
 });
 
-export const inviteUserSchema = User.refine(
+export const createPlatformInviteSchema = User.refine(
   (data) => {
     if (data.role === 'admin' && data.email) return true;
-    if (data.role === 'country-admin' && data.partnerId && data.email)
+    if (data.role === 'country-admin' && data.marketplace && data.email)
       return true;
 
     if (
@@ -35,12 +35,13 @@ export const inviteUserSchema = User.refine(
   }
 );
 
-export const verifyInviteSchema = z.object({
+export const verifyPlatformInviteSchema = z.object({
   code: z.string(),
 });
 
-export const acceptUserInviteSchema = z.object({
+export const acceptPlatformInviteSchema = z.object({
   code: z.string(),
+  otp: z.string(),
   email: z.string(),
   name: z.string(),
   phonePrefix: z.string(),

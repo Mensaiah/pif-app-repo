@@ -4,18 +4,18 @@ import { Schema } from 'zod';
 import { handleResponse } from '../utils/helpers';
 
 const policyMiddleware =
-  (schema: Schema, type: 'body' | 'params' | 'query' = 'body') =>
+  (schema: Schema, fieldType: 'body' | 'params' | 'query' = 'body') =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
       let parsedData;
 
-      if (type === 'body') {
+      if (fieldType === 'body') {
         parsedData = schema.parse(req.body);
         req.body = parsedData;
-      } else if (type === 'params') {
+      } else if (fieldType === 'params') {
         parsedData = schema.parse(req.params);
         req.params = parsedData;
-      } else if (type === 'query') {
+      } else if (fieldType === 'query') {
         parsedData = schema.parse(req.query);
         req.query = parsedData;
       }

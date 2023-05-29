@@ -5,10 +5,10 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { InviteUserModel } from '../user.model';
-import { verifyInviteSchema } from '../user.policy';
+import { verifyPlatformInviteSchema } from '../user.policy';
 
-const doVerifyUserInvite = async (req: IRequest, res: Response) => {
-  type verifyUserType = z.infer<typeof verifyInviteSchema>;
+const verifyPlatformInvite = async (req: IRequest, res: Response) => {
+  type verifyUserType = z.infer<typeof verifyPlatformInviteSchema>;
 
   const { code }: verifyUserType = req.params;
 
@@ -36,4 +36,4 @@ const doVerifyUserInvite = async (req: IRequest, res: Response) => {
   }
 };
 
-export default doVerifyUserInvite;
+export default verifyPlatformInvite;

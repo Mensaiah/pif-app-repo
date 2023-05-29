@@ -10,10 +10,10 @@ import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
 import { generateToken } from '../../auth/auth.utils';
 import { InviteUserModel, UserModel } from '../user.model';
-import { acceptUserInviteSchema } from '../user.policy';
+import { acceptPlatformInviteSchema } from '../user.policy';
 
-const doAcceptUserInvite = async (req: IRequest, res: Response) => {
-  type dataType = z.infer<typeof acceptUserInviteSchema>;
+const acceptPlatformInvite = async (req: IRequest, res: Response) => {
+  type dataType = z.infer<typeof acceptPlatformInviteSchema>;
 
   const { code, email, name, password, phone, phonePrefix, otp }: dataType =
     req.body;
@@ -130,4 +130,4 @@ const doAcceptUserInvite = async (req: IRequest, res: Response) => {
   }
 };
 
-export default doAcceptUserInvite;
+export default acceptPlatformInvite;
