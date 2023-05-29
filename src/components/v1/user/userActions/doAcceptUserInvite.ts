@@ -15,7 +15,7 @@ import { acceptUserInviteSchema } from '../user.policy';
 const doAcceptUserInvite = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof acceptUserInviteSchema>;
 
-  const { code, email, name, password, phone, phonePrefix }: dataType =
+  const { code, email, name, password, phone, phonePrefix, otp }: dataType =
     req.body;
 
   try {
@@ -31,13 +31,6 @@ const doAcceptUserInvite = async (req: IRequest, res: Response) => {
         401
       );
 
-    if (!existingInvite.isConfirmed)
-      return handleResponse(
-        res,
-        'You account has not been verified, please contact the admin.',
-        401
-      );
-
     const newUser = new UserModel({
       name,
       email,
@@ -47,6 +40,7 @@ const doAcceptUserInvite = async (req: IRequest, res: Response) => {
       },
     });
 
+    // handle platform roles
     if (['admin', 'country-admin'].includes(existingInvite.role)) {
       if (existingInvite.role === 'admin') {
         newUser.userType = existingInvite.role;
@@ -57,7 +51,8 @@ const doAcceptUserInvite = async (req: IRequest, res: Response) => {
       }
     }
 
-    if (['partner-admin', 'local-partner'].includes(existingInvite.role)) {
+    // handle partner roles
+    if (existingInvite.role === 'partner-admin') {
       if (existingInvite.role === 'partner-admin') {
         newUser.currentMarketplace = existingInvite.currentMarketplace;
         newUser.userType = existingInvite.role;

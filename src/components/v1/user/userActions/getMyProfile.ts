@@ -1,9 +1,7 @@
 import { Response } from 'express';
 
 import { IRequest } from '../../../../types/global';
-import { _omit, handleResponse } from '../../../../utils/helpers';
-import { useWord } from '../../../../utils/wordSheet';
-import { UserModel } from '../user.model';
+import { handleResponse } from '../../../../utils/helpers';
 
 const getMyProfile = async (req: IRequest, res: Response) => {
   if (req.userType === 'pos-user') {

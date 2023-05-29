@@ -3,7 +3,7 @@ import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { handleResponse, consoleLog } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendVerificationMail } from '../../auth/auth.utils';
@@ -31,7 +31,10 @@ const doInviteUser = async (req: IRequest, res: Response) => {
     const invitationData = await InviteUserModel.findOne({ email });
 
     if (invitationData) {
-      // TODO: check if it has expired
+      if (invitationData.expiresAt < new Date()) {
+        invitationData.code = uuid();
+      }
+
       await sendVerificationMail({
         to: email,
         url: createInviteLink(req, invitationData.code),
@@ -51,13 +54,9 @@ const doInviteUser = async (req: IRequest, res: Response) => {
       invitedBy: req.user._id,
       currentMarketplace: marketplace,
       Partner: partnerId,
-      expiresAt: new Date(Date.now() + ms('30 mins')),
+      expiresAt: new Date(Date.now() + ms('1 day')),
       lastSent: new Date(),
     }).save();
-
-    // const verificationLink = `${req.protocol}://${req.get('host')}${
-    //   req.baseUrl
-    // }/invitation/${newInviteCode.code}`;
 
     await sendVerificationMail({
       to: email,

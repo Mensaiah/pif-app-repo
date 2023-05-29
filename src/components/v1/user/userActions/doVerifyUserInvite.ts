@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { InviteUserModel, UserModel } from '../user.model';
+import { InviteUserModel } from '../user.model';
 import { verifyInviteSchema } from '../user.policy';
 
 const doVerifyUserInvite = async (req: IRequest, res: Response) => {
@@ -20,22 +20,13 @@ const doVerifyUserInvite = async (req: IRequest, res: Response) => {
     if (!existingInvite)
       return handleResponse(res, 'Invite code is invalid', 401);
 
-    const existingUser = await UserModel.findOne({
-      email: existingInvite.email,
-      userType: existingInvite.role,
-    });
-
-    if (existingUser) return handleResponse(res, 'Account already exists', 401);
-
     if (existingInvite.expiresAt < new Date())
-      return handleResponse(res, 'Invite code has expired');
+      return handleResponse(res, 'Invitation code has expired');
 
-    existingInvite.isConfirmed = true;
-
-    await existingInvite.save();
+    // TODO: send verification OTP code to invited user
 
     return handleResponse(res, {
-      message: 'Verification successful',
+      message: 'Proceed to onboarding',
       data: {
         email: existingInvite.email,
       },

@@ -21,14 +21,12 @@ export const inviteUserSchema = User.refine(
       return true;
 
     if (
-      data.role === 'partner-admin' &&
+      (data.role === 'partner-admin' || data.role === 'local-partner') &&
       data.marketplace &&
       data.partnerId &&
       data.email
     )
       return true;
-
-    if (data.role === 'local-partner' && data.email) return true;
 
     return false;
   },

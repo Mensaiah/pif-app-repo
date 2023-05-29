@@ -75,6 +75,8 @@ You've been invited to join the PIF Platform as an ${capitalize(
       role
     )}. Click the link below to join <br>
 ${url} <br><br>
+<small>This link expires in 24 hrs</small>
+<br><br>
 If you think this is a mistake, please ignore this email.
 <br>
 <br>

@@ -90,6 +90,5 @@ export interface InviteUserAttributes {
   currentMarketplace?: string;
   Partner?: ObjectId;
   expiresAt?: Date;
-  isConfirmed?: boolean;
   lastSent?: Date;
 }

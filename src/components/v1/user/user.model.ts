@@ -129,7 +129,6 @@ export const InviteUserSchema = new Schema<InviteUserAttributes>({
   Partner: { type: ObjectId, ref: 'Partner' },
   currentMarketplace: String,
   expiresAt: Date,
-  isConfirmed: Boolean,
   lastSent: Date,
 });
 
