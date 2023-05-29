@@ -126,7 +126,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       authKey: userAccess.securityCode,
       deviceId: req.fingerprint.hash,
       userType: existingUser.userType,
-      sessionId: '11',
+      sessionId: currentSession.sessionId,
       ref: existingUser._id,
     });
 
