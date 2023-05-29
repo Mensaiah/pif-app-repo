@@ -1,8 +1,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZTZmM2ViZWEtOGEwNi00MGMxLWJlNWEtZjc0NWQwMTM4NTA0IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJhZG1pbiIsInNlc3Npb25JZCI6ImJmOWQxYTZlLWM5M2MtNDljZS1hOTJjLWM5YWQwNjBhZTEwMyIsInJlZiI6IjY0NTNlNzI5YmZiN2ExNDdmY2E2ODU5OSIsImlhdCI6MTY4NTM3OTQyMSwiZXhwIjoxNjg1NTUyMjIxLCJpc3MiOiJQSUYtZGV2In0.XswhL12SKooDCRcogge1lWwtP-CdAQyONz32TyzGOKM
 
-GET {{server}}/timeout
-###
 GET {{server}}
 
 ### API
@@ -16,12 +15,15 @@ Content-Type: application/json
   "email": "piftech@pif-app.com",
   "password": "Password_1"
 }
+
 ### my profile
 GET {{api}}/user/my-profile
+Authorization: Bearer {{token}}
 
 ### invite user
 POST {{api}}/user/invite
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "email": "kgasta@gmail.com",

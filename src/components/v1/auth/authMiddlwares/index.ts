@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import appConfig from '../../../../config';
 import { IRequest, IToken } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 
 export { default as requireAuthMiddleware } from './requireAuth';
@@ -14,8 +14,8 @@ export const validateTokenMiddleware = async (
   next: NextFunction
 ) => {
   let token = (req.headers['x-access-token'] ||
-    req.headers['Authorization']) as string;
-  token = token.replace('Bearer ', '');
+    req.headers.authorization) as string;
+  token = token?.replace('Bearer ', '');
 
   if (!token) return next();
 
