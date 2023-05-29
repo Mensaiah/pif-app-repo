@@ -27,7 +27,7 @@ router.post(
 );
 
 router.get(
-  '/invite/:code',
+  '/verify-invite/:code',
   policyMiddleware(verifyInviteSchema, 'params'),
   doVerifyUserInvite
 );

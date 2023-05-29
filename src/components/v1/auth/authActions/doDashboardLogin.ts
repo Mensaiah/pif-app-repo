@@ -127,21 +127,24 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
       sessionId: currentSession.sessionId,
       ref: existingUser._id,
     });
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: !appConfig.isDev,
-      // sameSite: 'lax',
-      sameSite: 'none',
-      maxAge: ms(appConfig.authConfigs.sessionLivespan),
-    });
+    // res.cookie('jwt', token, {
+    //   httpOnly: true,
+    //   secure: !appConfig.isDev,
+    //   // sameSite: 'lax',
+    //   sameSite: 'none',
+    //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
+    // });
 
     return handleResponse(res, {
       message: 'Login successful, Welcome 🤗',
       data: {
-        name: existingUser.name,
-        avatar: existingUser.avatar,
-        userType: existingUser.userType,
-        roleAndPermissions: userAccess.rolesAndPermissions,
+        token,
+        userData: {
+          name: existingUser.name,
+          avatar: existingUser.avatar,
+          userType: existingUser.userType,
+          roleAndPermissions: userAccess.rolesAndPermissions,
+        },
       },
     });
   } catch (err) {

@@ -12,8 +12,23 @@ export { default as finalizeMobileSignup } from './finalizeMobileSignup';
 export { default as doMobileLogin } from './doMobileLogin';
 export { default as doSetPin } from './doSetPin';
 
-export const doLogout = (req: IRequest, res: Response) => {
-  res.clearCookie('jwt');
-  // TODO: logout the session as well
-  handleResponse(res, useWord('loggedOut', req.lang));
+export const doLogout = async (req: IRequest, res: Response) => {
+  try {
+    const { sessionId } = req.decoded;
+    req.userAccess.sessions.map((session) => {
+      if (session.sessionId === sessionId) session.isLoggedOut = true;
+
+      return session;
+    });
+    await req.userAccess.save();
+
+    return handleResponse(res, useWord('loggedOut', req.lang));
+  } catch (err) {
+    return handleResponse(
+      res,
+      useWord('internalServerError', req.lang),
+      500,
+      err
+    );
+  }
 };

@@ -13,7 +13,10 @@ export const validateTokenMiddleware = async (
   res: Response,
   next: NextFunction
 ) => {
-  const token = req.cookies.jwt;
+  let token = (req.headers['x-access-token'] ||
+    req.headers['Authorization']) as string;
+  token = token.replace('Bearer ', '');
+
   if (!token) return next();
 
   try {

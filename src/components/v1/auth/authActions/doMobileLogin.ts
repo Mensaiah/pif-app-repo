@@ -130,22 +130,25 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       ref: existingUser._id,
     });
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: appConfig.isProd,
-      sameSite: 'lax',
-      maxAge: ms(appConfig.authConfigs.sessionLivespan),
-    });
+    // res.cookie('jwt', token, {
+    //   httpOnly: true,
+    //   secure: appConfig.isProd,
+    //   sameSite: 'lax',
+    //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
+    // });
 
     return handleResponse(res, {
       message: 'Login successful, Welcome 🤗',
       data: {
-        name: existingUser.name,
-        pifId: existingUser.pifId,
-        avatar: existingUser.avatar,
-        currentMarketplace: existingUser.currentMarketplace,
-        phonePrefix: existingUser.contact.phonePrefix,
-        phone: existingUser.contact.phone,
+        token,
+        userData: {
+          name: existingUser.name,
+          pifId: existingUser.pifId,
+          avatar: existingUser.avatar,
+          currentMarketplace: existingUser.currentMarketplace,
+          phonePrefix: existingUser.contact.phonePrefix,
+          phone: existingUser.contact.phone,
+        },
       },
     });
   } catch (err) {
