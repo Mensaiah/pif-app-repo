@@ -4,7 +4,7 @@ import express, { Application, NextFunction, Response } from 'express';
 import helmet from 'helmet';
 
 import fingerprintMiddleware from './appMiddlewares/fingerprint.middleware';
-import routesV1 from './components/v1/routes.v1';
+import routerV1 from './components/v1/routes.v1';
 import appConfig from './config';
 import { connectMongoDb } from './config/persistence/database';
 import { seedNow } from './config/persistence/seeder';
@@ -80,7 +80,7 @@ const initializeMiddlewares = () => {
 };
 
 const initializeRoutes = () => {
-  app.use('/v1/:lang/', routesV1);
+  app.use('/v1/:lang/', routerV1);
   app.get('/', (_req, res) => {
     res.json({ message: 'Up and running in ' + appConfig.environment });
   });

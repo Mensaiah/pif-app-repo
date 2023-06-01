@@ -23,6 +23,7 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
     type: String,
     required: true,
   },
+  isDisabled: Boolean,
 });
 
 const platformSchema = new Schema<PlatformAttributes>(
@@ -35,6 +36,12 @@ const platformSchema = new Schema<PlatformAttributes>(
       type: [marketplaceSchema],
       required: true,
     },
+    socials: [
+      {
+        name: String,
+        url: String,
+      },
+    ],
   },
   { timestamps: true }
 );
