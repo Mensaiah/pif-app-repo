@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Document, Schema, model } from 'mongoose';
+import ms from 'ms';
 
 import { permissions } from '../../../config/rolesAndPermissions';
 
@@ -112,12 +113,21 @@ const OtpCodeSchema = new Schema<OtpAttributes>({
   code: String,
   purpose: {
     type: String,
-    enum: ['signup', 'pass-reset'],
+    enum: ['signup', 'pin-reset', 'password-reset'],
   },
   expiresAt: Date,
   phone: String,
   phonePrefix: String,
   isConfirmed: Boolean,
   lastSent: Date,
+  email: String,
+  isDeleted: Boolean,
+});
+OtpCodeSchema.pre<OtpAttributes & Document>('save', function (next) {
+  if (!this.isModified('code')) return next();
+
+  this.expiresAt = new Date(Date.now() + ms('15 mins'));
+
+  return next();
 });
 export const OtpCodeModel = model<OtpAttributes>('OtpCode', OtpCodeSchema);

@@ -4,7 +4,7 @@ import { Schema, model } from 'mongoose';
 import appConfig from '../../../config';
 
 import {
-  InviteUserAttributes,
+  UserInviteAttributes,
   PartnerPosUserAttributes,
   UserAttributes,
 } from './user.types';
@@ -121,7 +121,7 @@ export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
   partnerPosUserSchema
 );
 
-export const InviteUserSchema = new Schema<InviteUserAttributes>({
+export const UserInviteSchema = new Schema<UserInviteAttributes>({
   code: { type: String, required: true },
   role: { type: String, required: true },
   email: { type: String, required: true },
@@ -130,9 +130,10 @@ export const InviteUserSchema = new Schema<InviteUserAttributes>({
   currentMarketplace: String,
   expiresAt: Date,
   lastSent: Date,
+  status: String,
 });
 
-export const InviteUserModel = model<InviteUserAttributes>(
-  'InviteUser',
-  InviteUserSchema
+export const UserInviteModel = model<UserInviteAttributes>(
+  'UserInvite',
+  UserInviteSchema
 );

@@ -1,0 +1,204 @@
+/users/invite:
+  post:
+    tags:
+      - Users Authentication
+    summary: Create invitation for users to join the platform.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            oneOf:
+              - properties:
+                  role:
+                    type: string
+                    example: admin
+                    enum: [admin, country-admin, partner-admin, local-partner]
+                  email:
+                    type: string
+                required: [role, email]
+              - properties:
+                  role:
+                    type: string
+                    example: country-admin
+                    enum: [admin, country-admin, partner-admin, local-partner]
+                  email:
+                    type: string
+                  marketplace:
+                    type: string
+                required: [role, email, marketplace]
+              - properties:
+                  role:
+                    type: string
+                    enum: [partner-admin, local-partner, admin, country-admin]
+                  email:
+                    type: string
+                  marketplace:
+                    type: string
+                  partnerId:
+                    type: string
+                required: [role, email, marketplace, partnerId]
+    responses:
+      200:
+        description: When invitation is sent to a user mail successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Invite sent ✉️ / User has already been invited but another email has been sent
+
+      409:
+        description: Conflict (If account already exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: OTP has expired / OTP is invalid / Account does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/users/verify-invite/:code:
+  get:
+    tags:
+      - Users Authentication
+    summary: Verify user invitation by extracting invitation code from params.
+    parameters:
+      - name: code
+        in: path
+        description: Invitation code
+        required: true
+        type: string
+    responses:
+      200:
+        description: When invitation is sent to a user mail successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Proceed to onboarding
+
+      401:
+        description: Conflict (If invite code doesn't exist / is expired)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Invite code is invalid / has expire
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/users/accept-invite:
+  post:
+    tags:
+      - Users Authentication
+    summary: Finalize user invitation to platform.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - code
+              - email
+              - phonePrefix
+              - phone
+              - password
+            properties:
+              name:
+                type: string
+                default: John Doe
+              email:
+                type: string
+                default: xyz@com
+              code:
+                type: string
+                default: 13230
+              phonePrefix:
+                type: string
+                default: 234
+              phone:
+                type: string
+                default: 8012345678
+              password:
+                type: string
+                default: 123456
+    responses:
+      200:
+        description: Finalizing invitation successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Operation successful, Welcome 🤗
+                data:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: John Doe
+                    avatar:
+                      type: string
+                      example: http://image-url.com
+                    userType:
+                      type: string
+                      example: customer
+                    roleAndPermissions:
+                      type: array
+
+      401:
+        description: Unauthorized ( If invite dose not exist )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Invalid operation. Please contact the admin.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

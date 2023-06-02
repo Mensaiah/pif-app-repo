@@ -87,6 +87,34 @@ Pif Team.
   `,
   });
 
+export const sendForgotPasswordCodeMail = ({
+  to,
+  code,
+}: {
+  to: string;
+  code: string;
+}) =>
+  sendMail({
+    to,
+    subject: 'Reset your PIF password',
+    content: `<h1>Reset your password</h1>,
+    <br>
+    <br>
+You are receiving this code because you requested for reset of your PIF password.<br>
+  <h2>${code}</h2>
+<br><br>
+<small>This code expires in 15 mins</small>
+<br><br>
+If you think this is a mistake, please ignore this email.
+<br>
+<br>
+<br>
+Regards,
+<br>
+Pif Team.
+  `,
+  });
+
 export const isDateLessThanXMinutesAgo = (date: Date, min = 1): boolean => {
   const minutesAgo = new Date(Date.now() - min * 60 * 1000);
   return date > minutesAgo;

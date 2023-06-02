@@ -26,7 +26,7 @@ const requireAuth = async (
       ? await UserModel.findById(ref)
       : await PartnerPosUserModel.findById(ref);
 
-    if (!user) return handleResponse(res, 'auhtorization failed', 401);
+    if (!user) return handleResponse(res, 'authorization failed', 401);
 
     const userAccess = await UserAccessModel.findOne(
       currentUserIsUser ? { User: user._id } : { PartnerPosUser: user._id }
@@ -41,7 +41,7 @@ const requireAuth = async (
     if (
       userType === 'customer' &&
       !userAccess.pin &&
-      req.originalUrl !== '/v1/en/auth/m-pin'
+      req.originalUrl !== '/v1/en/auth/set-pin'
     )
       return handleResponse(res, 'You need to set your pin first!', 403);
 

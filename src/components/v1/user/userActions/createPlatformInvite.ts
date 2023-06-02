@@ -7,16 +7,16 @@ import { handleResponse } from '../../../../utils/helpers';
 import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendVerificationMail } from '../../auth/auth.utils';
-import { InviteUserModel, UserModel } from '../user.model';
+import { UserInviteModel, UserModel } from '../user.model';
 import { createPlatformInviteSchema } from '../user.policy';
 
 const createInviteLink = (req: IRequest, code: string) =>
   `${req.protocol}://${req.get('host')}${req.baseUrl}/invitation/${code}`;
 
 const createPlatformInvite = async (req: IRequest, res: Response) => {
-  type inviteUserType = z.infer<typeof createPlatformInviteSchema>;
+  type UserInviteType = z.infer<typeof createPlatformInviteSchema>;
 
-  const { email, role, marketplace, partnerId }: inviteUserType = req.body;
+  const { email, role, marketplace, partnerId }: UserInviteType = req.body;
 
   try {
     const existingUser = await UserModel.findOne(
@@ -28,7 +28,7 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
     if (existingUser)
       return handleResponse(res, 'Account already exists.', 409);
 
-    const invitationData = await InviteUserModel.findOne({ email });
+    const invitationData = await UserInviteModel.findOne({ email });
 
     if (invitationData) {
       if (invitationData.expiresAt < new Date()) {
@@ -41,13 +41,14 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
         role,
       });
 
+      await invitationData.save();
       return handleResponse(
         res,
         'User has already been invited but another email has been sent'
       );
     }
 
-    const newInvite = await new InviteUserModel({
+    const newInvite = await new UserInviteModel({
       code: uuid(),
       email,
       role,

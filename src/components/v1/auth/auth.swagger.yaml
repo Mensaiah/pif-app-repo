@@ -78,6 +78,110 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
+/auth/forgot-password:
+  post:
+    tags:
+      - Dashboard Authentication
+    summary: Request for reset of password for dashboard platform users.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                default: xyz@mail.com
+    responses:
+      200:
+        description: If operation is successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Please check your mail for OTP.
+
+      401:
+        description: Unauthorized (If user does not exist / user isBlocked / userAccess does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: User does not exist / invalid request
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/reset-password:
+  post:
+    tags:
+      - Dashboard Authentication
+    summary: Request for setting new password for dashboard platform user.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - otpCode
+              - password
+            properties:
+              otpCode:
+                type: string
+                default: 34210
+              password:
+                type: string
+                default: 0000
+    responses:
+      201:
+        description: If operation is successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Password reset successful, kindly login.
+
+      401:
+        description: Unauthorized (If OTP code is not found / expired / user does not exist / isBlocked / userAccess is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: User does not exist / invalid request / OTP code is invalid / OTP has expired
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
 /auth/m-signup:
   post:
     tags:
@@ -136,31 +240,38 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/auth/verify-m-signup:
+/auth/verify-otp:
   post:
     tags:
       - Mobile Authentication
-    summary: Verify mobile OTP
+    summary: Verify OTP from phoneNo or mail. Accepted are phonePrefix + phone + code + purpose or email + purpose + code
     requestBody:
       required: true
       content:
         application/json:
           schema:
             type: object
-            required:
-              - phone
-              - phonePrefix
-              - code
-            properties:
-              phone:
-                type: string
-                default: 8012345678
-              phonePrefix:
-                type: string
-                default: 234
-              code:
-                type: string
-                default: 123456
+            oneOf:
+              - properties:
+                  phonePrefix:
+                    type: string
+                  phone:
+                    type: string
+                  code:
+                    type: string
+                  purpose:
+                    type: string
+                    enum: [signup, pass-reset, pin-reset, password-reset]
+                required: [phonePrefix, phone, code, purpose]
+              - properties:
+                  email:
+                    type: string
+                  purpose:
+                    type: string
+                    enum: [signup, pass-reset, pin-reset, password-reset]
+                  code:
+                    type: string
+                required: [email, purpose, code]
     responses:
       200:
         description: Verification successful
@@ -172,6 +283,17 @@
                 message:
                   type: string
                   example: Verification successful
+
+      400:
+        description: Bad request (if any of the field are missiing or not combined as it should- accepted are phonePrefix + phone + code + purpose or email + purpose + code)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: missing some fields or if fields are not combined, accepted are phonePrefix + phone + code + purpose or email + purpose + code.
 
       401:
         description: Unauthorized (If OTP has expired or invalid / or account does not exist)
@@ -291,7 +413,7 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/auth/m-pin:
+/auth/set-pin:
   post:
     tags:
       - Mobile Authentication
@@ -320,7 +442,7 @@
                   type: string
                   example: Operation successful
 
-      409:
+      401:
         description: When user pin is already set.
         content:
           application/json:
@@ -330,6 +452,114 @@
                 message:
                   type: string
                   example: Pin is already set
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/forgot-pin:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Request for reset of pin for mobile
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - phonePrefix
+              - phone
+            properties:
+              phonePrefix:
+                type: string
+                default: 234
+              phone:
+                type: string
+                default: 80123456789
+    responses:
+      200:
+        description: If operation is successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Enter OTP and new pin to proceed
+
+      401:
+        description: Unauthorized (If user does not exist or user isBlocked)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: User does not exist / invalid request
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/reset-pin:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Request for setting new pin for mobile
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - otpCode
+              - pin
+            properties:
+              otpCode:
+                type: string
+                default: 34210
+              pin:
+                type: string
+                default: 0000
+    responses:
+      201:
+        description: If operation is successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Pin reset successful, kindly login.
+
+      401:
+        description: Unauthorized (If OTP code is not found / expired / user does not exist / isBlocked / userAccess is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: User does not exist / invalid request / OTP code is invalid / OTP has expired
       500:
         description: Internal Server Error
         content:
@@ -441,20 +671,23 @@
         application/json:
           schema:
             type: object
-            required:
-              - phone
-              - phonePrefix
-              - purpose
-            properties:
-              phone:
-                type: string
-                default: 8012345678
-              phonePrefix:
-                type: string
-                default: 234
-              purpose:
-                type: string
-                default: signup
+            oneOf:
+              - properties:
+                  phonePrefix:
+                    type: string
+                  phone:
+                    type: string
+                  purpose:
+                    type: string
+                    enum: [signup, pass-reset, pin-reset, password-reset]
+                required: [phonePrefix, phone, purpose]
+              - properties:
+                  email:
+                    type: string
+                  purpose:
+                    type: string
+                    enum: [signup, pass-reset, pin-reset, password-reset]
+                required: [email, purpose]
     responses:
       200:
         description: OTP code sent successfully
@@ -476,7 +709,7 @@
               properties:
                 message:
                   type: string
-                  example: Please wait for at least 1 minute before you try again / Signup completed. You do not need OTP anymore / Invalid request
+                  example: Please wait for at least 1 minute before you try again / Signup completed. You do not need OTP anymore / Invalid request (If user is not found or otp related to the user is not found.)
 
       500:
         description: Internal Server Error

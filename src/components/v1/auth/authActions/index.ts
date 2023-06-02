@@ -6,11 +6,18 @@ import { useWord } from '../../../../utils/wordSheet';
 
 export { default as doMobileSignup } from './doMobileSignup';
 export { default as doDashboardLogin } from './doDashboardLogin';
-export { default as verifyMobileSignup } from './verifyMobileSignup';
+export { default as verifyOTPCode } from './verifyOTPCode';
 export { default as resendOtpCode } from './resendOtpCode';
 export { default as finalizeMobileSignup } from './finalizeMobileSignup';
+
 export { default as doMobileLogin } from './doMobileLogin';
 export { default as doSetPin } from './doSetPin';
+
+export { default as doForgotPin } from './doForgotPin';
+export { default as doResetPin } from './doResetPin';
+
+export { default as doForgotPassword } from './doForgotPassword';
+export { default as doResetPassword } from './doResetPassword';
 
 export const doLogout = async (req: IRequest, res: Response) => {
   try {

@@ -9,17 +9,17 @@ import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
 import { generateToken } from '../../auth/auth.utils';
-import { InviteUserModel, UserModel } from '../user.model';
+import { UserInviteModel, UserModel } from '../user.model';
 import { acceptPlatformInviteSchema } from '../user.policy';
 
 const acceptPlatformInvite = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof acceptPlatformInviteSchema>;
 
-  const { code, email, name, password, phone, phonePrefix, otp }: dataType =
+  const { code, email, name, password, phone, phonePrefix }: dataType =
     req.body;
 
   try {
-    const existingInvite = await InviteUserModel.findOne({
+    const existingInvite = await UserInviteModel.findOne({
       email,
       code,
     });
@@ -104,12 +104,12 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       ref: newUser._id,
     });
 
-    res.cookie('jwt', token, {
-      httpOnly: true,
-      secure: appConfig.isProd,
-      sameSite: 'lax',
-      maxAge: ms(appConfig.authConfigs.sessionLivespan),
-    });
+    // res.cookie('jwt', token, {
+    //   httpOnly: true,
+    //   secure: appConfig.isProd,
+    //   sameSite: 'lax',
+    //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
+    // });
 
     return handleResponse(res, {
       message: 'Operation successful, Welcome 🤗',

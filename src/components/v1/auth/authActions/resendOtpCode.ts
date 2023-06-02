@@ -11,27 +11,43 @@ import {
   isDateLessThanXMinutesAgo,
   generateRandomCode,
   sendOTP,
+  sendForgotPasswordCodeMail,
 } from '../auth.utils';
 
 const resendOtpcode = async (req: IRequest, res: Response) => {
   type verifyDataType = z.infer<typeof resendOTPSchema>;
 
-  const { phone, phonePrefix, purpose }: verifyDataType = req.body;
+  const { phone, phonePrefix, purpose, email }: verifyDataType = req.body;
 
   try {
-    const existingUser = await UserModel.findOne({
-      userType: 'customer',
-      'contact.phone': phone,
-      'contact.phonePrefix': phonePrefix,
-    });
+    const existingUser = await UserModel.findOne(
+      phonePrefix && phone
+        ? {
+            userType: 'customer',
+            'contact.phone': phone,
+            'contact.phonePrefix': phonePrefix,
+          }
+        : {
+            email,
+          }
+    );
 
     if (!existingUser) return handleResponse(res, 'Invalid request', 401);
 
-    const otpExists = await OtpCodeModel.findOne({
-      purpose,
-      phone,
-      phonePrefix,
-    });
+    const otpExists = await OtpCodeModel.findOne(
+      phonePrefix && phone
+        ? {
+            purpose,
+            phone,
+            phonePrefix,
+            isDeleted: { $ne: true },
+          }
+        : {
+            email,
+            purpose,
+            isDeleted: { $ne: true },
+          }
+    );
 
     if (!otpExists) return handleResponse(res, 'Invalid request', 401);
 
@@ -42,7 +58,12 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
         401
       );
 
-    if (existingUser.isSignupComplete)
+    if (
+      purpose === 'signup' &&
+      phonePrefix &&
+      phone &&
+      existingUser.isSignupComplete
+    )
       return handleResponse(
         res,
         'Signup completed. You do not need OTP anymore',
@@ -52,6 +73,11 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
     if (otpExists.expiresAt < new Date()) {
       otpExists.code = generateRandomCode();
       await otpExists.save();
+    }
+
+    if (email && purpose === 'password-reset') {
+      await sendForgotPasswordCodeMail({ to: email, code: otpExists.code });
+      return handleResponse(res, 'Please recheck your mail for OTP code');
     }
 
     await sendOTP(phonePrefix + phone, otpExists.code);

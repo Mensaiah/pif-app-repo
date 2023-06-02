@@ -13,8 +13,9 @@ import {
   acceptPlatformInvite,
   createPlatformInvite,
   verifyPlatformInvite,
+  getMyProfile,
+  changeMyMarketplace,
 } from './userActions';
-import getMyProfile from './userActions/getMyProfile';
 
 const router = Router();
 
@@ -36,6 +37,14 @@ router.post(
   '/accept-invite',
   policyMiddleware(acceptPlatformInviteSchema),
   acceptPlatformInvite
+);
+
+// change my marketplace to the one in the params
+router.put(
+  '/my-marketplace/:marketplace',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  changeMyMarketplace
 );
 
 router.get(

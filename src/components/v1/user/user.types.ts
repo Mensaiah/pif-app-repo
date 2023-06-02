@@ -82,7 +82,7 @@ export interface PartnerPosUserAttributes {
   isActive: boolean;
 }
 
-export interface InviteUserAttributes {
+export interface UserInviteAttributes {
   code: string;
   role: string;
   email: string;
@@ -91,4 +91,5 @@ export interface InviteUserAttributes {
   Partner?: ObjectId;
   expiresAt?: Date;
   lastSent?: Date;
+  status: 'pending' | 'accepted';
 }

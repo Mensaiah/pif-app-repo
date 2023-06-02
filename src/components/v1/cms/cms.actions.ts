@@ -163,7 +163,7 @@ export const updateInfo = async (req: IRequest, res: Response) => {
       });
     }
 
-    if (req.body.hasOwnProperty('isPublished')) info.isPublished = isPublished;
+    if ('isPublished' in req.body) info.isPublished = isPublished;
     if (iconifyName) info.icon.iconifyName = iconifyName;
     if (iconSvg) info.icon.svg = iconSvg;
     if (iconUrl) info.icon.url = iconUrl;
@@ -307,8 +307,7 @@ export const updateLegalPolicy = async (req: IRequest, res: Response) => {
         }
       });
     }
-    if (req.body.hasOwnProperty('isPublished'))
-      policyExists.isPublished = isPublished;
+    if ('isPublished' in req.body) policyExists.isPublished = isPublished;
 
     const changesMade = policyExists.isModified();
     if (changesMade) {

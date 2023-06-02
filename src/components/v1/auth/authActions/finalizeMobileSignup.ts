@@ -57,8 +57,9 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
     existingUser.pifId = pifId;
     existingUser.contact.zip = zipCode;
     existingUser.isSignupComplete = true;
+    otpExists.isDeleted = true;
     await existingUser.save();
-    await otpExists.deleteOne();
+    await otpExists.save();
 
     const now = new Date();
     const userAccess = new UserAccessModel({

@@ -5,6 +5,15 @@ export const dashLoginSchema = z.object({
   password: z.string(),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string(),
+});
+
+export const resetPasswordSchema = z.object({
+  otpCode: z.string(),
+  password: z.string(),
+});
+
 export const mobileLoginSchema = z.object({
   phonePrefix: z.string(),
   phone: z.string(),
@@ -17,15 +26,26 @@ export const mobileSignupSchema = z.object({
   marketplace: z.string(),
 });
 
-export const verifyMobileSignupSchema = z.object({
-  phonePrefix: z.string(),
-  phone: z.string(),
+export const verifyOTP = z.object({
+  phonePrefix: z.string().optional(),
+  email: z.string().email().optional(),
+  phone: z.string().optional(),
   code: z.string(),
+  purpose: z.enum(['signup', 'pin-reset', 'password-reset']),
 });
 
-export const resendOTPSchema = verifyMobileSignupSchema
-  .extend({ purpose: z.string() })
-  .omit({ code: true });
+export const verifyOTPSchema = verifyOTP.refine(
+  ({ phone, phonePrefix, email }) => (phonePrefix && phone) || email,
+  {
+    message: 'You must provide either email or phone and phonePrefix.',
+  }
+);
+
+export const resendOTPSchema = verifyOTP
+  .omit({ code: true })
+  .refine(({ email, phone, phonePrefix }) => email || (phone && phonePrefix), {
+    message: 'You must provide either email or phone and phonePrefix.',
+  });
 
 export const finalizeMobileSignupSchema = z.object({
   phonePrefix: z.string(),
@@ -39,4 +59,14 @@ export const finalizeMobileSignupSchema = z.object({
 
 export const setPinSchema = z.object({
   pin: z.string().length(4, 'Four digit pin is required'),
+});
+
+export const forgotPinSchema = z.object({
+  phonePrefix: z.string(),
+  phone: z.string(),
+});
+
+export const resetPinSchema = z.object({
+  otpCode: z.string(),
+  pin: z.string(),
 });

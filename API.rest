@@ -1,7 +1,7 @@
-@server = https://pif-api.herokuapp.com
-# @server = http://localhost:3030
+# @server = https://pif-api.herokuapp.com
+@server = http://localhost:3030
 @api = {{server}}/v1/en
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiY2JlZGQ1NzgtODVjYi00MzA4LWI3YmEtYTAxNzIxMWFlOTQxIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJhZG1pbiIsInNlc3Npb25JZCI6Ijk2NTliNDVhLWQ2YTUtNDJjNS1hZDg1LTcwMGJjODNiNGE0ZiIsInJlZiI6IjY0NmIzYmQ2NjZlM2E3ZDEzMzZjNDc5YiIsImlhdCI6MTY4NTM4MTExMywiZXhwIjoxNjg1NTUzOTEzLCJpc3MiOiJQSUYtc3RhZ2luZyJ9.QJRfpJ7BFm1zExw0AOQuWgDPeX8RNTmX_SNLFVi-OvM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjU2ZGUyMDQtNGM2My00ZjBkLWEzMDAtMWFiNDE5NmE0YTc2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6IjMwMTBhMjk3LWM1YzItNDZlZC1hOTdkLWM4ZjUyN2Q0MTM3YiIsInJlZiI6IjY0Nzc2YTEzYmMwYjczOTk4Mzc3YTdiYyIsImlhdCI6MTY4NTU0Nzg5OCwiZXhwIjoxNjg1NzIwNjk4LCJpc3MiOiJQSUYtZGV2In0.vNZ8NiONpnjL7XpWu-lx9MhtcnvECXval5NGpjRL0Ew
 
 GET {{server}}
 
@@ -27,12 +27,30 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "email": "kgasta@gmail.com",
+  "email": "jimohafeez738@gmail.com",
   "role": "admin"
 }
 
 ### invite user
 GET {{api}}/user/invite/893675a2-0e60-47f2-9e71-274d31270096
+
+### dashboard - forgot pin
+POST {{api}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784"
+}
+
+### dashboard - reset password
+POST {{api}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "otpCode": "24691",
+  "password": "0000"
+}
 
 ### mobile signup
 POST {{api}}/auth/m-signup
@@ -40,18 +58,19 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541",
+  "phone": "8103498784",
   "marketplace": "Nigeria"
 }
 
 ### mobile - verify otp
-POST {{api}}/auth/verify-m-signup
+POST {{api}}/auth/verify-otp
 Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "7032434744",
-  "code": "86173"
+  "phone": "8103498784",
+  "code": "24691",
+  "purpose": "pin-reset"
 }
 
 ### mobile resend otp
@@ -59,9 +78,9 @@ POST {{api}}/auth/resend-otp
 Content-Type: application/json
 
 {
-  "phonePrefix": "234",
-  "phone": "7032434744",
-  "purpose": "signup"
+ "phonePrefix": "234",
+  "phone": "8103498784",
+  "purpose": "pin-reset"
 }
 
 
@@ -70,18 +89,19 @@ POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Muzammil Opayemi",
+ "name": "Aweds wedi",
  "dob": "1990-02-20",
  "phonePrefix": "234",
- "phone": "7032434744",
- "pifId":"semo",
+"phone": "8103498784",
+ "pifId":"wedi",
  "zipCode":"12345",
- "otpCode":"86173"
+ "otpCode":"93550"
 }
 
 ### mobile set pin
-POST {{api}}/auth/m-pin
+POST {{api}}/auth/set-pin
 Content-Type: application/json
+Authorization: Bearer {{token}}
 
 {
   "pin": "1234"
@@ -93,7 +113,25 @@ POST {{api}}/auth/m-login
 Content-Type: application/json
 
 {
+ "phonePrefix": "234",
+ "phone": "8103498784",
+ "pin": "0000"
+}
+
+### mobile - forgot pin
+POST {{api}}/auth/forgot-pin
+Content-Type: application/json
+
+{
   "phonePrefix": "234",
-  "phone": "7065516083",
-  "pin": "1234"
+  "phone": "8103498784"
+}
+
+### mobile - reset pin
+POST {{api}}/auth/reset-pin
+Content-Type: application/json
+
+{
+  "otpCode": "24691",
+  "pin": "0000"
 }

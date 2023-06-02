@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { InviteUserModel } from '../user.model';
+import { UserInviteModel } from '../user.model';
 import { verifyPlatformInviteSchema } from '../user.policy';
 
 const verifyPlatformInvite = async (req: IRequest, res: Response) => {
@@ -13,7 +13,7 @@ const verifyPlatformInvite = async (req: IRequest, res: Response) => {
   const { code }: verifyUserType = req.params;
 
   try {
-    const existingInvite = await InviteUserModel.findOne({
+    const existingInvite = await UserInviteModel.findOne({
       code,
     });
 
@@ -21,7 +21,7 @@ const verifyPlatformInvite = async (req: IRequest, res: Response) => {
       return handleResponse(res, 'Invite code is invalid', 401);
 
     if (existingInvite.expiresAt < new Date())
-      return handleResponse(res, 'Invitation code has expired');
+      return handleResponse(res, 'Invitation code has expire');
 
     // TODO: send verification OTP code to invited user
 

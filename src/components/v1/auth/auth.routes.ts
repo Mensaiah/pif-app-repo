@@ -5,21 +5,29 @@ import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
   dashLoginSchema,
   finalizeMobileSignupSchema,
+  forgotPinSchema,
   mobileLoginSchema,
+  resetPinSchema,
   mobileSignupSchema,
   resendOTPSchema,
   setPinSchema,
-  verifyMobileSignupSchema,
+  verifyOTPSchema,
+  resetPasswordSchema,
+  forgotPasswordSchema,
 } from './auth.policy';
 import {
   doDashboardLogin,
   doLogout,
+  doForgotPin,
   doMobileLogin,
   doMobileSignup,
+  doResetPin,
   doSetPin,
   finalizeMobileSignup,
   resendOtpCode,
-  verifyMobileSignup,
+  verifyOTPCode,
+  doResetPassword,
+  doForgotPassword,
 } from './authActions';
 import {
   requireAuthMiddleware,
@@ -37,17 +45,31 @@ router.post(
   finalizeMobileSignup
 );
 router.post('/resend-otp', policyMiddleware(resendOTPSchema), resendOtpCode);
+
+router.post('/verify-otp', policyMiddleware(verifyOTPSchema), verifyOTPCode);
+
 router.post(
-  '/verify-m-signup',
-  policyMiddleware(verifyMobileSignupSchema),
-  verifyMobileSignup
-);
-router.post(
-  '/m-pin',
+  '/set-pin',
   policyMiddleware(setPinSchema),
   validateTokenMiddleware,
   requireAuthMiddleware,
   doSetPin
+);
+
+router.post('/forgot-pin', policyMiddleware(forgotPinSchema), doForgotPin);
+
+router.post('/reset-pin', policyMiddleware(resetPinSchema), doResetPin);
+
+router.post(
+  '/forgot-password',
+  policyMiddleware(forgotPasswordSchema),
+  doForgotPassword
+);
+
+router.post(
+  '/reset-password',
+  policyMiddleware(resetPasswordSchema),
+  doResetPassword
 );
 
 router.get('/logout', validateTokenMiddleware, requireAuthMiddleware, doLogout);

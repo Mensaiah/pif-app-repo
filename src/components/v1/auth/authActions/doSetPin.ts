@@ -12,7 +12,7 @@ const doSetPin = async (req: IRequest, res: Response) => {
   const { pin }: dataType = req.body;
   const userAccess = req.userAccess;
 
-  if (userAccess.pin) return handleResponse(res, 'Pin is already set', 409);
+  if (userAccess.pin) return handleResponse(res, 'Pin is already set', 401);
 
   userAccess.pin = pin;
   try {

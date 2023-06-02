@@ -41,7 +41,6 @@ export const verifyPlatformInviteSchema = z.object({
 
 export const acceptPlatformInviteSchema = z.object({
   code: z.string(),
-  otp: z.string(),
   email: z.string(),
   name: z.string(),
   phonePrefix: z.string(),

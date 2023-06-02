@@ -44,10 +44,12 @@ export interface UserSessionAttributes {
 
 export interface OtpAttributes {
   code: string;
-  purpose: 'signup' | 'pass-reset';
+  purpose: 'signup' | 'pin-reset' | 'password-reset';
   expiresAt: Date;
   phone: string;
   phonePrefix: string;
   isConfirmed: boolean;
   lastSent: Date;
+  email?: string;
+  isDeleted?: boolean;
 }
