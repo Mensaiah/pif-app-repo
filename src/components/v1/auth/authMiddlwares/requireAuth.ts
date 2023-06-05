@@ -32,6 +32,7 @@ const requireAuth = async (
       currentUserIsUser ? { User: user._id } : { PartnerPosUser: user._id }
     );
     if (!userAccess) return handleResponse(res, 'authorization failed', 401);
+
     if (userAccess.isBlocked)
       return handleResponse(res, 'You have been banned. Contact us', 401);
 

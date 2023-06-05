@@ -15,9 +15,11 @@ export { default as doSetPin } from './doSetPin';
 
 export { default as doForgotPin } from './doForgotPin';
 export { default as doResetPin } from './doResetPin';
+export { default as doChangePin } from './doChangePin';
 
 export { default as doForgotPassword } from './doForgotPassword';
 export { default as doResetPassword } from './doResetPassword';
+export { default as doChangePassword } from './doChangePassword';
 
 export const doLogout = async (req: IRequest, res: Response) => {
   try {

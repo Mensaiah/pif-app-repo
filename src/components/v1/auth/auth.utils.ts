@@ -97,21 +97,18 @@ export const sendForgotPasswordCodeMail = ({
   sendMail({
     to,
     subject: 'Reset your PIF password',
-    content: `<h1>Reset your password</h1>,
-    <br>
-    <br>
-You are receiving this code because you requested for reset of your PIF password.<br>
-  <h2>${code}</h2>
-<br><br>
-<small>This code expires in 15 mins</small>
-<br><br>
-If you think this is a mistake, please ignore this email.
-<br>
-<br>
-<br>
-Regards,
-<br>
-Pif Team.
+    content: `<div style="max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #444;">Hello,</h2>
+      <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+      <p>Please use the following verification code to proceed:</p>
+      <div style="background: #eee; padding: 10px; text-align: center;">
+        <strong style="font-size: 1.5rem;">${code}</strong>
+      </div>
+      <p>This code is only valid for 15 minutes.</p>
+      <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+      <p>Best,</p>
+      <p>PIF Team</p>
+    </div>
   `,
   });
 

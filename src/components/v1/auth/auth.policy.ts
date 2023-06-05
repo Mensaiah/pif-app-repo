@@ -12,6 +12,7 @@ export const forgotPasswordSchema = z.object({
 export const resetPasswordSchema = z.object({
   otpCode: z.string(),
   password: z.string(),
+  email: z.string(),
 });
 
 export const mobileLoginSchema = z.object({
@@ -69,4 +70,16 @@ export const forgotPinSchema = z.object({
 export const resetPinSchema = z.object({
   otpCode: z.string(),
   pin: z.string(),
+  phone: z.string(),
+  phonePrefix: z.string(),
+});
+
+export const changePasswordSchema = z.object({
+  oldPassword: z.string(),
+  newPassword: z.string(),
+});
+
+export const changePinSchema = z.object({
+  oldPin: z.string(),
+  newPin: z.string(),
 });

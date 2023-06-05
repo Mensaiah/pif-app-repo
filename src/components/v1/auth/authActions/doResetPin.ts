@@ -11,11 +11,13 @@ import { resetPinSchema } from '../auth.policy';
 const doResetPin = async (req: IRequest, res: Response) => {
   type resetPinDataType = z.infer<typeof resetPinSchema>;
 
-  const { otpCode, pin }: resetPinDataType = req.body;
+  const { otpCode, pin, phone, phonePrefix }: resetPinDataType = req.body;
 
   try {
     const existingOTP = await OtpCodeModel.findOne({
       code: otpCode,
+      phonePrefix,
+      phone,
     });
 
     if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);

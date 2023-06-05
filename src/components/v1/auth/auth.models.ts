@@ -123,6 +123,7 @@ const OtpCodeSchema = new Schema<OtpAttributes>({
   email: String,
   isDeleted: Boolean,
 });
+
 OtpCodeSchema.pre<OtpAttributes & Document>('save', function (next) {
   if (!this.isModified('code')) return next();
 
@@ -130,4 +131,5 @@ OtpCodeSchema.pre<OtpAttributes & Document>('save', function (next) {
 
   return next();
 });
+
 export const OtpCodeModel = model<OtpAttributes>('OtpCode', OtpCodeSchema);

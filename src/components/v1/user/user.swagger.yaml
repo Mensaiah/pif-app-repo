@@ -169,17 +169,30 @@
                 data:
                   type: object
                   properties:
-                    name:
+                    token:
                       type: string
-                      example: John Doe
-                    avatar:
-                      type: string
-                      example: http://image-url.com
-                    userType:
-                      type: string
-                      example: customer
-                    roleAndPermissions:
-                      type: array
+                      example: exsknkcdknksndcoqadkajncknckcknjknsdcskncksnckjsnkcnskcnsncksncsnkjnksndcnksnksoi1pkpkkpo3k3k2 23oi2kWDMdKJNKN
+                    userData:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: John Doe
+                        avatar:
+                          type: string
+                          example: http://url.com
+                        userType:
+                          type: string
+                          example: sample-user-type
+                        roleAndPermissions:
+                          type: array
+                          example:
+                            [
+                              {
+                                role: sample-role,
+                                permissions: sample-permissions,
+                              },
+                            ]
 
       401:
         description: Unauthorized ( If invite dose not exist )

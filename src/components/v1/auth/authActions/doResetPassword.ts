@@ -11,10 +11,11 @@ import { resetPasswordSchema } from '../auth.policy';
 const doResetPassword = async (req: IRequest, res: Response) => {
   type resetPasswordDataType = z.infer<typeof resetPasswordSchema>;
 
-  const { otpCode, password }: resetPasswordDataType = req.body;
+  const { otpCode, password, email }: resetPasswordDataType = req.body;
   try {
     const existingOTP = await OtpCodeModel.findOne({
       code: otpCode,
+      email,
     });
 
     if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);

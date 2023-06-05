@@ -1,7 +1,7 @@
 # @server = https://pif-api.herokuapp.com
 @server = http://localhost:3030
 @api = {{server}}/v1/en
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjU2ZGUyMDQtNGM2My00ZjBkLWEzMDAtMWFiNDE5NmE0YTc2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6IjMwMTBhMjk3LWM1YzItNDZlZC1hOTdkLWM4ZjUyN2Q0MTM3YiIsInJlZiI6IjY0Nzc2YTEzYmMwYjczOTk4Mzc3YTdiYyIsImlhdCI6MTY4NTU0Nzg5OCwiZXhwIjoxNjg1NzIwNjk4LCJpc3MiOiJQSUYtZGV2In0.vNZ8NiONpnjL7XpWu-lx9MhtcnvECXval5NGpjRL0Ew
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYmZjZWMxMDgtOWRkYi00ODJmLWEzODUtMTAwYmJiMjgxMjBlIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJhZG1pbiIsInNlc3Npb25JZCI6IjU0ZTA1YmFlLWY3NTgtNGE1Ni05YTg4LTZjYTkyZmU0YmMwOSIsInJlZiI6IjY0NzkwNjJiM2QzNzI2YTQ2ZDZlOTE0YyIsImlhdCI6MTY4NTk1NjYwNSwiZXhwIjoxNjg2MTI5NDA1LCJpc3MiOiJQSUYtZGV2In0.RcUgdh3YU9rCT4a5iQUyFzQXScXjEKXp-xHd59XPMdE
 
 GET {{server}}
 
@@ -13,16 +13,16 @@ POST {{api}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "piftech@pif-app.com",
-  "password": "Password_1"
+  "email": "jimohafeez738@gmail.com",
+  "password": "00000"
 }
 
 ### my profile
-GET {{api}}/user/my-profile
+GET {{api}}/users/my-profile
 Authorization: Bearer {{token}}
 
-### invite user
-POST {{api}}/user/invite
+### invite users
+POST {{api}}/users/invite
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -31,8 +31,40 @@ Authorization: Bearer {{token}}
   "role": "admin"
 }
 
-### invite user
-GET {{api}}/user/invite/893675a2-0e60-47f2-9e71-274d31270096
+### invite users
+GET {{api}}/auth/verify-invite/22074183-67ca-4b9a-898e-f3d70a3814db
+
+### finalize users invite
+POST {{api}}/users/accept-invite
+Content-Type: application/json
+
+{
+ "name": "Abdul-Afeez",
+ "email": "jimohafeez738@gmail.com",
+ "code": "22074183-67ca-4b9a-898e-f3d70a3814db",
+ "phonePrefix": "234",
+"phone": "8103498784",
+"password": "Aweda"
+}
+
+### dashboard - forgot password
+POST {{api}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email":"Jimohafeez738@gmail.com"
+}
+
+### dashboard - reset password
+POST {{api}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784",
+  "otpCode": "99497",
+  "password": "00000"
+}
 
 ### dashboard - forgot pin
 POST {{api}}/auth/forgot-password
@@ -48,6 +80,7 @@ POST {{api}}/auth/reset-password
 Content-Type: application/json
 
 {
+  "email": "jimohafeez738@gmail.com",
   "otpCode": "24691",
   "password": "0000"
 }
@@ -69,8 +102,8 @@ Content-Type: application/json
 {
   "phonePrefix": "234",
   "phone": "8103498784",
-  "code": "24691",
-  "purpose": "pin-reset"
+  "code": "55677",
+  "purpose": "signup"
 }
 
 ### mobile resend otp
@@ -80,7 +113,7 @@ Content-Type: application/json
 {
  "phonePrefix": "234",
   "phone": "8103498784",
-  "purpose": "pin-reset"
+  "purpose": "signup"
 }
 
 
@@ -92,10 +125,10 @@ Content-Type: application/json
  "name": "Aweds wedi",
  "dob": "1990-02-20",
  "phonePrefix": "234",
-"phone": "8103498784",
+ "phone": "8103498784",
  "pifId":"wedi",
  "zipCode":"12345",
- "otpCode":"93550"
+ "otpCode":"55677"
 }
 
 ### mobile set pin
@@ -115,7 +148,7 @@ Content-Type: application/json
 {
  "phonePrefix": "234",
  "phone": "8103498784",
- "pin": "0000"
+ "pin": "1111"
 }
 
 ### mobile - forgot pin
@@ -134,4 +167,14 @@ Content-Type: application/json
 {
   "otpCode": "24691",
   "pin": "0000"
+}
+
+### mobile - change pin
+POST {{api}}/auth/change-pin
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "oldPin": "1234",
+  "newPin": "1111"
 }

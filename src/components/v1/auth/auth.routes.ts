@@ -14,6 +14,8 @@ import {
   verifyOTPSchema,
   resetPasswordSchema,
   forgotPasswordSchema,
+  changePasswordSchema,
+  changePinSchema,
 } from './auth.policy';
 import {
   doDashboardLogin,
@@ -28,6 +30,8 @@ import {
   verifyOTPCode,
   doResetPassword,
   doForgotPassword,
+  doChangePassword,
+  doChangePin,
 } from './authActions';
 import {
   requireAuthMiddleware,
@@ -61,6 +65,14 @@ router.post('/forgot-pin', policyMiddleware(forgotPinSchema), doForgotPin);
 router.post('/reset-pin', policyMiddleware(resetPinSchema), doResetPin);
 
 router.post(
+  '/change-pin',
+  policyMiddleware(changePinSchema),
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  doChangePin
+);
+
+router.post(
   '/forgot-password',
   policyMiddleware(forgotPasswordSchema),
   doForgotPassword
@@ -70,6 +82,14 @@ router.post(
   '/reset-password',
   policyMiddleware(resetPasswordSchema),
   doResetPassword
+);
+
+router.post(
+  '/change-password',
+  policyMiddleware(changePasswordSchema),
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  doChangePassword
 );
 
 router.get('/logout', validateTokenMiddleware, requireAuthMiddleware, doLogout);

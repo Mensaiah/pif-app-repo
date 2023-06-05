@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';

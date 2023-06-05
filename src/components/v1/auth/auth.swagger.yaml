@@ -33,19 +33,30 @@
                 data:
                   type: object
                   properties:
-                    name:
+                    token:
                       type: string
-                      example: John Doe
-                    avatar:
-                      type: string
-                      example: http://url.com
-                    userType:
-                      type: string
-                      example: sample-user-type
-                    roleAndPermissions:
-                      type: array
-                      example:
-                        [{ role: sample-role, permissions: sample-permissions }]
+                      example: exsknkcdknksndcoqadkajncknckcknjknsdcskncksnckjsnkcnskcnsncksncsnkjnksndcnksnksoi1pkpkkpo3k3k2 23oi2kWDMdKJNKN
+                    userData:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: John Doe
+                        avatar:
+                          type: string
+                          example: http://url.com
+                        userType:
+                          type: string
+                          example: sample-user-type
+                        roleAndPermissions:
+                          type: array
+                          example:
+                            [
+                              {
+                                role: sample-role,
+                                permissions: sample-permissions,
+                              },
+                            ]
 
       401:
         description: Unauthorized (if the account has been blocked / if the wrong user type is sent / Invalid login credentials )
@@ -140,15 +151,19 @@
           schema:
             type: object
             required:
+              - email
               - otpCode
               - password
             properties:
+              email:
+                type: string
+                default: xyz@mail.com
               otpCode:
                 type: string
                 default: 34210
               password:
                 type: string
-                default: 0000
+                default: password_1234
     responses:
       201:
         description: If operation is successful
@@ -372,24 +387,30 @@
                 data:
                   type: object
                   properties:
-                    name:
+                    token:
                       type: string
-                      example: John Doe
-                    pifId:
-                      type: string
-                      example: JohnnyDoe
-                    avatar:
-                      type: string
-                      example: http://image-url.com
-                    currentMarketplace:
-                      type: string
-                      example: nigeria
-                    phonePrefix:
-                      type: string
-                      example: 234
-                    phone:
-                      type: string
-                      example: 8012345678
+                      example: exsknkcdknksndcoqadkajncknckcknjknsdcskncksnckjsnkcnskcnsncksncsnkjnksndcnksnksoi1pkpkkpo3k3k2 23oi2kWDMdKJNKN
+                    userData:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: John Doe
+                        pifId:
+                          type: string
+                          example: JohnnyDoe
+                        avatar:
+                          type: string
+                          example: http://image-url.com
+                        currentMarketplace:
+                          type: string
+                          example: nigeria
+                        phonePrefix:
+                          type: string
+                          example: 234
+                        phone:
+                          type: string
+                          example: 8012345678
 
       401:
         description: Unauthorized (If OTP has not been verified / invalid / the credentials sent are invalid)
@@ -529,9 +550,17 @@
           schema:
             type: object
             required:
+              - phonePrefix
+              - phone
               - otpCode
               - pin
             properties:
+              phone:
+                type: string
+                default: 234
+              phonePrefix:
+                type: string
+                default: 80123456789
               otpCode:
                 type: string
                 default: 34210
@@ -610,24 +639,30 @@
                 data:
                   type: object
                   properties:
-                    name:
+                    token:
                       type: string
-                      example: John Doe
-                    pifId:
-                      type: string
-                      example: JohnDoe
-                    avatar:
-                      type: string
-                      example: http://url.com
-                    currentMarketplace:
-                      type: string
-                      example: nigeria
-                    phonePrefix:
-                      type: string
-                      example: 234
-                    phone:
-                      type: string
-                      example: 80x xxxx xxx
+                      example: exsknkcdknksndcoqadkajncknckcknjknsdcskncksnckjsnkcnskcnsncksncsnkjnksndcnksnksoi1pkpkkpo3k3k2 23oi2kWDMdKJNKN
+                    userData:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          example: John Doe
+                        pifId:
+                          type: string
+                          example: JohnnyDoe
+                        avatar:
+                          type: string
+                          example: http://image-url.com
+                        currentMarketplace:
+                          type: string
+                          example: nigeria
+                        phonePrefix:
+                          type: string
+                          example: 234
+                        phone:
+                          type: string
+                          example: 8012345678
 
       401:
         description: Unauthorized (if the account has not been confirmed and signup is not complete / if account has been blocked / invalid credentials )
@@ -738,3 +773,113 @@
                 message:
                   type: string
                   example: It's not bye bye but see you again
+
+/auth/change-pin:
+  post:
+    tags:
+      - Mobile Authentication
+    summary: Change mobile users pin, they have to be logged in, it requires authentication.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - oldPin
+              - newPin
+            properties:
+              oldPin:
+                type: string
+                default: 12345
+              newPin:
+                type: string
+                default: 00000
+    responses:
+      200:
+        description: when pin is changed successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Pin changed successfully
+
+      401:
+        description: Unauthorized (if old pin does not match existing pin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Old pin is not correct.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/auth/change-password:
+  post:
+    tags:
+      - Dashboard Authentication
+    summary: Change dashboard user password, they have to be logged in, it requires authentication.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - oldPassword
+              - newPassword
+            properties:
+              oldPassword:
+                type: string
+                default: abcd1234
+              newPassword:
+                type: string
+                default: 0000abcd
+    responses:
+      200:
+        description: when password is changed successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Password changed successfully
+
+      401:
+        description: Unauthorized (if old password does not match existing password)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Old password is not correct.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

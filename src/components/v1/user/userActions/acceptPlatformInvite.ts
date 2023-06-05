@@ -114,10 +114,13 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
     return handleResponse(res, {
       message: 'Operation successful, Welcome 🤗',
       data: {
-        name: newUser.name,
-        avatar: newUser.avatar,
-        userType: newUser.userType,
-        roleAndPermissions: newUserAccess.rolesAndPermissions,
+        token,
+        userData: {
+          name: newUser.name,
+          avatar: newUser.avatar,
+          userType: newUser.userType,
+          roleAndPermissions: newUserAccess.rolesAndPermissions,
+        },
       },
     });
   } catch (err) {

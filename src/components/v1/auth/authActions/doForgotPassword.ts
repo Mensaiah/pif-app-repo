@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
@@ -48,7 +47,10 @@ const doForgotPassword = async (req: IRequest, res: Response) => {
 
     await sendForgotPasswordCodeMail({ to: email, code: newOtpCode.code });
 
-    return handleResponse(res, 'Please check your mail for OTP');
+    return handleResponse(
+      res,
+      'Please check your mail for a verification code'
+    );
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 501, err);
   }
