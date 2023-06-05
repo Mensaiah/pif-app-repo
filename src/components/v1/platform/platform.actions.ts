@@ -32,6 +32,7 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
     code,
     currency,
     currencyCode,
+    currencySymbol,
     language,
     languageCode,
   }: dataType = req.body;
@@ -54,6 +55,7 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
       name,
       code,
       currency,
+      currencySymbol,
       currencyCode,
       language,
       languageCode,
@@ -77,6 +79,7 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     name,
     currency,
     currencyCode,
+    currencySymbol,
     language,
     languageCode,
   }: dataType = req.body;
@@ -94,11 +97,15 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     if (!marketplaceExists)
       return handleResponse(res, 'Marketplace does not exist', 404);
 
-    if (name) marketplaceExists.name = name;
-    if (currency) marketplaceExists.currency = currency;
-    if (currencyCode) marketplaceExists.currencyCode = currencyCode;
-    if (language) marketplaceExists.language = language;
-    if (languageCode) marketplaceExists.languageCode = languageCode;
+    if ('name' in req.body) marketplaceExists.name = name;
+    if ('currency' in req.body) marketplaceExists.currency = currency;
+    if ('currencyCode' in req.body)
+      marketplaceExists.currencyCode = currencyCode;
+    if ('currencySymbol' in req.body)
+      marketplaceExists.currencySymbol = currencySymbol;
+    if ('language' in req.body) marketplaceExists.language = language;
+    if ('languageCode' in req.body)
+      marketplaceExists.languageCode = languageCode;
 
     platformData.marketplaces = platformData.marketplaces?.map(
       (marketplace) => {
@@ -129,10 +136,6 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
   } catch (err) {
     return handleResponse(res, useWord('internalServerError', req.lang), 500);
   }
-  // get platform data from db
-  // update marketplace in platform
-  // save platform
-  // return platform
 };
 
 export const addPlatformSocial = async (req: IRequest, res: Response) => {

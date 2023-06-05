@@ -7,6 +7,7 @@ export const addMarketplaceSchema = z.object({
   currencyCode: z.string(),
   language: z.string(),
   languageCode: z.string(),
+  currencySymbol: z.string(),
 });
 
 export const updateMarketplaceSchema = z.object({
@@ -16,6 +17,7 @@ export const updateMarketplaceSchema = z.object({
   currencyCode: z.string().optional(),
   language: z.string().optional(),
   languageCode: z.string().optional(),
+  currencySymbol: z.string().optional(),
 });
 
 export const addPlatformSocialSchema = z.object({

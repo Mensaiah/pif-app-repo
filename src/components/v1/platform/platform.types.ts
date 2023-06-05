@@ -6,6 +6,7 @@ export interface MarketplaceAttributes {
   language: string;
   languageCode: string;
   isDisabled?: boolean;
+  currencySymbol: string;
 }
 export interface PlatformAttributes {
   version: string;
