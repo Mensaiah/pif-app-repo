@@ -33,7 +33,7 @@ export const seedNow = async () => {
           currencyCode: 'DKK',
           language: 'danish',
           languageCode: 'da',
-          currencySymbol: 'kr',
+          currencySymbol: 'kr ',
         },
         {
           name: 'sweden',
@@ -42,7 +42,7 @@ export const seedNow = async () => {
           currencyCode: 'SEK',
           language: 'swedish',
           languageCode: 'sv',
-          currencySymbol: 'kr',
+          currencySymbol: 'kr ',
         },
         {
           name: 'spain',
