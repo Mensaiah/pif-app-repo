@@ -42,3 +42,11 @@ export const updateLegalPolicySchema = z.object({
   content: z.object(contentSchema).optional(),
   isPublished: z.boolean().optional(),
 });
+
+export const addFaqSchema = z.object({
+  question: z.string(),
+  answer: z.string(),
+  isDraft: z.boolean().optional(),
+});
+
+export const updateFaqSchema = addFaqSchema; //addFaqSchema.omit({ isDraft: true });

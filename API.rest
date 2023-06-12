@@ -71,8 +71,7 @@ POST {{api}}/auth/forgot-password
 Content-Type: application/json
 
 {
-  "phonePrefix": "234",
-  "phone": "8103498784"
+  "email":"jimohafeez738@gmail.com"
 }
 
 ### dashboard - reset password
@@ -177,4 +176,33 @@ Authorization: Bearer {{token}}
 {
   "oldPin": "1234",
   "newPin": "1111"
+}
+
+###
+
+GET {{api}}/cms/faq
+Authorization: Bearer {{token}}
+
+###
+
+POST {{api}}/cms/faq
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "question": "What is Pifing?",
+  "answer": "It means sending a gift to your loved ones and friends",
+  "isDraft": false
+}
+
+###
+
+GET {{api}}/cms/faq/647f684100839cfd80eec4f8
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "question": "What is Pifing?",
+  "answer": "It means sending a gift to your loved one and friends",
+  "isDraft": false
 }

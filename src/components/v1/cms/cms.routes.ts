@@ -1,20 +1,28 @@
 import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
-import { validateTokenMiddleware } from '../auth/authMiddlwares';
+import {
+  validateRolesMiddleware,
+  validateTokenMiddleware,
+} from '../auth/authMiddlwares';
 import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
+  addFaq,
   addInfo,
   addLegalPolicy,
+  getFaq,
   getInfo,
   getLegalPolicy,
+  updateFaq,
   updateInfo,
   updateLegalPolicy,
 } from './cms.actions';
 import {
+  addFaqSchema,
   addInfoSchema,
   addLegalPolicySchema,
+  updateFaqSchema,
   updateInfoSchema,
   updateLegalPolicySchema,
 } from './cms.policy';
@@ -53,6 +61,32 @@ router.patch(
   requireAuth,
   policyMiddleware(updateLegalPolicySchema),
   updateLegalPolicy
+);
+
+router.get(
+  '/faq',
+  validateTokenMiddleware,
+  requireAuth,
+  validateRolesMiddleware(['super admin', 'admin'], 'error getting info'),
+  getFaq
+);
+
+router.post(
+  '/faq',
+  validateTokenMiddleware,
+  requireAuth,
+  validateRolesMiddleware(['admin', 'super admin'], 'error adding info'),
+  policyMiddleware(addFaqSchema),
+  addFaq
+);
+
+router.get(
+  '/faq/:faqId',
+  validateTokenMiddleware,
+  requireAuth,
+  validateRolesMiddleware(['admin', 'super admin'], 'error adding info'),
+  policyMiddleware(updateFaqSchema),
+  updateFaq
 );
 
 export default router;

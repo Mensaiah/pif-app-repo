@@ -51,5 +51,25 @@ const legalPolicySchema = new Schema(
   { timestamps: true }
 );
 
+const faqSchema = new Schema(
+  {
+    question: String,
+    answer: String,
+    isDraft: Boolean,
+    AddedBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    LastEditedBy: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
 export const InfoBoxModel = model('InfoBox', infoBoxSchema);
 export const LegalPolicyModel = model('LegalPolicy', legalPolicySchema);
+export const FaqModel = model('Faq', faqSchema);

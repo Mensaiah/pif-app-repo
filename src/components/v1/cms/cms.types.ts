@@ -24,3 +24,11 @@ export interface LegalPolicyAttributes extends Document {
   CreatedBy: ObjectId;
   LastEditedBy: ObjectId;
 }
+
+export interface FaqAttribute extends Document {
+  question: string;
+  answer: string;
+  isDraft: boolean;
+  AddedBy: ObjectId;
+  LastEditedBy: ObjectId;
+}

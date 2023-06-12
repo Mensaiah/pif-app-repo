@@ -38,3 +38,37 @@ export const validateTokenMiddleware = async (
     }
   }
 };
+
+type verifyRoleParamsType = 'super admin' | 'admin';
+
+export const validateRolesMiddleware =
+  (roles: verifyRoleParamsType | Array<verifyRoleParamsType>, info?: string) =>
+  async (req: IRequest, res: Response, next: NextFunction) => {
+    try {
+      const userType = req.userType;
+
+      consoleLog(userType);
+
+      if (!userType) return handleResponse(res, info, 401, 'invalid-user');
+
+      if (typeof roles === 'string' && roles !== userType)
+        return handleResponse(
+          res,
+          "You're not authorized to perform this operation",
+          401,
+          'invalid-user'
+        );
+
+      if (!roles.includes(userType as verifyRoleParamsType))
+        return handleResponse(
+          res,
+          "You're not authorized to perform this operation",
+          401,
+          'invalid-user'
+        );
+
+      next();
+    } catch (err) {
+      return handleResponse(res, 'Authentication error', 401, err);
+    }
+  };

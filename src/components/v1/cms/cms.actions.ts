@@ -7,10 +7,12 @@ import { handleResponse } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import { UserModel } from '../user/user.model';
 
-import { InfoBoxModel, LegalPolicyModel } from './cms.models';
+import { FaqModel, InfoBoxModel, LegalPolicyModel } from './cms.models';
 import {
+  addFaqSchema,
   addInfoSchema,
   addLegalPolicySchema,
+  updateFaqSchema,
   updateLegalPolicySchema,
 } from './cms.policy';
 
@@ -318,6 +320,105 @@ export const updateLegalPolicy = async (req: IRequest, res: Response) => {
     return handleResponse(res, {
       message: changesMade ? 'Policy updated successfully' : 'No changes made',
       data: policyExists,
+    });
+  } catch (err) {
+    return handleResponse(
+      res,
+      useWord('internalServerError', req.lang),
+      500,
+      err
+    );
+  }
+};
+
+export const addFaq = async (req: IRequest, res: Response) => {
+  type addFaqDataType = z.infer<typeof addFaqSchema>;
+
+  const { question, answer, isDraft }: addFaqDataType = req.body;
+
+  try {
+    const { _id: userId } = req.user;
+
+    const faqExists = await FaqModel.findOne({
+      question: question.toLowerCase(),
+    });
+
+    if (faqExists && !isDraft)
+      return handleResponse(
+        res,
+        'A faq with this question already exists',
+        409,
+        'faq-exists'
+      );
+
+    const newFaq = await new FaqModel({
+      question,
+      answer,
+      isDraft,
+      AddedBy: userId,
+      LastEditedBy: userId,
+    }).save();
+
+    return handleResponse(res, {
+      message: 'Faq added successfully',
+      data: newFaq,
+    });
+  } catch (err) {
+    return handleResponse(
+      res,
+      useWord('internalServerError', req.lang),
+      500,
+      err
+    );
+  }
+};
+
+export const getFaq = async (req: IRequest, res: Response) => {
+  const { faqId } = req.params;
+
+  try {
+    const faq = await (faqId ? FaqModel.findById(faqId) : FaqModel.find());
+
+    if (!faq) return handleResponse(res, 'error getting faq', 404);
+
+    return handleResponse(res, faq);
+  } catch (err) {
+    return handleResponse(
+      res,
+      useWord('internalServerError', req.lang),
+      500,
+      err
+    );
+  }
+};
+
+export const updateFaq = async (req: IRequest, res: Response) => {
+  type dataType = z.infer<typeof updateFaqSchema>;
+
+  const { faqId } = req.params;
+
+  const { _id: userId } = req.user;
+
+  try {
+    const faqExists = await FaqModel.findById(faqId);
+
+    if (!faqExists) return handleResponse(res, 'error locating faq', 404);
+
+    const { answer, isDraft, question }: dataType = req.body;
+
+    if (question) faqExists.question = question;
+    if (answer) faqExists.answer = answer;
+    if (isDraft) faqExists.isDraft = isDraft;
+
+    const changesMade = faqExists.isModified();
+    if (changesMade) {
+      faqExists.LastEditedBy = userId;
+      await faqExists.save();
+    }
+
+    return handleResponse(res, {
+      message: changesMade ? 'Faq updated successfully' : 'No changes made',
+      data: faqExists,
     });
   } catch (err) {
     return handleResponse(
