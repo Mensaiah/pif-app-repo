@@ -51,8 +51,6 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
   ],
 });
 
-userAccessSchema.path('rolesAndPermissions').schema.set('autoIndex', false);
-
 // Hash password before saving to database
 userAccessSchema.pre<UserAccessAttributes & Document>(
   'save',

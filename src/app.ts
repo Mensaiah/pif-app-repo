@@ -49,7 +49,7 @@ const initializeMiddlewares = () => {
     .use(express.json({ limit: '1kb' }))
     .use(express.urlencoded({ limit: '1kb', extended: false }))
     .use(helmet())
-    .use(fingerprintMiddleware)
+    .use(fingerprintMiddleware) // TODO: fix lat & long
     .use(swaggerApp)
     .use((req, res, next) => {
       if (req.method === 'OPTIONS') {
@@ -65,7 +65,7 @@ const initializeMiddlewares = () => {
 
   // dev middlewares
   if (appConfig.isDev) {
-    app.use(httpRequestLogger);
+    app.use(httpRequestLogger); // TODO: look into logger for dev & prod
   }
 
   // pass lang as part of the request

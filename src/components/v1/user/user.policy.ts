@@ -5,28 +5,38 @@ const Role = z.enum([
   'country-admin',
   'partner-admin',
   'local-partner',
+  'pos-user',
 ]);
 
 const User = z.object({
   email: z.string().email(),
   role: Role,
-  marketplace: z.string().optional(),
+  userType: z.enum(['platform-admin', 'partner-admin']),
+  marketplaces: z.array(z.string()).optional(),
   partnerId: z.string().optional(),
+  cityId: z.string().optional(),
+  posId: z.string().optional(),
 });
 
-export const createPlatformInviteSchema = User.refine(
+export const createPlatformInviteSchema: any = User.refine(
   (data) => {
-    if (data.role === 'admin' && data.email) return true;
-    if (data.role === 'country-admin' && data.marketplace && data.email)
-      return true;
-
+    // Define who can invite which userType and role
+    if (data.userType === 'platform-admin') {
+      if (data.role === 'admin') return true;
+      if (data.role === 'country-admin' && data.marketplaces.length)
+        return true;
+    }
     if (
-      (data.role === 'partner-admin' || data.role === 'local-partner') &&
-      data.marketplace &&
+      data.userType === 'partner-admin' &&
       data.partnerId &&
-      data.email
-    )
-      return true;
+      data.marketplaces.length
+    ) {
+      if (data.role === 'partner-admin') return true;
+      if (data.role === 'local-partner' && data.cityId) {
+        return true;
+      }
+      if (data.role === 'pos-user' && data.posId) return true;
+    }
 
     return false;
   },

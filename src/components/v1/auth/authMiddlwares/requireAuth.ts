@@ -15,11 +15,18 @@ const requireAuth = async (
   if (!req.decoded)
     return handleResponse(res, useWord('authIsRequired', req.lang), 401);
 
-  const { sessionId, ref, authKey, userType } = req.decoded;
-  consoleLog(JSON.stringify({ sessionId, ref, authKey, userType }, null, 2));
-  const currentUserIsUser = ['admin', 'customer', 'partner-admin'].includes(
-    userType
+  const { sessionId, ref, authKey, userType, role } = req.decoded;
+
+  // TODO: remove
+  consoleLog(
+    JSON.stringify({ sessionId, ref, authKey, userType, role }, null, 2)
   );
+
+  const currentUserIsUser = [
+    'platform-admin',
+    'customer',
+    'partner-admin',
+  ].includes(userType);
 
   try {
     const user = currentUserIsUser
@@ -29,26 +36,22 @@ const requireAuth = async (
     if (!user) return handleResponse(res, 'authorization failed', 401);
 
     const userAccess = await UserAccessModel.findOne(
-      currentUserIsUser ? { User: user._id } : { PartnerPosUser: user._id }
+      currentUserIsUser
+        ? { User: user._id, role }
+        : { PartnerPosUser: user._id, role }
     );
     if (!userAccess) return handleResponse(res, 'authorization failed', 401);
 
     if (userAccess.isBlocked)
       return handleResponse(res, 'You have been banned. Contact us', 401);
 
-    // TODO: if user is not customer and has no password, he should get this => if (set password first)
-
     // if user is a customer and have not set pin
     if (
       userType === 'customer' &&
       !userAccess.pin &&
-      req.originalUrl !== '/v1/en/auth/set-pin'
+      !req.originalUrl.match(/^\/v1\/[a-z]{2}\/auth\/set-pin$/)
     )
       return handleResponse(res, 'You need to set your pin first!', 403);
-
-    // // if user is not a customer and have not set password
-    // if (userType !== 'customer' && !userAccess.password)
-    //   return handleResponse(res, 'Set your password.', 403);
 
     // find session index
     const sessionIndex = userAccess.sessions.findIndex(
@@ -108,6 +111,7 @@ const requireAuth = async (
     req.userType = req.decoded.userType;
     req.userAccess = userAccess;
     req.user = user;
+    if (req.userType !== 'customer') req.marketplaces = userAccess.markeplaces;
 
     consoleLog({ url: req.originalUrl, path: req.path });
 

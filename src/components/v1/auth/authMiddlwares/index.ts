@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import appConfig from '../../../../config';
 import { IRequest, IToken } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 
 export { default as requireAuthMiddleware } from './requireAuth';
@@ -39,36 +39,64 @@ export const validateTokenMiddleware = async (
   }
 };
 
-type verifyRoleParamsType = 'super admin' | 'admin';
+export const hasAnyPermissionMiddleware =
+  (requiredPermissions: string[]) =>
+  (req: IRequest, res: Response, next: NextFunction) => {
+    if (req.userType === 'customer')
+      return handleResponse(res, 'Forbidden', 403);
 
-export const validateRolesMiddleware =
-  (roles: verifyRoleParamsType | Array<verifyRoleParamsType>, info?: string) =>
-  async (req: IRequest, res: Response, next: NextFunction) => {
-    try {
-      const userType = req.userType;
+    const { permissions } = req.userAccess;
 
-      consoleLog(userType);
+    if (!permissions || !permissions.length)
+      return handleResponse(
+        res,
+        'You do not have permission to perform this operation',
+        403
+      );
 
-      if (!userType) return handleResponse(res, info, 401, 'invalid-user');
+    const hasPermission =
+      permissions.includes('supreme') ||
+      requiredPermissions.some((permission) =>
+        permissions.includes(permission)
+      );
 
-      if (typeof roles === 'string' && roles !== userType)
-        return handleResponse(
-          res,
-          "You're not authorized to perform this operation",
-          401,
-          'invalid-user'
-        );
+    if (!hasPermission)
+      return handleResponse(
+        res,
+        'You do not have permission to perform this operation',
+        403
+      );
 
-      if (!roles.includes(userType as verifyRoleParamsType))
-        return handleResponse(
-          res,
-          "You're not authorized to perform this operation",
-          401,
-          'invalid-user'
-        );
+    return next();
+  };
 
-      next();
-    } catch (err) {
-      return handleResponse(res, 'Authentication error', 401, err);
-    }
+export const hasAllPermissionsMiddleware =
+  (requiredPermissions: string[]) =>
+  (req: IRequest, res: Response, next: NextFunction) => {
+    if (req.userType === 'customer')
+      return handleResponse(res, 'Forbidden', 403);
+
+    const { permissions } = req.userAccess;
+
+    if (!permissions || !permissions.length)
+      return handleResponse(
+        res,
+        'You do not have permission to perform this operation',
+        403
+      );
+
+    const hasPermission =
+      permissions.includes('supreme') &&
+      requiredPermissions.every((permission) =>
+        permissions.includes(permission)
+      );
+
+    if (!hasPermission)
+      return handleResponse(
+        res,
+        'You do not have permission to perform this operation',
+        403
+      );
+
+    return next();
   };

@@ -1,7 +1,5 @@
 import { ObjectId } from 'mongoose';
 
-import { PermissionCapabilities } from '../../../config/rolesAndPermissions';
-
 export interface UserAccessAttributes {
   User?: ObjectId;
   PartnerPosUser?: ObjectId;
@@ -10,10 +8,6 @@ export interface UserAccessAttributes {
   securityCode?: string;
   role: string;
   permissions: [string];
-  rolesAndPermissions: {
-    role: string;
-    permissions: (PermissionCapabilities | 'supreme')[];
-  }[];
   markeplaces?: Array<string>;
   isBlocked?: boolean;
   lastLoginAttempt?: Date | null;

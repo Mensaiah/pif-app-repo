@@ -33,7 +33,7 @@ const userSchema = new Schema<UserAttributes>(
     occupation: String,
     relationship: {
       type: String,
-      enum: ['married', 'single', 'divorced', 'prefer not to say'],
+      enum: ['married', 'single', 'divorced', 'prefer-not-to-say'],
     },
     hasChildren: Boolean,
     interests: [String],
@@ -112,6 +112,11 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
   Partner: { type: ObjectId, ref: 'Partner', required: true },
   name: { type: String, required: true },
   isActive: Boolean,
+  email: String,
+  contact: {
+    phone: String,
+    phonePrefix: String,
+  },
 });
 
 export const UserModel = model<UserAttributes>('User', userSchema);
@@ -123,10 +128,13 @@ export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
 export const UserInviteSchema = new Schema<UserInviteAttributes>({
   code: { type: String, required: true },
   role: { type: String, required: true },
+  userType: { type: String, required: true },
   email: { type: String, required: true },
   invitedBy: { type: ObjectId, ref: 'User' },
   Partner: { type: ObjectId, ref: 'Partner' },
-  currentMarketplace: String,
+  marketplaces: [String],
+  City: { type: ObjectId, ref: 'City' },
+  Pos: { type: ObjectId, ref: 'Pos' },
   expiresAt: Date,
   lastSent: Date,
   status: String,

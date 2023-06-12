@@ -1,9 +1,12 @@
 import { Response } from 'express';
 import { z } from 'zod';
 
+import appConfig from '../../../config';
 import { IRequest } from '../../../types/global';
 import { handleResponse } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
+import { OtpCodeModel, UserAccessModel } from '../auth/auth.models';
+import { UserInviteModel, UserModel } from '../user/user.model';
 
 import PlatformModel from './platform.model';
 import {
@@ -197,6 +200,25 @@ export const updatePlatformSocial = async (req: IRequest, res: Response) => {
     });
 
     return handleResponse(res, platformData);
+  } catch (err) {
+    return handleResponse(res, useWord('internalServerError', req.lang), 500);
+  }
+};
+
+export const clearDBonDev = async (req: IRequest, res: Response) => {
+  if (!appConfig.isDev) return handleResponse(res, 'Not allowed', 403);
+
+  // clear all models in the db, send success to the client and restart server to prompt seeder to run
+  try {
+    await PlatformModel.deleteMany();
+    await UserModel.deleteMany();
+    await UserAccessModel.deleteMany();
+    await UserInviteModel.deleteMany();
+    await OtpCodeModel.deleteMany();
+
+    handleResponse(res, 'DB cleared successfully');
+
+    process.exit(0);
   } catch (err) {
     return handleResponse(res, useWord('internalServerError', req.lang), 500);
   }

@@ -2,7 +2,7 @@ import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
-  validateRolesMiddleware,
+  hasAnyPermissionMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 import requireAuth from '../auth/authMiddlwares/requireAuth';
@@ -35,6 +35,7 @@ router.post(
   '/info',
   validateTokenMiddleware,
   requireAuth,
+  hasAnyPermissionMiddleware(['manage-info', 'add-info']),
   policyMiddleware(addInfoSchema),
   addInfo
 );
@@ -42,6 +43,7 @@ router.patch(
   '/info/:infoId',
   validateTokenMiddleware,
   requireAuth,
+  hasAnyPermissionMiddleware(['manage-info', 'update-info']),
   policyMiddleware(updateInfoSchema),
   updateInfo
 );
@@ -52,6 +54,7 @@ router.post(
   '/policies',
   validateTokenMiddleware,
   requireAuth,
+  hasAnyPermissionMiddleware(['manage-policies', 'add-policy']),
   policyMiddleware(addLegalPolicySchema),
   addLegalPolicy
 );
@@ -59,32 +62,28 @@ router.patch(
   '/policies/:policyId',
   validateTokenMiddleware,
   requireAuth,
+  hasAnyPermissionMiddleware(['manage-policies', 'update-policy']),
   policyMiddleware(updateLegalPolicySchema),
   updateLegalPolicy
 );
 
-router.get(
-  '/faq',
-  validateTokenMiddleware,
-  requireAuth,
-  validateRolesMiddleware(['super admin', 'admin'], 'error getting info'),
-  getFaq
-);
+router.get('/faq', getFaq);
+router.get('/faq/:faqId', getFaq);
 
 router.post(
   '/faq',
   validateTokenMiddleware,
   requireAuth,
-  validateRolesMiddleware(['admin', 'super admin'], 'error adding info'),
+  hasAnyPermissionMiddleware(['manage-faq', 'add-faq']),
   policyMiddleware(addFaqSchema),
   addFaq
 );
 
-router.get(
+router.patch(
   '/faq/:faqId',
   validateTokenMiddleware,
   requireAuth,
-  validateRolesMiddleware(['admin', 'super admin'], 'error adding info'),
+  hasAnyPermissionMiddleware(['manage-faq', 'update-faq']),
   policyMiddleware(updateFaqSchema),
   updateFaq
 );

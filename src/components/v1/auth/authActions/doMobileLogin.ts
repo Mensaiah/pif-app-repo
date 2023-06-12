@@ -128,6 +128,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       userType: existingUser.userType,
       sessionId: currentSession.sessionId,
       ref: existingUser._id,
+      role: userAccess.role,
     });
 
     // res.cookie('jwt', token, {

@@ -23,8 +23,6 @@ const verifyPlatformInvite = async (req: IRequest, res: Response) => {
     if (existingInvite.expiresAt < new Date())
       return handleResponse(res, 'Invitation code has expire');
 
-    // TODO: send verification OTP code to invited user
-
     return handleResponse(res, {
       message: 'Proceed to onboarding',
       data: {

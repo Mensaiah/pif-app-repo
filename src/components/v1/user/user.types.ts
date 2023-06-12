@@ -2,7 +2,7 @@ import { ObjectId } from 'mongoose';
 
 import { LanguageCode } from '../../../types/global';
 
-export type UserType = 'customer' | 'admin' | 'partner-admin';
+export type UserType = 'customer' | 'platform-admin' | 'partner-admin';
 export interface UserAttributes {
   name?: string;
   email?: string;
@@ -80,15 +80,23 @@ export interface PartnerPosUserAttributes {
   Partner: ObjectId;
   name: string;
   isActive: boolean;
+  email?: string;
+  contact?: {
+    phone?: string;
+    phonePrefix?: string;
+  };
 }
 
 export interface UserInviteAttributes {
   code: string;
+  userType: Exclude<UserType, 'customer'>;
   role: string;
   email: string;
   invitedBy: ObjectId;
-  currentMarketplace?: string;
+  marketplaces?: string[];
   Partner?: ObjectId;
+  City?: ObjectId;
+  Pos?: ObjectId;
   expiresAt?: Date;
   lastSent?: Date;
   status: 'pending' | 'accepted';

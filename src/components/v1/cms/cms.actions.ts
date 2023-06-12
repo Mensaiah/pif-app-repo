@@ -5,7 +5,6 @@ import appConfig from '../../../config';
 import { IRequest } from '../../../types/global';
 import { handleResponse } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
-import { UserModel } from '../user/user.model';
 
 import { FaqModel, InfoBoxModel, LegalPolicyModel } from './cms.models';
 import {
@@ -31,19 +30,6 @@ export const addInfo = async (req: IRequest, res: Response) => {
 
   try {
     const { _id: userId } = req.user;
-
-    const existingUser = await UserModel.findById(userId);
-
-    if (!existingUser)
-      return handleResponse(res, 'error adding info', 401, 'invalid-user');
-
-    if (!['admin', 'super-admin'].includes(existingUser.userType))
-      return handleResponse(
-        res,
-        'You are not authorized to perform this operation',
-        401,
-        'invalid-user'
-      );
 
     const infoExists = await InfoBoxModel.findOne({
       title: title.toLowerCase(),
@@ -124,19 +110,6 @@ export const updateInfo = async (req: IRequest, res: Response) => {
   try {
     const { _id: userId } = req.user;
 
-    const existingUser = await UserModel.findById(userId);
-
-    if (!existingUser)
-      return handleResponse(res, 'error updating info', 401, 'invalid-user');
-
-    if (!['admin', 'super-admin'].includes(existingUser.userType))
-      return handleResponse(
-        res,
-        "You're not authorized to perform this operation",
-        401,
-        'invalid-user'
-      );
-
     const info = await InfoBoxModel.findById(infoId);
 
     if (!info) return handleResponse(res, 'error locating info', 404);
@@ -199,19 +172,6 @@ export const addLegalPolicy = async (req: IRequest, res: Response) => {
 
   try {
     const { _id: userId } = req.user;
-
-    const existingUser = await UserModel.findById(userId);
-
-    if (!existingUser)
-      return handleResponse(res, 'error adding legal policy', 401);
-
-    if (!['admin', 'super-admin'].includes(existingUser.userType))
-      return handleResponse(
-        res,
-        "You're not authorized to perform this operation",
-        401,
-        'invalid-user'
-      );
 
     const policyExists = await LegalPolicyModel.findOne({
       title: title.toLowerCase(),
@@ -408,7 +368,7 @@ export const updateFaq = async (req: IRequest, res: Response) => {
 
     if (question) faqExists.question = question;
     if (answer) faqExists.answer = answer;
-    if (isDraft) faqExists.isDraft = isDraft;
+    if ('isDraft' in req.body) faqExists.isDraft = isDraft;
 
     const changesMade = faqExists.isModified();
     if (changesMade) {

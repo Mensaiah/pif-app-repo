@@ -19,7 +19,15 @@ const createInviteLink = (req: IRequest, code: string) =>
 const createPlatformInvite = async (req: IRequest, res: Response) => {
   type UserInviteType = z.infer<typeof createPlatformInviteSchema>;
 
-  const { email, role, marketplace, partnerId }: UserInviteType = req.body;
+  const {
+    email,
+    userType,
+    role,
+    marketplaces,
+    partnerId,
+    cityId,
+    posId,
+  }: UserInviteType = req.body;
 
   try {
     const existingUser = await UserModel.findOne(
@@ -31,7 +39,11 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
     if (existingUser)
       return handleResponse(res, 'Account already exists.', 409);
 
-    const invitationData = await UserInviteModel.findOne({ email });
+    const invitationData = await UserInviteModel.findOne({
+      email,
+      role,
+      userType,
+    });
 
     if (invitationData) {
       if (invitationData.expiresAt < new Date()) {
@@ -53,13 +65,17 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
 
     const newInvite = await new UserInviteModel({
       code: uuid(),
-      email,
+      userType,
       role,
+      email,
       invitedBy: req.user._id,
-      currentMarketplace: marketplace,
+      marketplaces: marketplaces,
       Partner: partnerId,
+      City: cityId,
+      Pos: posId,
       expiresAt: new Date(Date.now() + ms('1 day')),
       lastSent: new Date(),
+      status: 'pending',
     }).save();
 
     await sendVerificationMail({

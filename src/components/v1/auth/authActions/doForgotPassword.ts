@@ -18,7 +18,7 @@ const doForgotPassword = async (req: IRequest, res: Response) => {
     const existingUser = await UserModel.findOne({
       email,
       userType: {
-        $not: { $eq: 'customer' },
+        $ne: 'customer',
       },
     });
 

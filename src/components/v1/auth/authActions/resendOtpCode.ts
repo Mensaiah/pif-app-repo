@@ -29,6 +29,7 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
           }
         : {
             email,
+            userType: { $ne: 'customer' },
           }
     );
 
@@ -77,6 +78,7 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
 
     if (email && purpose === 'password-reset') {
       await sendForgotPasswordCodeMail({ to: email, code: otpExists.code });
+
       return handleResponse(res, 'Please recheck your mail for OTP code');
     }
 

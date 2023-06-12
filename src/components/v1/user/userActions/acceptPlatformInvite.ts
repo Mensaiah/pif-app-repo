@@ -9,7 +9,7 @@ import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
 import { generateToken } from '../../auth/auth.utils';
-import { UserInviteModel, UserModel } from '../user.model';
+import { PartnerPosUserModel, UserInviteModel, UserModel } from '../user.model';
 import { acceptPlatformInviteSchema } from '../user.policy';
 
 const acceptPlatformInvite = async (req: IRequest, res: Response) => {
@@ -31,14 +31,33 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
         401
       );
 
-    const newUser = new UserModel({
-      name,
-      email,
-      contact: {
-        phonePrefix,
-        phone,
-      },
-    });
+    const newUser =
+      existingInvite.role === 'pos-user'
+        ? new PartnerPosUserModel({
+            Partner: existingInvite.Partner,
+            name,
+            email,
+            contact: {
+              phonePrefix,
+              phone,
+            },
+          })
+        : new UserModel({
+            name,
+            email,
+            contact: {
+              phonePrefix,
+              phone,
+            },
+          });
+
+    if (existingInvite.userType === 'partner-admin') {
+      newUser.Partner = existingInvite.Partner;
+
+      if (existingInvite.role === 'partner-admin') {
+        newUser.userType = existingInvite.role;
+      }
+    }
 
     // handle platform roles
     if (['admin', 'country-admin'].includes(existingInvite.role)) {
@@ -102,6 +121,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       userType: newUser.userType,
       sessionId: newSession.sessionId,
       ref: newUser._id,
+      role: newUserAccess.role,
     });
 
     // res.cookie('jwt', token, {

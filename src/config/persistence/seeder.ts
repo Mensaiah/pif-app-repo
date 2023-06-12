@@ -103,7 +103,7 @@ export const seedNow = async () => {
     const seeduser = new UserModel<UserAttributes>({
       name: seedData.name,
       email: seedData.email,
-      userType: 'admin',
+      userType: 'platform-admin',
       contact: seedData.contact,
       isConfirmed: true,
     });
@@ -111,12 +111,8 @@ export const seedNow = async () => {
     await new UserAccessModel({
       User: seeduser._id,
       password: seedData.password,
-      rolesAndPermissions: [
-        {
-          role: 'super-admin',
-          permissions: ['supreme'],
-        },
-      ],
+      role: 'super-admin',
+      permissions: ['supreme'],
       failedLoginAttempts: 0,
       sessions: [],
     }).save();
@@ -133,3 +129,5 @@ export const seedNow = async () => {
     );
   }
 };
+
+// create a funtion to seed the database

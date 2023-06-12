@@ -93,6 +93,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       userType: existingUser.userType,
       sessionId: newSession.sessionId,
       ref: existingUser._id,
+      role: userAccess.role,
     });
     // res.cookie('jwt', token, {
     //   httpOnly: true,

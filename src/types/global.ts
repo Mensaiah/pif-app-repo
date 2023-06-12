@@ -64,12 +64,14 @@ export interface IRequest extends Request {
   userType?: UserType | 'pos-user';
   permissions?: string[];
   userAccess: Document & UserAccessAttributes;
+  marketplaces?: string[];
 }
 
 export interface IToken {
   deviceId: string;
   sessionId: string;
   ref: Types.ObjectId;
+  role: string;
   authKey: string;
   userType: UserType | 'pos-user';
 }

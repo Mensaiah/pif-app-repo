@@ -27,13 +27,13 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
     lowercase: true,
     required: true,
   },
-  currencySymbol: {
-    type: String,
-  },
   languageCode: {
     type: String,
     lowercase: true,
     required: true,
+  },
+  currencySymbol: {
+    type: String,
   },
   isDisabled: Boolean,
 });

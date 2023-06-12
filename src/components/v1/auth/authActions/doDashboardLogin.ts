@@ -19,18 +19,20 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
   const { email, password }: LoginDatatype = req.body;
 
   try {
-    const existingUser = await UserModel.findOne({ email: email });
+    const existingUser = await UserModel.findOne({
+      email: email,
+      userType: { $ne: 'customer' },
+    });
+
     if (!existingUser)
       return handleResponse(res, 'Invalid login credentials', 401);
 
     const userAccess = await UserAccessModel.findOne({
       User: existingUser._id,
+      role: { $ne: 'customer' },
     });
     if (!userAccess)
       return handleResponse(res, 'Invalid login credentials', 401);
-
-    if (existingUser.userType === 'customer')
-      return handleResponse(res, 'Login on the mobile app instead', 401);
 
     if (userAccess.isBlocked) {
       return handleResponse(
@@ -119,11 +121,12 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     }
 
     await userAccess.save();
-    consoleLog(JSON.stringify({ deviceHash: req.fingerprint.hash }, null, 2));
+
     const token = generateToken({
       authKey: userAccess.securityCode,
       deviceId: req.fingerprint.hash,
       userType: existingUser.userType,
+      role: userAccess.role,
       sessionId: currentSession.sessionId,
       ref: existingUser._id,
     });
@@ -143,7 +146,8 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
           name: existingUser.name,
           avatar: existingUser.avatar,
           userType: existingUser.userType,
-          roleAndPermissions: userAccess.rolesAndPermissions,
+          role: userAccess.role,
+          permissions: userAccess.permissions,
         },
       },
     });
