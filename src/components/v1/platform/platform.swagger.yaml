@@ -1,0 +1,357 @@
+/platform:
+  get:
+    tags:
+      - Platform
+    summary: fetch platform data.
+    responses:
+      200:
+        description: Return an object with platform data.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                version:
+                  type: string
+                marketplaces:
+                  type: array
+                  items:
+                    type:
+                    properties:
+                      name:
+                        type: string
+                      code:
+                        type: string
+                      currency:
+                        type: string
+                      currencyCode:
+                        type: string
+                      language:
+                        type: string
+                      languageCode:
+                        type: string
+                      isDisabled:
+                        type: boolean
+                      currencySymbol:
+                        type: string
+                socials:
+                  type: array
+                  items:
+                    type:
+                    properties:
+                      name:
+                        type: string
+                      url:
+                        type: string
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/platform/marketplace:
+  post:
+    tags:
+      - Platform
+    summary: Adding new marketplace
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - code
+              - currency
+              - currencyCode
+              - currencySymbol
+              - language
+              - languageCode
+            properties:
+              name:
+                type: string
+              code:
+                type: string
+              currency:
+                type: string
+              currencyCode:
+                type: string
+              currencySymbol:
+                type: string
+              language:
+                type: string
+              languageCode:
+                type: string
+
+    responses:
+      200:
+        description: Adding new marketplace successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                code:
+                  type: string
+                currency:
+                  type: string
+                currencyCode:
+                  type: string
+                currencySymbol:
+                  type: string
+                language:
+                  type: string
+                languageCode:
+                  type: string
+                isDisabled:
+                  type: boolean
+
+      409:
+        description: If the marketplace exists.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Marketplace already exists
+
+      500:
+        description: if there is no platform data / internal server error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is no platform data (Error handling request at this time) / Internal server error. We're duly notified and will fix this. Try again later
+
+  patch:
+    tags:
+      - Platform
+    summary: Edit or update marketplace data
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              code:
+                type: string
+              currency:
+                type: string
+              currencyCode:
+                type: string
+              currencySymbol:
+                type: string
+              language:
+                type: string
+              languageCode:
+                type: string
+            required:
+              - code
+
+    responses:
+      200:
+        description: If marketplace is updated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Marketplace updated successfully
+                date:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    code:
+                      type: string
+                    currency:
+                      type: string
+                    currencyCode:
+                      type: string
+                    currencySymbol:
+                      type: string
+                    language:
+                      type: string
+                    languageCode:
+                      type: string
+                    isDisabled:
+                      type: boolean
+
+      304:
+        description: If no changes were made.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: No changes were made
+                date:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    code:
+                      type: string
+                    currency:
+                      type: string
+                    currencyCode:
+                      type: string
+                    currencySymbol:
+                      type: string
+                    language:
+                      type: string
+                    languageCode:
+                      type: string
+                    isDisabled:
+                      type: boolean
+
+      404:
+        description: If the marketplace is not found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Marketplace does not exist.
+
+      500:
+        description: if there is no platform data / internal server error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is no platform data (Error handling request at this time) / Internal server error. We're duly notified and will fix this. Try again later
+
+/platform/social:
+  post:
+    tags:
+      - Platform
+    summary: Adding new social
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - url
+            properties:
+              name:
+                type: string
+              url:
+                type: string
+
+    responses:
+      200:
+        description: Adding new social successfully
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                url:
+                  type: string
+
+      409:
+        description: If the social exists.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Social already exists
+
+      500:
+        description: if there is no platform data / internal server error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is no platform data (Error handling request at this time) / Internal server error. We're duly notified and will fix this. Try again later
+
+  patch:
+    tags:
+      - Platform
+    summary: Edit or update platform social data
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - url
+            properties:
+              name:
+                type: string
+              url:
+                type: string
+
+    responses:
+      200:
+        description: If social is updated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                url:
+                  type: string
+
+      404:
+        description: If the marketplace is not found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Social media data does not exist.
+
+      500:
+        description: if there is no platform data / internal server error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is no platform data (Error handling request at this time) / Internal server error. We're duly notified and will fix this. Try again later

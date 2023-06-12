@@ -1,0 +1,724 @@
+/cms/info:
+  get:
+    tags:
+      - CMS
+    summary: fetch all info.
+    responses:
+      200:
+        description: Return array of infos
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type:
+                properties:
+                  title:
+                    type: string
+                    default: Info Title
+                  content:
+                    type: object
+                    properties:
+                      language:
+                        type: string
+                      value:
+                        type: string
+                  icon:
+                    type: object
+                    properties:
+                      iconifyName:
+                        type: string
+                      svg:
+                        type: string
+                      url:
+                        type: string
+                  isPublished:
+                    type: boolean
+                    example: true or false
+                  isNewInfo:
+                    type: boolean
+                    example: true or false
+                  CreatedBy:
+                    type: string
+                    example: User Id
+                  LastEditedBy:
+                    type: string
+                    example: User Id
+
+      404:
+        description: Not found (if the info does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting info
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+  post:
+    tags:
+      - CMS
+    summary: Adding new Info by either admin or super-admin
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - content
+              - iconifyName
+              - iconSvg
+              - iconUrl
+              - isPublished
+              - isNewInfo
+            properties:
+              title:
+                type: string
+                example: Info Title
+              content:
+                type: object
+                properties:
+                  language:
+                    type: string
+                    example: en | da
+                  value:
+                    type: string
+                    example: this is a new info
+              iconifyName:
+                type: string
+                example: PifIcon
+              iconSvg:
+                type: string
+              iconUrl:
+                type: string
+                example: http://iconsvg.com
+              isPublished:
+                type: boolean
+                example: true or false
+              isNewInfo:
+                type: boolean
+                example: true or false
+
+    responses:
+      200:
+        description: Info box added successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Info box added successfully
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Info Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    icon:
+                      type: object
+                      properties:
+                        iconifyName:
+                          type: string
+                        svg:
+                          type: string
+                        url:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error adding info (invalid-user) / You are not authorized to perform this operation. (invalid-user)
+      409:
+        description: If the info with the title exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: An info box with this title already exists.(info-exists)
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+/cms/info/:infoId:
+  get:
+    tags:
+      - CMS
+    summary: fetch a single info.
+    parameters:
+      - name: infoId
+        in: path
+        description: Info Id
+        required: true
+        type: string
+    responses:
+      200:
+        description: Return a single info
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Info Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    icon:
+                      type: object
+                      properties:
+                        iconifyName:
+                          type: string
+                        svg:
+                          type: string
+                        url:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      404:
+        description: Not found (if the info does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting info
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+  patch:
+    tags:
+      - CMS
+    summary: Edit or update info data.
+    parameters:
+      - name: infoId
+        in: path
+        description: Info Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - content
+              - isPublished
+            properties:
+              title:
+                type: string
+                example: Info Title
+              content:
+                type: object
+                properties:
+                  language:
+                    type: string
+                    example: en | da
+                  value:
+                    type: string
+                    example: this is a new info
+              iconifyName:
+                type: string
+                example: PifIcon
+              iconSvg:
+                type: string
+              iconUrl:
+                type: string
+                example: http://iconsvg.com
+              isPublished:
+                type: boolean
+                example: true or false
+              isNewInfo:
+                type: boolean
+                example: true or false
+
+    responses:
+      200:
+        description: This is of two types when there is a change and otherwise.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is a change (Info box updated successfully) else (No changes made)
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Info Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    icon:
+                      type: object
+                      properties:
+                        iconifyName:
+                          type: string
+                        svg:
+                          type: string
+                        url:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error updating info (invalid-user) / You are not authorized to perform this operation. (invalid-user)
+      404:
+        description: Not found (if the info to be updated does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error locating info
+
+      409:
+        description: If the info with the title exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: An info box with this title already exists.(info-exists)
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/cms/policies:
+  get:
+    tags:
+      - CMS
+    summary: fetch all Policies.
+    responses:
+      200:
+        description: Return array of policies
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type:
+                properties:
+                  title:
+                    type: string
+                    default: Policy Title
+                  content:
+                    type: object
+                    properties:
+                      language:
+                        type: string
+                      value:
+                        type: string
+                  isPublished:
+                    type: boolean
+                    example: true or false
+                  deletedAt:
+                    type: date
+                    example: 20/5/2023
+                  CreatedBy:
+                    type: string
+                    example: User Id
+                  LastEditedBy:
+                    type: string
+                    example: User Id
+
+      404:
+        description: Not found (if the policy does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting policy
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+  post:
+    tags:
+      - CMS
+    summary: Adding new policy by either admin or super-admin
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - content
+              - isPublished
+              - isNewPolicy
+            properties:
+              title:
+                type: string
+                example: Policy Title
+              content:
+                type: object
+                properties:
+                  language:
+                    type: string
+                    example: en | da
+                  value:
+                    type: string
+                    example: this is a new policy
+              isPublished:
+                type: boolean
+                example: true or false
+              isNewPolicy:
+                type: boolean
+                example: true or false
+
+    responses:
+      200:
+        description: Legal policy added successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Legal policy added successfully
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Info Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    deletedAt:
+                      type: date
+                      example: 20/5/2023
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error adding legal policy / You are not authorized to perform this operation. (invalid-user)
+      409:
+        description: If the legal policy with this title exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: A legal policy with this title already exists.(info-exists)
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+/cms/policies/:policyId:
+  get:
+    tags:
+      - CMS
+    summary: fetch a single policy.
+    parameters:
+      - name: policyId
+        in: path
+        description: policy Id
+        required: true
+        type: string
+    responses:
+      200:
+        description: Return a single legal policy
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Policy Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    deletedAt:
+                      type: date
+                      example: 20/5/2023
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      404:
+        description: Not found (if the policy does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting policy
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+  patch:
+    tags:
+      - CMS
+    summary: Edit or update policy data.
+    parameters:
+      - name: policyId
+        in: path
+        description: policy Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - title
+              - content
+              - isPublished
+            properties:
+              title:
+                type: string
+                example: Info Title
+              content:
+                type: object
+                properties:
+                  language:
+                    type: string
+                    example: en | da
+                  value:
+                    type: string
+                    example: this is a new info
+              isPublished:
+                type: boolean
+                example: true or false
+
+    responses:
+      200:
+        description: This is of two types when there is a change and otherwise.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: if there is a change (Policy updated successfully) else (No changes made)
+                data:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      default: Policy Title
+                    content:
+                      type: object
+                      properties:
+                        language:
+                          type: string
+                        value:
+                          type: string
+                    isPublished:
+                      type: boolean
+                      example: true or false
+                    deletedAt:
+                      type: date
+                      example: 20/5/2023
+                    CreatedBy:
+                      type: string
+                      example: User Id
+                    LastEditedBy:
+                      type: string
+                      example: User Id
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error updating policy (invalid-user) / You are not authorized to perform this operation. (invalid-user)
+      404:
+        description: Not found (if the policy to be updated does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error locating policy
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

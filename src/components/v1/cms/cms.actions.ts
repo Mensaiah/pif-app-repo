@@ -40,7 +40,7 @@ export const addInfo = async (req: IRequest, res: Response) => {
     if (!['admin', 'super-admin'].includes(existingUser.userType))
       return handleResponse(
         res,
-        "You're not authorized to perform this operation",
+        'You are not authorized to perform this operation',
         401,
         'invalid-user'
       );
@@ -213,7 +213,7 @@ export const addLegalPolicy = async (req: IRequest, res: Response) => {
         'invalid-user'
       );
 
-    const policyExists = await InfoBoxModel.findOne({
+    const policyExists = await LegalPolicyModel.findOne({
       title: title.toLowerCase(),
     });
 
@@ -226,7 +226,7 @@ export const addLegalPolicy = async (req: IRequest, res: Response) => {
       );
     }
 
-    const newPolicy = new InfoBoxModel({
+    const newPolicy = new LegalPolicyModel({
       title,
       isPublished,
       CreatedBy: userId,
