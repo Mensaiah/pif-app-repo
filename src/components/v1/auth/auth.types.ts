@@ -8,6 +8,8 @@ export interface UserAccessAttributes {
   pin?: string; // hashedPin
   password?: string; // hashedPassword
   securityCode?: string;
+  role: string;
+  permissions: [string];
   rolesAndPermissions: {
     role: string;
     permissions: (PermissionCapabilities | 'supreme')[];

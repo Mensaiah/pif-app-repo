@@ -72,6 +72,32 @@ export const seedNow = async () => {
           currencySymbol: '£',
         },
       ],
+      defaultUserTypesAndRoles: [
+        {
+          userType: 'customer',
+          roles: [
+            {
+              name: 'customer',
+            },
+          ],
+        },
+        {
+          userType: 'platform-admin',
+          roles: [
+            { name: 'super-admin' },
+            { name: 'admin' },
+            { name: 'country-admin' },
+          ],
+        },
+        {
+          userType: 'partner-admin',
+          roles: [
+            { name: 'partner-admin' },
+            { name: 'local-partner' },
+            { name: 'pos-user' },
+          ],
+        },
+      ],
     }).save();
     // .save({ session })
     const seeduser = new UserModel<UserAttributes>({
@@ -87,7 +113,7 @@ export const seedNow = async () => {
       password: seedData.password,
       rolesAndPermissions: [
         {
-          role: 'super admin',
+          role: 'super-admin',
           permissions: ['supreme'],
         },
       ],

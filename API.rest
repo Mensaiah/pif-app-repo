@@ -66,6 +66,38 @@ Content-Type: application/json
   "password": "00000"
 }
 
+### finalize users invite
+POST {{api}}/users/accept-invite
+Content-Type: application/json
+
+{
+ "name": "Abdul-Afeez",
+ "email": "jimohafeez738@gmail.com",
+ "code": "22074183-67ca-4b9a-898e-f3d70a3814db",
+ "phonePrefix": "234",
+"phone": "8103498784",
+"password": "Aweda"
+}
+
+### dashboard - forgot password
+POST {{api}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email":"Jimohafeez738@gmail.com"
+}
+
+### dashboard - reset password
+POST {{api}}/auth/reset-password
+Content-Type: application/json
+
+{
+  "phonePrefix": "234",
+  "phone": "8103498784",
+  "otpCode": "99497",
+  "password": "00000"
+}
+
 ### dashboard - forgot pin
 POST {{api}}/auth/forgot-password
 Content-Type: application/json

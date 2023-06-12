@@ -11,6 +11,13 @@ export interface MarketplaceAttributes {
 export interface PlatformAttributes {
   version: string;
   marketplaces: MarketplaceAttributes[];
+  defaultUserTypesAndRoles: Array<{
+    userType: string;
+    roles: Array<{
+      name: string;
+      permissions?: string[];
+    }>;
+  }>;
   socials?: Array<{
     name: string;
     url: string;

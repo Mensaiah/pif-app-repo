@@ -48,6 +48,17 @@ const platformSchema = new Schema<PlatformAttributes>(
       type: [marketplaceSchema],
       required: true,
     },
+    defaultUserTypesAndRoles: [
+      {
+        userType: String,
+        roles: [
+          {
+            name: String,
+            permissions: [String],
+          },
+        ],
+      },
+    ],
     socials: [
       {
         name: String,

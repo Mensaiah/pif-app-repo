@@ -1,7 +1,5 @@
 import { Document } from 'mongoose';
 
-import { PermissionCapabilities } from '../../../config/rolesAndPermissions';
-
 export interface PartnerAttributes extends Document {
   name: string;
   vat: string;
@@ -55,6 +53,6 @@ export interface PartnerAttributes extends Document {
   }>;
   rolesAndPermissions: Array<{
     role: string;
-    permissions: PermissionCapabilities[];
+    permissions: string[];
   }>;
 }

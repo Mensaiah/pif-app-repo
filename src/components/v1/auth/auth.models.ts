@@ -2,22 +2,8 @@ import bcrypt from 'bcrypt';
 import { Document, Schema, model } from 'mongoose';
 import ms from 'ms';
 
-import { permissions } from '../../../config/rolesAndPermissions';
-
 import { OtpAttributes, UserAccessAttributes } from './auth.types';
 
-const roleAndPermissionSchema = new Schema(
-  {
-    role: String,
-    permissions: [
-      {
-        type: String,
-        enum: [...permissions.map((p) => p.capabilities).flat(), 'supreme'],
-      },
-    ],
-  },
-  { _id: false }
-);
 const userAccessSchema = new Schema<UserAccessAttributes>({
   User: {
     type: Schema.Types.ObjectId,
@@ -30,7 +16,8 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
   pin: String,
   password: String,
   securityCode: String,
-  rolesAndPermissions: [roleAndPermissionSchema],
+  role: String,
+  permissions: [String],
   markeplaces: [
     {
       type: String,

@@ -23,7 +23,6 @@ const userSchema = new Schema<UserAttributes>(
     },
     userType: {
       type: String,
-      enum: ['customer', 'admin', 'partner-admin'],
       required: true,
     },
     username: String,
