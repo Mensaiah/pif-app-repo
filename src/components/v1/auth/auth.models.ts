@@ -23,6 +23,7 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
       type: String,
     },
   ],
+  citiesCovered: [Schema.Types.ObjectId],
   isBlocked: Boolean,
   lastLoginAttempt: Date,
   lastLoginAt: Date,

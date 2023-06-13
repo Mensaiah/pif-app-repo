@@ -79,12 +79,14 @@ export interface UserAttributes {
 export interface PartnerPosUserAttributes {
   Partner: ObjectId;
   name: string;
+  avatar?: string;
   isActive: boolean;
   email?: string;
   contact?: {
     phone?: string;
     phonePrefix?: string;
   };
+  Pos: ObjectId;
 }
 
 export interface UserInviteAttributes {

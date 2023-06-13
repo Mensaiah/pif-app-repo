@@ -9,8 +9,33 @@ import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
 import { generateToken } from '../../auth/auth.utils';
+import CityModel from '../../city/city.model';
+import PlatformModel from '../../platform/platform.model';
+import { PlatformAttributes } from '../../platform/platform.types';
 import { PartnerPosUserModel, UserInviteModel, UserModel } from '../user.model';
 import { acceptPlatformInviteSchema } from '../user.policy';
+import { UserInviteAttributes } from '../user.types';
+
+const getUserRoleAndPermissions = (
+  userInvite: UserInviteAttributes,
+  platform: PlatformAttributes
+) => {
+  for (const userTypeRole of platform.defaultUserTypesAndRoles) {
+    if (userTypeRole.userType === userInvite.userType) {
+      for (const role of userTypeRole.roles) {
+        if (role.name === userInvite.role) {
+          return {
+            role: role.name,
+            permissions: role.permissions || [], // assuming 'permissions' key exists
+          };
+        }
+      }
+    }
+  }
+
+  // If no matching userType and role found, return undefined or any suitable default
+  return {};
+};
 
 const acceptPlatformInvite = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof acceptPlatformInviteSchema>;
@@ -23,6 +48,27 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       email,
       code,
     });
+
+    const platformData = await PlatformModel.findOne().sort({ createdAt: -1 });
+
+    if (!platformData) {
+      return handleResponse(
+        res,
+        "operation failed. It's not you but us. Please try again later",
+        401
+      );
+    }
+    const { role, permissions } = getUserRoleAndPermissions(
+      existingInvite,
+      platformData
+    );
+    if (!role || !permissions) {
+      return handleResponse(
+        res,
+        'Invalid operation. Please contact the admin.',
+        400
+      );
+    }
 
     if (!existingInvite)
       return handleResponse(
@@ -41,6 +87,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
               phonePrefix,
               phone,
             },
+            Pos: existingInvite.Pos,
           })
         : new UserModel({
             name,
@@ -49,42 +96,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
               phonePrefix,
               phone,
             },
+            userType: existingInvite.userType,
           });
-
-    if (existingInvite.userType === 'partner-admin') {
-      newUser.Partner = existingInvite.Partner;
-
-      if (existingInvite.role === 'partner-admin') {
-        newUser.userType = existingInvite.role;
-      }
-    }
-
-    // handle platform roles
-    if (['admin', 'country-admin'].includes(existingInvite.role)) {
-      if (existingInvite.role === 'admin') {
-        newUser.userType = existingInvite.role;
-      }
-
-      if (existingInvite.role === 'country-admin') {
-        newUser.currentMarketplace = existingInvite.currentMarketplace;
-      }
-    }
-
-    // handle partner roles
-    if (existingInvite.role === 'partner-admin') {
-      if (existingInvite.role === 'partner-admin') {
-        newUser.currentMarketplace = existingInvite.currentMarketplace;
-        newUser.userType = existingInvite.role;
-        newUser.Partner = existingInvite.Partner;
-      }
-
-      // if (existingInvite.role === 'local-partner') {
-      //   newUser.userType = existingInvite.role;
-      // }
-    }
-
     const now = new Date();
-
     const newUserAccess = new UserAccessModel({
       User: newUser._id,
       password,
@@ -92,7 +106,30 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       lastLoginAt: now,
       lastEventTime: now,
       failedLoginAttempts: 0,
+      role: existingInvite.role,
+      permissions,
+      markeplaces: existingInvite.marketplaces,
     });
+
+    if (existingInvite.userType === 'partner-admin') {
+      newUser.Partner = existingInvite.Partner;
+
+      if (
+        existingInvite.role === 'local-partner' ||
+        existingInvite.role === 'pos-user'
+      ) {
+        const city = await CityModel.findOne({
+          name: {
+            $elemMatch: {
+              value: existingInvite.City,
+            },
+          },
+        });
+        if (city) {
+          newUserAccess.citiesCovered = [city._id];
+        }
+      }
+    }
 
     const newSession: UserSessionAttributes = {
       used: 1,
@@ -118,7 +155,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
     const token = generateToken({
       authKey: newUserAccess.securityCode,
       deviceId: req.fingerprint.hash,
-      userType: newUser.userType,
+      userType: existingInvite.userType,
       sessionId: newSession.sessionId,
       ref: newUser._id,
       role: newUserAccess.role,
@@ -138,8 +175,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
         userData: {
           name: newUser.name,
           avatar: newUser.avatar,
-          userType: newUser.userType,
-          roleAndPermissions: newUserAccess.rolesAndPermissions,
+          userType: existingInvite.userType,
+          role: newUserAccess.role,
+          permissions: newUserAccess.permissions,
         },
       },
     });

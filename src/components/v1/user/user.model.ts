@@ -111,12 +111,14 @@ const userSchema = new Schema<UserAttributes>(
 const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
   Partner: { type: ObjectId, ref: 'Partner', required: true },
   name: { type: String, required: true },
+  avatar: String,
   isActive: Boolean,
   email: String,
   contact: {
     phone: String,
     phonePrefix: String,
   },
+  Pos: { type: ObjectId, ref: 'Pos', required: true },
 });
 
 export const UserModel = model<UserAttributes>('User', userSchema);

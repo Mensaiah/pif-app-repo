@@ -1,5 +1,5 @@
-import { ObjectId } from 'mongoose';
-
+import { Schema } from 'mongoose';
+type ObjectId = Schema.Types.ObjectId;
 export interface UserAccessAttributes {
   User?: ObjectId;
   PartnerPosUser?: ObjectId;
@@ -7,6 +7,7 @@ export interface UserAccessAttributes {
   password?: string; // hashedPassword
   securityCode?: string;
   role: string;
+  citiesCovered: ObjectId[];
   permissions: [string];
   markeplaces?: Array<string>;
   isBlocked?: boolean;
