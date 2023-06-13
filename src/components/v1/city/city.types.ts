@@ -8,5 +8,5 @@ export interface CityAttributes extends Document {
   x: number;
   y: number;
   deletedAt: Date;
-  Marketplace: ObjectId;
+  marketplace: string;
 }

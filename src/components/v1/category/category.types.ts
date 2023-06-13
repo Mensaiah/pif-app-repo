@@ -13,7 +13,7 @@ export interface CategoryAttributes extends Document {
   Icon: CategoryIconAttributes['_id'];
   isBirthday: boolean;
   deletedAt?: Date;
-  marketplaces: Array<Types.ObjectId>;
+  marketplaces: Array<string>;
 }
 export interface InterCategoryAttributes extends Document {
   name: LanguageValuePair[];

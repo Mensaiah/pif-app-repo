@@ -30,7 +30,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     const userAccess = await UserAccessModel.findOne({
       User: existingUser._id,
       role: { $ne: 'customer' },
-    }).populate('marketplaces', 'name');
+    });
     if (!userAccess)
       return handleResponse(res, 'Invalid login credentials', 401);
 

@@ -20,16 +20,18 @@ const User = z.object({
 
 export const createPlatformInviteSchema: any = User.refine(
   (data) => {
+    if (data.role !== 'admin' && !data.marketplaces) return false;
+
     // Define who can invite which userType and role
     if (data.userType === 'platform-admin') {
       if (data.role === 'admin') return true;
-      if (data.role === 'country-admin' && data.marketplaces.length)
+      if (data.role === 'country-admin' && data.marketplaces?.length)
         return true;
     }
     if (
       data.userType === 'partner-admin' &&
       data.partnerId &&
-      data.marketplaces.length
+      data.marketplaces?.length
     ) {
       if (data.role === 'partner-admin') return true;
       if (data.role === 'local-partner' && data.cityId) {
@@ -41,7 +43,8 @@ export const createPlatformInviteSchema: any = User.refine(
     return false;
   },
   {
-    message: 'Invalid combination of role, marketplace, and partnerId',
+    message:
+      'Invalid combination of role, marketplace, and partnerId. Except role is admin, marketplace is required',
   }
 );
 

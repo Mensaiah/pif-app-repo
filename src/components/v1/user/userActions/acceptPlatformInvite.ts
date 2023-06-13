@@ -99,7 +99,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
             userType: existingInvite.userType,
           });
     const now = new Date();
-    const newUserAccess = new UserAccessModel({
+    let newUserAccess = new UserAccessModel({
       User: newUser._id,
       password,
       securityCode: uuid(),
@@ -152,6 +152,10 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
     await newUser.save();
     await newUserAccess.save();
 
+    newUserAccess = await UserAccessModel.findOne({
+      _id: newUserAccess._id,
+    }).populate('marketplaces', 'name');
+
     const token = generateToken({
       authKey: newUserAccess.securityCode,
       deviceId: req.fingerprint.hash,
@@ -178,6 +182,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
           userType: existingInvite.userType,
           role: newUserAccess.role,
           permissions: newUserAccess.permissions,
+          marketplaces: newUserAccess.marketplaces,
         },
       },
     });

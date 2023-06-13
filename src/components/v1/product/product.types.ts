@@ -18,7 +18,7 @@ export interface ProductAttributes extends Document {
   Partner: PartnerAttributes['_id'];
   price: number;
   isApproved: boolean;
-  marketplace: ObjectId;
+  marketplace: string;
   photo: string;
   productType: 'regular product' | 'free gift';
   categories: CategoryAttributes['_id'][];

@@ -39,6 +39,8 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
     if (existingUser)
       return handleResponse(res, 'Account already exists.', 409);
 
+    // TODO: fetch platform and ensure the markeplaces supplied exists
+
     const invitationData = await UserInviteModel.findOne({
       email,
       role,

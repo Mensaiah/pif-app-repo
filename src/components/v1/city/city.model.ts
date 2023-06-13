@@ -29,10 +29,7 @@ export const citySchema = new Schema<CityAttributes>({
     required: true,
   },
   deletedAt: Date,
-  Marketplace: {
-    type: Schema.Types.ObjectId,
-    ref: 'Marketplace',
-  },
+  marketplace: String,
 });
 
 const CityModel = model<CityAttributes>('City', citySchema);
