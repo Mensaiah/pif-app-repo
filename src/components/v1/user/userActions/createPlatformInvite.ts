@@ -11,10 +11,12 @@ import { UserInviteModel, UserModel } from '../user.model';
 import { createPlatformInviteSchema } from '../user.policy';
 
 const createInviteLink = (req: IRequest, code: string) =>
-  `${req.protocol}://${req.get('host')}${req.baseUrl.replace(
-    'users',
-    'auth'
-  )}/invitation/${code}`;
+  `${req.protocol}://${
+    req.protocol === 'http' ? 'localhost:5173' : 'pif-dashboard.web.app'
+  }${req.baseUrl.replace('users', 'auth')}/invitation/${code}`.replace(
+    '/v1/en',
+    ''
+  );
 
 const createPlatformInvite = async (req: IRequest, res: Response) => {
   type UserInviteType = z.infer<typeof createPlatformInviteSchema>;
