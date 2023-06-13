@@ -108,7 +108,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       failedLoginAttempts: 0,
       role: existingInvite.role,
       permissions,
-      markeplaces: existingInvite.marketplaces,
+      marketplaces: existingInvite.marketplaces,
     });
 
     if (existingInvite.userType === 'partner-admin') {

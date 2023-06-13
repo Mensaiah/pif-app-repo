@@ -18,9 +18,12 @@ import {
 
 export const getPlatformData = async (req: IRequest, res: Response) => {
   try {
-    const platform = await PlatformModel.findOne().sort({
-      createdAt: -1,
-    });
+    const platform = await PlatformModel.findOne()
+      .sort({
+        createdAt: -1,
+      })
+      .select('-defaultUserTypesAndRoles');
+
     return handleResponse(res, platform);
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
@@ -66,9 +69,12 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
 
     await platformData.save();
 
+    const rawPlatformData = platformData.toJSON();
+    delete rawPlatformData.defaultUserTypesAndRoles;
+
     return handleResponse(res, {
       message: 'Marketplace added successfully',
-      data: platformData,
+      data: rawPlatformData,
     });
   } catch (err) {
     return handleResponse(res, useWord('internalServerError', req.lang), 500);
@@ -126,13 +132,16 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
       await platformData.save();
     }
 
+    const rawPlatformData = platformData.toJSON();
+    delete rawPlatformData.defaultUserTypesAndRoles;
+
     return handleResponse(
       res,
       {
         message: changesMade
           ? 'Marketplace updated successfully'
           : 'No changes were made',
-        data: platformData,
+        data: rawPlatformData,
       },
       changesMade ? 200 : 304
     );
@@ -166,7 +175,10 @@ export const addPlatformSocial = async (req: IRequest, res: Response) => {
 
     await platformData.save();
 
-    return handleResponse(res, platformData);
+    const rawPlatformData = platformData.toJSON();
+    delete rawPlatformData.defaultUserTypesAndRoles;
+
+    return handleResponse(res, rawPlatformData);
   } catch (err) {
     return handleResponse(res, useWord('internalServerError', req.lang), 500);
   }
@@ -199,7 +211,10 @@ export const updatePlatformSocial = async (req: IRequest, res: Response) => {
       return social;
     });
 
-    return handleResponse(res, platformData);
+    const rawPlatformData = platformData.toJSON();
+    delete rawPlatformData.defaultUserTypesAndRoles;
+
+    return handleResponse(res, rawPlatformData);
   } catch (err) {
     return handleResponse(res, useWord('internalServerError', req.lang), 500);
   }

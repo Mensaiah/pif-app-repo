@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 # @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjczY2EzNGItMzgzZS00ZTAwLWEyOTYtZmEzNzFlMmFjMDVlIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjgxOTRlNWVkLTM4NTMtNDg2Yy1iNzc4LTAyMjNjZTczYThiNCIsInJlZiI6IjY0ODgzMTM0ODkwODc5Yjc1OWViMGE0NyIsImlhdCI6MTY4NjY0NzEyNiwiZXhwIjoxNjg2ODE5OTI2LCJpc3MiOiJQSUYtZGV2In0.L1x6_I37VTGl7VCbF-xO7fVmE8wZVINmNJAF58OF2Nc
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMTM5OGNhYTUtMmI4YS00OWZjLWJjYWItMzVlZGM3NGE5NzYyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInNlc3Npb25JZCI6ImFjMDY5OTk5LTcyNWItNDMyZS1hZTE0LTJiOWJiNTJmODI3ZSIsInJlZiI6IjY0ODgzMWZkODkwODc5Yjc1OWViMGE2OSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NjY0NzI5MywiZXhwIjoxNjg2ODIwMDkzLCJpc3MiOiJQSUYtZGV2In0.pLurJojqAVybVpI9yCqxIx28tCkCKigccTAltwX7k1w
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjFiZGNiZGQtNDExNC00NjRhLTkzMDItNzNkOTA3Yzg1MjBhIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImM5MTlkN2I2LTUzOTAtNDE3NS1iMzg2LWEzMTk1ZTVlNzBmMCIsInJlZiI6IjY0ODgzN2I3NzRhNWE4MGFjNjRkZTYwYSIsImlhdCI6MTY4NjY0ODc5NSwiZXhwIjoxNjg2ODIxNTk1LCJpc3MiOiJQSUYtZGV2In0.n_F8De0aDtdUhQ0ztrDnOZXt3-aQ_Xan6X8r9o3Qxds
 
 GET {{server}}
 
@@ -43,7 +43,7 @@ Content-Type: application/json
 {
  "name": "Jalasem Ajala",
  "email": "kgasta@gmail.com",
- "code": "e2bf3b59-c950-4974-8d9e-77d9449fa6ef",
+ "code": "88595e23-7f5c-471f-a4f8-ca002f1b4873",
  "phonePrefix": "234",
 "phone": "8168861541",
 "password": "Password_1"
@@ -240,6 +240,9 @@ Content-Type: application/json
   "answer": "It means sending a gift to your loved one and friends",
   "isDraft": false
 }
+
+### get platform data
+GET {{api}}/platform
 
 ### refresh db
 GET {{api}}/platform/refresh

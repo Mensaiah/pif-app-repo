@@ -18,7 +18,7 @@ const userAccessSchema = new Schema<UserAccessAttributes>({
   securityCode: String,
   role: String,
   permissions: [String],
-  markeplaces: [
+  marketplaces: [
     {
       type: String,
     },

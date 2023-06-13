@@ -84,8 +84,17 @@ export const seedNow = async () => {
         {
           userType: 'platform-admin',
           roles: [
-            { name: 'super-admin' },
-            { name: 'admin' },
+            { name: 'super-admin', permissions: ['supreme'] },
+            {
+              name: 'admin',
+              permissions: [
+                'update-marketplace',
+                'update-social',
+                'manage-info',
+                'manage-policies',
+                'manage-faq',
+              ],
+            },
             { name: 'country-admin' },
           ],
         },

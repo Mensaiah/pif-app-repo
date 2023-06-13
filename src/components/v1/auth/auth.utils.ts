@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import appConfig from '../../../config';
 import { sendSms } from '../../../services/infobipService';
 import { sendMail } from '../../../services/mailgunService';
-import { IRequest, IToken } from '../../../types/global';
+import { IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
 
 export const calculateLoginWaitingTime = (

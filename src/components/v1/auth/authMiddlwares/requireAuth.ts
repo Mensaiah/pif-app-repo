@@ -111,7 +111,9 @@ const requireAuth = async (
     req.userType = req.decoded.userType;
     req.userAccess = userAccess;
     req.user = user;
-    if (req.userType !== 'customer') req.marketplaces = userAccess.markeplaces;
+
+    if ('marketplaces' in userAccess)
+      req.marketplaces = userAccess.marketplaces;
 
     consoleLog({ url: req.originalUrl, path: req.path });
 

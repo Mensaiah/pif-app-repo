@@ -9,7 +9,7 @@ export interface UserAccessAttributes {
   role: string;
   citiesCovered: ObjectId[];
   permissions: [string];
-  markeplaces?: Array<string>;
+  marketplaces?: Array<string>;
   isBlocked?: boolean;
   lastLoginAttempt?: Date | null;
   lastLoginAt?: Date;
