@@ -1,7 +1,8 @@
 # @server = https://pif-api.herokuapp.com
 @server = http://localhost:3030
 @api = {{server}}/v1/en
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYmZjZWMxMDgtOWRkYi00ODJmLWEzODUtMTAwYmJiMjgxMjBlIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJhZG1pbiIsInNlc3Npb25JZCI6IjU0ZTA1YmFlLWY3NTgtNGE1Ni05YTg4LTZjYTkyZmU0YmMwOSIsInJlZiI6IjY0NzkwNjJiM2QzNzI2YTQ2ZDZlOTE0YyIsImlhdCI6MTY4NTk1NjYwNSwiZXhwIjoxNjg2MTI5NDA1LCJpc3MiOiJQSUYtZGV2In0.RcUgdh3YU9rCT4a5iQUyFzQXScXjEKXp-xHd59XPMdE
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjczY2EzNGItMzgzZS00ZTAwLWEyOTYtZmEzNzFlMmFjMDVlIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjgxOTRlNWVkLTM4NTMtNDg2Yy1iNzc4LTAyMjNjZTczYThiNCIsInJlZiI6IjY0ODgzMTM0ODkwODc5Yjc1OWViMGE0NyIsImlhdCI6MTY4NjY0NzEyNiwiZXhwIjoxNjg2ODE5OTI2LCJpc3MiOiJQSUYtZGV2In0.L1x6_I37VTGl7VCbF-xO7fVmE8wZVINmNJAF58OF2Nc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMTM5OGNhYTUtMmI4YS00OWZjLWJjYWItMzVlZGM3NGE5NzYyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInNlc3Npb25JZCI6ImFjMDY5OTk5LTcyNWItNDMyZS1hZTE0LTJiOWJiNTJmODI3ZSIsInJlZiI6IjY0ODgzMWZkODkwODc5Yjc1OWViMGE2OSIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY4NjY0NzI5MywiZXhwIjoxNjg2ODIwMDkzLCJpc3MiOiJQSUYtZGV2In0.pLurJojqAVybVpI9yCqxIx28tCkCKigccTAltwX7k1w
 
 GET {{server}}
 
@@ -13,8 +14,8 @@ POST {{api}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "jimohafeez738@gmail.com",
-  "password": "00000"
+  "email": "piftech@pif-app.com",
+  "password": "Password_1"
 }
 
 ### my profile
@@ -27,7 +28,8 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "email": "jimohafeez738@gmail.com",
+  "email": "kgasta@gmail.com",
+  "userType": "platform-admin",
   "role": "admin"
 }
 
@@ -39,12 +41,12 @@ POST {{api}}/users/accept-invite
 Content-Type: application/json
 
 {
- "name": "Abdul-Afeez",
- "email": "jimohafeez738@gmail.com",
- "code": "22074183-67ca-4b9a-898e-f3d70a3814db",
+ "name": "Jalasem Ajala",
+ "email": "kgasta@gmail.com",
+ "code": "e2bf3b59-c950-4974-8d9e-77d9449fa6ef",
  "phonePrefix": "234",
-"phone": "8103498784",
-"password": "Aweda"
+"phone": "8168861541",
+"password": "Password_1"
 }
 
 ### dashboard - forgot password
@@ -238,3 +240,6 @@ Content-Type: application/json
   "answer": "It means sending a gift to your loved one and friends",
   "isDraft": false
 }
+
+### refresh db
+GET {{api}}/platform/refresh
