@@ -58,7 +58,6 @@ const requireAuth = async (
       (sesn) => sesn.sessionId === sessionId
     );
     const session = userAccess.sessions[sessionIndex];
-    consoleLog(JSON.stringify({ sessions: userAccess.sessions }, null, 2));
 
     if (!session)
       return handleResponse(res, useWord('invalidSession', req.lang), 401);
@@ -70,10 +69,6 @@ const requireAuth = async (
     const fingerprint: FingerprintResult = req.fingerprint;
     const { hash: deviceHash } = fingerprint;
     if (session.deviceHash !== deviceHash) {
-      consoleLog({
-        deviceHash: session.deviceHash,
-        requestDeviceHash: deviceHash,
-      });
       return handleResponse(
         res,
         'Session expired, please login again',
@@ -114,8 +109,6 @@ const requireAuth = async (
 
     if ('marketplaces' in userAccess)
       req.marketplaces = userAccess.marketplaces;
-
-    consoleLog({ url: req.originalUrl, path: req.path });
 
     return next();
   } catch (err) {

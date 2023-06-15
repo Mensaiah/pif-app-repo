@@ -7,6 +7,8 @@ import { handleResponse } from '../../../../utils/helpers';
 import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendVerificationMail } from '../../auth/auth.utils';
+import PlatformModel from '../../platform/platform.model';
+import { filterMarketplaces } from '../../platform/platform.utils';
 import { UserInviteModel, UserModel } from '../user.model';
 import { createPlatformInviteSchema } from '../user.policy';
 
@@ -43,6 +45,18 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
 
     // TODO: fetch platform and ensure the markeplaces supplied exists
 
+    const platform = await PlatformModel.findOne();
+
+    const sanitizedMarketplace = filterMarketplaces(marketplaces, platform);
+
+    if (!sanitizedMarketplace.length)
+      return handleResponse(
+        res,
+        'Either none of the marketplaces supplied does not exists or you did not supply any at all',
+        404,
+        'marketplace does not exist'
+      );
+
     const invitationData = await UserInviteModel.findOne({
       email,
       role,
@@ -73,7 +87,7 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
       role,
       email,
       invitedBy: req.user._id,
-      marketplaces: marketplaces,
+      marketplaces: sanitizedMarketplace,
       Partner: partnerId,
       City: cityId,
       Pos: posId,

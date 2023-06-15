@@ -15,6 +15,7 @@ const userSchema = new Schema<UserAttributes>(
     email: {
       type: String,
       lowercase: true,
+      trim: true,
     },
     timezone: String,
     Partner: {
@@ -113,7 +114,11 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
   name: { type: String, required: true },
   avatar: String,
   isActive: Boolean,
-  email: String,
+  email: {
+    type: String,
+    lowercase: true,
+    trim: true,
+  },
   contact: {
     phone: String,
     phonePrefix: String,
@@ -131,7 +136,7 @@ export const UserInviteSchema = new Schema<UserInviteAttributes>({
   code: { type: String, required: true },
   role: { type: String, required: true },
   userType: { type: String, required: true },
-  email: { type: String, required: true },
+  email: { type: String, lowercase: true, trim: true, required: true },
   invitedBy: { type: ObjectId, ref: 'User' },
   Partner: { type: ObjectId, ref: 'Partner' },
   marketplaces: [String],

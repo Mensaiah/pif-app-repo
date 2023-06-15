@@ -69,6 +69,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       lastEventTime: now,
       failedLoginAttempts: 0,
     });
+
     const newSession: UserSessionAttributes = {
       used: 1,
       deviceHash: req.fingerprint.hash,

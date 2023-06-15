@@ -7,30 +7,36 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
     type: String,
     lowercase: true,
     required: true,
+    trim: true,
   },
   code: {
     type: String,
     uppercase: true,
     required: true,
+    trim: true,
   },
   currency: {
     type: String,
     lowercase: true,
     required: true,
+    trim: true,
   },
   currencyCode: {
     uppercase: true,
     type: String,
+    trim: true,
   },
   language: {
     type: String,
     lowercase: true,
     required: true,
+    trim: true,
   },
   languageCode: {
     type: String,
     lowercase: true,
     required: true,
+    trim: true,
   },
   currencySymbol: {
     type: String,

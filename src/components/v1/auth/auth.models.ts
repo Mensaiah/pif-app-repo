@@ -106,7 +106,11 @@ const OtpCodeSchema = new Schema<OtpAttributes>({
   phonePrefix: String,
   isConfirmed: Boolean,
   lastSent: Date,
-  email: String,
+  email: {
+    type: String,
+    lowercase: true,
+    trim: true,
+  },
   isDeleted: Boolean,
 });
 
