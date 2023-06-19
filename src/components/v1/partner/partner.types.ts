@@ -1,51 +1,61 @@
 import { Document } from 'mongoose';
 
-export interface PartnerAttributes extends Document {
+export interface PartnerAttribute extends Document {
+  _id: number;
   name: string;
-  vat: string;
-  country: string;
-  marketplace: string;
-  isCharity: boolean;
-  city: string;
-  zipcode: string;
-  address: string;
+  email: string;
+  marketplaces: string[];
+  vat?: string;
   phonePrefix: string;
   phone: string;
   fax?: string;
-  email: string;
-  website: string;
-  logo: string;
+  website?: string;
+  isCharity?: boolean;
+  logo?: string;
+  adminEmail?: string;
+  adminName?: string;
+  headquarter: {
+    country: string;
+    city: string;
+    zipCode: string;
+    address: string;
+  };
   paymentDetails: {
     bankName: string;
-    accountNumber: string;
     accountName: string;
-    currency: string;
+    accountNumber: string;
     country: string;
+    currency: string;
   };
   settlingDetails: {
-    isPeriodically: boolean;
-    periodType: 'daily' | 'weekly' | 'monthly';
-    amountThreshold: boolean;
-    thresholdAmount: number;
-    proportionStart: number;
-    proportionFinish: number;
-    proportionPif: number;
-    fixedFee: number;
+    isPeriodically?: boolean;
+    periodType?: 'daily' | 'weekly' | 'monthly';
+    isAmountThreshold?: boolean;
+    amountThreshold?: string;
+    startProportion?: string;
+    finishProportion?: string;
+    pifProportion?: string;
+    fixedFee?: string;
+    enableTransactionFeeManualSettings?: boolean;
+    transactionAmount?: string;
+    transactionMaximumAmount?: string;
   };
-  status: 'active' | 'inactive' | 'not verified';
   redeemType:
-    | 'mobile_redemption'
-    | 'unique_code_offline_wt_confirmation'
-    | 'non-unique_codes_offline';
-  rewardSystemEnabled: boolean;
-  ftp_host: string;
-  ftp_login: string;
-  ftp_pass: string;
-  ftp_last_sync: string;
-  api_login: string;
-  api_pass: string;
-  api_code_type: string;
-  logoCropData: { scd: string; sd: string };
+    | 'mobile-redemption'
+    | 'unique-codes-offline-with-confirmation'
+    | 'unique-codes-offline-without-confirmation'
+    | 'non-unique-codes-offline';
+
+  status: 'active' | 'inactive' | 'not-verified';
+  enableRewardSystem?: boolean;
+  ftpHost?: string;
+  ftpLogin?: string;
+  ftpPass?: string;
+  ftpLastSync?: string;
+  apiLogin?: string;
+  apiPass?: string;
+  apiCodeType?: string;
+  logoCropData?: { scd?: string; sd?: string };
   contractDocuments?: Array<{
     filename: string;
     source: string;

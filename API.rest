@@ -1,10 +1,8 @@
 # @server = https://pif-api.herokuapp.com
 @server = http://localhost:3030
 @api = {{server}}/v1/en
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiOTUwY2Q0YWYtMTM0Mi00NmFmLThmMTItYjY2MzdjMjNlYzBmIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjY3MGZkNGMxLTMwODQtNDNkNS04ZjI4LTVjMTUyNTk0NTZmOSIsInJlZiI6IjY0ODg4NDc2MDc2N2EyNmEwMGEyMzUxMSIsImlhdCI6MTY4NjY5NDk3MywiZXhwIjoxNjg2ODY3NzczLCJpc3MiOiJQSUYtZGV2In0.uDqhaFpMjJI4OXqmwo5qceujdAFuV387lM95rImH-Q0
 
-
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNDNhOWJiMTktYmNiYS00NTZhLTgzMmItMTVkMGM1ZWVlNDNiIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImM5MjNlMzQ4LTFjNDEtNDNjMS05YzQzLTNhNDYxNDUxMjQ0NSIsInJlZiI6IjY0ODg0NjBmNzMyZWFlYTY4ZmQ3NDNmNyIsImlhdCI6MTY4NjY1MjQ0NiwiZXhwIjoxNjg2ODI1MjQ2LCJpc3MiOiJQSUYtZGV2In0.nLnmphXdioaRSwAXHoAzZfettMWiBd7ixJoZ3MR6Hww
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYTExYTI0ZTktMjVlZi00NDRkLWFjNzItNzExNWFiYTUxZGU1IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjJiM2IwZjRjLWM2MGQtNDEwOS1hMzEyLTViNDk0ZTA0YmQ5OCIsInJlZiI6IjY0OGYwNWEyMjAzNjBlODU4YTk1ZjdhYyIsImlhdCI6MTY4NzExODU0MywiZXhwIjoxNjg3MjkxMzQzLCJpc3MiOiJQSUYtZGV2In0.dFHuH8FWWB5BSQQvgZZpFkOtPK9crnjUyFjWCpkqjy0
 
 GET {{server}}
 
@@ -251,3 +249,87 @@ GET {{api}}/platform
 
 ### refresh db
 GET {{api}}/platform/refresh
+
+### add partner
+POST {{api}}/partners
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name": "Gift Enterprise",
+    "email": "giftenterprise@mail.com",
+    "phone": "",
+    "phonePrefix": "",
+    "headquarterAddress": "7 gwagwalada street, fct.",
+    "headquarterCity": "Abuja",
+    "headquarterCountry": "Nigeria",
+    "headquarterZipCode": "242201",
+    "marketplaces": ["denmark"],
+    "accountName": "Gift Enterprise",
+    "accountNumber": "0123456789",
+    "bankCountry": "Nigeria",
+    "bankName": "first-bank",
+    "currency": "naira",
+    "redeemType": "mobile-redemption",
+    "status": "inactive",
+    "isPeriodically": true,
+    "periodType": "weekly"
+  }
+
+  ###
+
+    # "isAmountThreshold": true,
+    # "amountThreshold": "20"
+    # "pifProportion": "",
+    # "startProportion": "",
+    # "transactionAmount": "",
+    # "transactionMaximumAmount": "",
+    # "vat": "",
+    # "website": ""
+    # "enablePushNotification": "",
+    # "enableRewardSystem": "",
+    # "enableTransactionFeeManualSettings": "",
+    # "fax": "",
+    # "finishProportion": "",
+    # "fixedFee": "",
+    # "isCharity": "",
+
+    ###
+
+### get partner
+GET {{api}}/partners
+
+### get partner by market
+GET {{api}}/partners/nigeria
+
+
+### update partner
+PATCH {{api}}/partners/1001
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "currency": "naira",
+    "phonePrefix": "234",
+    "phone": "8123456789",
+    "headquarterAddress": "7 gwagwalada street, fct.",
+    "headquarterCity": "Abuja",
+    "headquarterCountry": "Nigeria",
+    "headquarterZipCode": "242201",
+    "marketplaces": ["nigeria"],
+    "accountName": "Gift Enterprise",
+    "accountNumber": "0123456789",
+    "bankCountry": "Nigeria",
+    "bankName": "first-bank",
+    "redeemType": "mobile-redemption",
+    "status": "inactive",
+    "isAmountThreshold": true,
+    "amountThreshold": "20",
+    "isPeriodically": true,
+    "periodType": "daily"
+  }
+
+
+  ###
+
+  

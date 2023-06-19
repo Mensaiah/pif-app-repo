@@ -35,7 +35,7 @@ const appConfig = {
   authConfigs: {
     saltRounds: 10,
     tokenLifespan: ms('3 days'),
-    maxInactivity: '30 mins',
+    maxInactivity: '3 hours',
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
   },

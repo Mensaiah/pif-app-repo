@@ -4,12 +4,15 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 
 const getMyProfile = async (req: IRequest, res: Response) => {
-  if (req.userType === 'pos-user') {
-    const { Partner, name } = req.user;
+  if (!('userType' in req.user)) {
+    const { Partner, name, email, contact, Pos } = req.user;
 
     return handleResponse(res, {
       name,
+      email,
+      contact,
       Partner,
+      Pos,
     });
   } else {
     const {

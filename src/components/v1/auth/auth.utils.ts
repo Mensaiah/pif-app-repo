@@ -1,11 +1,13 @@
-import { Response } from 'express';
 import jwt from 'jsonwebtoken';
+import { Document } from 'mongoose';
 
 import appConfig from '../../../config';
 import { sendSms } from '../../../services/infobipService';
 import { sendMail } from '../../../services/mailgunService';
 import { IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
+import PlatformModel from '../platform/platform.model';
+import { PlatformAttributes } from '../platform/platform.types';
 
 export const calculateLoginWaitingTime = (
   failedAttempts: number,
@@ -55,16 +57,17 @@ export const generateRandomCode = (length = 5): string => {
 };
 
 export const sendOTP = (to: string, code: string) =>
-  sendSms({ to, text: `Your one time PIF OTP code is ${code}` });
+  sendSms({
+    to,
+    text: `Your one time PIF OTP (Verification) code is ${code} Don't share with anyone please.`,
+  });
 
-export const sendVerificationMail = ({
+export const sendPlatformInviteMail = ({
   to,
   url,
-  role,
 }: {
   to: string;
   url: string;
-  role: string;
 }) =>
   sendMail({
     to,
@@ -72,9 +75,40 @@ export const sendVerificationMail = ({
     content: `Hello,
     <br>
     <br>
-You've been invited to join the PIF Platform as an ${capitalize(
-      role
-    )}. Click the link below to join <br>
+You've been invited to join the PIF Platform as an admin. Click the link below to join <br>
+${url} <br><br>
+<small>This link expires in 24 hrs</small>
+<br><br>
+If you think this is a mistake, please ignore this email.
+<br>
+<br>
+<br>
+Regards,
+<br>
+Pif Team.
+  `,
+  });
+
+export const sendPartnerAdminInviteMail = ({
+  to,
+  url,
+  adminName,
+  partnerName,
+}: {
+  to: string;
+  url: string;
+  adminName: string;
+  partnerName: string;
+}) =>
+  sendMail({
+    to,
+    subject: 'PIF Invitation',
+    content: `Hi ${capitalize(adminName)},
+    <br>
+    <br>
+You've been invited as an admin of ${capitalize(
+      partnerName
+    )} on PIF Platform. Please click on this link below to accept the invitation. <br>
 ${url} <br><br>
 <small>This link expires in 24 hrs</small>
 <br><br>
@@ -116,4 +150,50 @@ export const sendForgotPasswordCodeMail = ({
 export const isDateLessThanXMinutesAgo = (date: Date, min = 1): boolean => {
   const minutesAgo = new Date(Date.now() - min * 60 * 1000);
   return date > minutesAgo;
+};
+
+export const getRoleAndPermissions = async (
+  userType: string,
+  userRole: string
+) => {
+  const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
+
+  for (const userTypeRole of platform.defaultUserTypesAndRoles) {
+    if (userTypeRole.userType === userType) {
+      for (const role of userTypeRole.roles) {
+        if (role.name === userRole) {
+          return {
+            role: role.name,
+            permissions: role.permissions || [], // assuming 'permissions' key exists
+          };
+        }
+      }
+    }
+  }
+  // If no matching userType and role found, return undefined or any suitable default
+  return {};
+};
+
+export const getUserRolesAndPermissions = (
+  userType: string,
+  platformData: PlatformAttributes & Document
+) =>
+  platformData.defaultUserTypesAndRoles
+    .filter((platformUserType) => platformUserType.userType === userType)[0]
+    .roles.map(({ name, permissions }) => {
+      return { role: name, permissions };
+    }) || [];
+
+export const getPermissions = async (userType: string, userRole: string) => {
+  const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
+
+  if (!platform) return [];
+
+  return (
+    platform.defaultUserTypesAndRoles
+      .filter(
+        ({ userType: platformUserType }) => userType === platformUserType
+      )[0]
+      ?.roles.filter(({ name }) => name === userRole)[0]?.permissions || []
+  );
 };

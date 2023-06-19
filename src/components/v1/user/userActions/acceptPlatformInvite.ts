@@ -8,34 +8,15 @@ import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
-import { generateToken } from '../../auth/auth.utils';
+import {
+  generateToken,
+  getPermissions,
+  getRoleAndPermissions,
+} from '../../auth/auth.utils';
 import CityModel from '../../city/city.model';
 import PlatformModel from '../../platform/platform.model';
-import { PlatformAttributes } from '../../platform/platform.types';
 import { PartnerPosUserModel, UserInviteModel, UserModel } from '../user.model';
 import { acceptPlatformInviteSchema } from '../user.policy';
-import { UserInviteAttributes } from '../user.types';
-
-const getUserRoleAndPermissions = (
-  userInvite: UserInviteAttributes,
-  platform: PlatformAttributes
-) => {
-  for (const userTypeRole of platform.defaultUserTypesAndRoles) {
-    if (userTypeRole.userType === userInvite.userType) {
-      for (const role of userTypeRole.roles) {
-        if (role.name === userInvite.role) {
-          return {
-            role: role.name,
-            permissions: role.permissions || [], // assuming 'permissions' key exists
-          };
-        }
-      }
-    }
-  }
-
-  // If no matching userType and role found, return undefined or any suitable default
-  return {};
-};
 
 const acceptPlatformInvite = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof acceptPlatformInviteSchema>;
@@ -49,6 +30,13 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       code,
     });
 
+    if (!existingInvite)
+      return handleResponse(
+        res,
+        'Invalid operation. Please contact the admin.',
+        401
+      );
+
     const platformData = await PlatformModel.findOne().sort({ createdAt: -1 });
 
     if (!platformData) {
@@ -58,24 +46,20 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
         401
       );
     }
-    const { role, permissions } = getUserRoleAndPermissions(
-      existingInvite,
-      platformData
+
+    const permissions = getPermissions(
+      existingInvite.userType,
+      existingInvite.role
     );
-    if (!role || !permissions) {
+
+    // TODO: remove
+    if (!permissions) {
       return handleResponse(
         res,
         'Invalid operation. Please contact the admin.',
         400
       );
     }
-
-    if (!existingInvite)
-      return handleResponse(
-        res,
-        'Invalid operation. Please contact the admin.',
-        401
-      );
 
     const newUser =
       existingInvite.role === 'pos-user'

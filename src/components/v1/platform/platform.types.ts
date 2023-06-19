@@ -22,4 +22,7 @@ export interface PlatformAttributes {
     name: string;
     url: string;
   }>;
+  numericIdTrackers?: {
+    lastPartnerId?: number;
+  };
 }

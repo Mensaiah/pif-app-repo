@@ -71,6 +71,9 @@ const platformSchema = new Schema<PlatformAttributes>(
         url: String,
       },
     ],
+    numericIdTrackers: {
+      lastPartnerId: { type: Number, default: 999 },
+    },
   },
   { timestamps: true }
 );

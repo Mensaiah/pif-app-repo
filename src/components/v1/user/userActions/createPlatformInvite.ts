@@ -6,19 +6,12 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendVerificationMail } from '../../auth/auth.utils';
+import { sendPlatformInviteMail } from '../../auth/auth.utils';
 import PlatformModel from '../../platform/platform.model';
 import { filterMarketplaces } from '../../platform/platform.utils';
 import { UserInviteModel, UserModel } from '../user.model';
 import { createPlatformInviteSchema } from '../user.policy';
-
-const createInviteLink = (req: IRequest, code: string) =>
-  `${req.protocol}://${
-    req.protocol === 'http' ? 'localhost:5173' : 'pif-dashboard.web.app'
-  }${req.baseUrl.replace('users', 'auth')}/invitation/${code}`.replace(
-    '/v1/en',
-    ''
-  );
+import { createInviteLink } from '../user.utils';
 
 const createPlatformInvite = async (req: IRequest, res: Response) => {
   type UserInviteType = z.infer<typeof createPlatformInviteSchema>;
@@ -45,7 +38,7 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
 
     // TODO: fetch platform and ensure the markeplaces supplied exists
 
-    const platform = await PlatformModel.findOne();
+    const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
 
     const sanitizedMarketplace = filterMarketplaces(marketplaces, platform);
 
@@ -68,10 +61,9 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
         invitationData.code = uuid();
       }
 
-      await sendVerificationMail({
+      await sendPlatformInviteMail({
         to: email,
         url: createInviteLink(req, invitationData.code),
-        role,
       });
 
       await invitationData.save();
@@ -96,10 +88,9 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
       status: 'pending',
     }).save();
 
-    await sendVerificationMail({
+    await sendPlatformInviteMail({
       to: email,
       url: createInviteLink(req, newInvite.code),
-      role,
     });
 
     return handleResponse(res, 'Invite sent ✉️');
