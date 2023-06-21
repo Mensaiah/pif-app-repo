@@ -1,6 +1,6 @@
 import { Document } from 'mongoose';
 
-export interface PartnerAttribute extends Document {
+export interface PartnerAttributes extends Document {
   _id: number;
   name: string;
   email: string;

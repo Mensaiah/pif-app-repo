@@ -3,9 +3,9 @@ import { Document } from 'mongoose';
 
 import PlatformModel from '../platform/platform.model';
 
-import { PartnerAttribute } from './partner.types';
+import { PartnerAttributes } from './partner.types';
 
-const partnerSchema = new Schema<PartnerAttribute>(
+const partnerSchema = new Schema<PartnerAttributes>(
   {
     _id: Number,
     name: String,
@@ -88,7 +88,7 @@ const partnerSchema = new Schema<PartnerAttribute>(
   { timestamps: true }
 );
 
-partnerSchema.pre<PartnerAttribute & Document>('save', async function (next) {
+partnerSchema.pre<PartnerAttributes & Document>('save', async function (next) {
   try {
     const platform = await PlatformModel.findOneAndUpdate(
       {},
@@ -104,4 +104,4 @@ partnerSchema.pre<PartnerAttribute & Document>('save', async function (next) {
   }
 });
 
-export const PartnerModel = model<PartnerAttribute>('Partner', partnerSchema);
+export const PartnerModel = model<PartnerAttributes>('Partner', partnerSchema);
