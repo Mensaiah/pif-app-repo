@@ -77,7 +77,7 @@ export interface UserAttributes {
 // contacts, details (UserPifDetails), kickbackPoints, rewardSystemPoints: UserPifRewardSystemPoints, IUserPifProportions (622), PartnerSlicePrices, ProductVouchers, ProductVouchersUses
 
 export interface PartnerPosUserAttributes {
-  Partner: ObjectId;
+  Partner: number;
   name: string;
   avatar?: string;
   isActive: boolean;

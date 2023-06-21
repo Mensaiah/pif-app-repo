@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYTExYTI0ZTktMjVlZi00NDRkLWFjNzItNzExNWFiYTUxZGU1IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjJiM2IwZjRjLWM2MGQtNDEwOS1hMzEyLTViNDk0ZTA0YmQ5OCIsInJlZiI6IjY0OGYwNWEyMjAzNjBlODU4YTk1ZjdhYyIsImlhdCI6MTY4NzExODU0MywiZXhwIjoxNjg3MjkxMzQzLCJpc3MiOiJQSUYtZGV2In0.dFHuH8FWWB5BSQQvgZZpFkOtPK9crnjUyFjWCpkqjy0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYTExYTI0ZTktMjVlZi00NDRkLWFjNzItNzExNWFiYTUxZGU1IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjJiM2IwZjRjLWM2MGQtNDEwOS1hMzEyLTViNDk0ZTA0YmQ5OCIsInJlZiI6IjY0OGYwNWEyMjAzNjBlODU4YTk1ZjdhYyIsImlhdCI6MTY4NzE3NDA3MCwiZXhwIjoxNjg3MzQ2ODcwLCJpc3MiOiJQSUYtZGV2In0.FlRiHESF5HPdb757oomXKucvqm50Ceih2zfL5wAi5yg
 
 GET {{server}}
 
@@ -304,7 +304,7 @@ GET {{api}}/partners/nigeria
 
 
 ### update partner
-PATCH {{api}}/partners/1001
+PATCH {{api}}/partners/1002
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -333,3 +333,15 @@ Authorization: Bearer {{token}}
   ###
 
   
+### invite partner
+POST {{api}}/partners/invite
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "adminEmail": "afeez@pif-app.com",
+  "adminName": "Afeez",
+  "userType": "partner-admin",
+  "role": "partner-admin",
+  "partnerId": "1002"
+}
