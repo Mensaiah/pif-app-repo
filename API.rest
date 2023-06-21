@@ -327,12 +327,9 @@ Authorization: Bearer {{token}}
     "amountThreshold": "20",
     "isPeriodically": true,
     "periodType": "daily"
-  }
+ }
 
 
-  ###
-
-  
 ### invite partner
 POST {{api}}/partners/invite
 Content-Type: application/json

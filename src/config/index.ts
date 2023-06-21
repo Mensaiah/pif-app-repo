@@ -61,6 +61,12 @@ const appConfig = {
   infoBipApiKey: env.INFOBIP_API_KEY || '',
   reCaptchaPublicKey: env.reCAPTCHA_PUBLIC_KEY || '',
   reCaptchaSecretKey: env.reCAPTCHA_SECRET_KEY || '',
+  spacesConfigs: {
+    key: env.SPACES_KEY || '',
+    secret: env.SPACES_SECRET || '',
+    region: env.SPACES_REGION || '',
+    endpoint: env.SPACES_ENDPOINT || '',
+  },
 };
 
 export default appConfig;

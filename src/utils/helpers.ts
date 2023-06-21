@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import appConfig from '../config';
 import { IRequest, IPaginationData, LanguageValuePair } from '../types/global';
 
-import normalizeLang from './normalizeLang';
+// import normalizeLang from './normalizeLang';
 import { isArray, isObject } from './validators';
 
 export const consoleLog = (
@@ -106,6 +106,38 @@ export const langDbStructure = (
   });
 
   return langObj;
+};
+
+type DataInput = {
+  [key: string]: any; // Can be number, string or LangObject array
+};
+
+export const normalizeLang = (data: DataInput | DataInput[]): any => {
+  // Check if data is an array
+  if (Array.isArray(data)) {
+    // If it's an array, recursively call normalizeLang for each item in the array
+    return data.map((item) => normalizeLang(item));
+  } else {
+    // If it's not an array, it's an individual object. Process it.
+    const normalized: any = {};
+
+    for (const key in data) {
+      if (
+        Array.isArray(data[key]) &&
+        data[key].length > 0 &&
+        data[key][0].hasOwnProperty('lang')
+      ) {
+        normalized[key] = {};
+        for (const item of data[key]) {
+          normalized[key][item.lang] = item.value;
+        }
+      } else {
+        normalized[key] = data[key];
+      }
+    }
+
+    return normalized;
+  }
 };
 
 export const handlePaginate = (req: IRequest) => {
