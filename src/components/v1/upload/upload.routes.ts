@@ -8,8 +8,8 @@ import {
 } from '../auth/authMiddlwares';
 
 import {
-  uploadCategoryIcon,
   uploadContractDocuments,
+  uploadIcon,
   uploadProductImages,
   uploadUserAvatar,
 } from './upload.actions';
@@ -58,7 +58,7 @@ router.post(
   requireAuthMiddleware,
   // TODO: check permissions
   upload.single('icon'),
-  uploadCategoryIcon
+  uploadIcon
 );
 
 export default router;

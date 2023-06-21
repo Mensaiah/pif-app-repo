@@ -78,7 +78,7 @@ export const uploadProductImages = async (req: IRequest, res: Response) => {
   }
 };
 
-export const uploadCategoryIcon = async (req: IRequest, res: Response) => {
+export const uploadIcon = async (req: IRequest, res: Response) => {
   try {
     const fileExt = path.extname(req.file.originalname);
 
