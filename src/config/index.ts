@@ -1,4 +1,7 @@
 /* eslint-disable no-console */
+
+import { allPermissions, permissionList } from './platformPermissionList';
+
 /* eslint-disable @typescript-eslint/no-var-requires */
 const ms = require('ms');
 
@@ -38,6 +41,8 @@ const appConfig = {
     maxInactivity: '3 hours',
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
+    permissionList,
+    allPermissions,
   },
   supportedLanguages: ['en', 'da'] as const,
   paginationConfig: {

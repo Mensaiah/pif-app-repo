@@ -1,19 +1,15 @@
 import { Schema, model } from 'mongoose';
-import { Document } from 'mongoose';
-
-import PlatformModel from '../platform/platform.model';
 
 import { PartnerAttributes } from './partner.types';
 
 const partnerSchema = new Schema<PartnerAttributes>(
   {
-    _id: Number,
     name: String,
     email: {
       type: String,
       lowercase: true,
     },
-
+    old_id: Number,
     marketplaces: [String],
     vat: String,
     phonePrefix: String,
@@ -36,6 +32,7 @@ const partnerSchema = new Schema<PartnerAttributes>(
       accountNumber: String,
       country: String,
       currency: String,
+      notifyEmail: String,
     },
     settlingDetails: {
       isPeriodically: Boolean,
@@ -88,20 +85,20 @@ const partnerSchema = new Schema<PartnerAttributes>(
   { timestamps: true }
 );
 
-partnerSchema.pre<PartnerAttributes & Document>('save', async function (next) {
-  try {
-    const platform = await PlatformModel.findOneAndUpdate(
-      {},
-      {
-        $inc: { 'numericIdTrackers.lastPartnerId': 1 },
-      },
-      { new: true }
-    );
-    this._id = platform.numericIdTrackers.lastPartnerId;
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-});
+// partnerSchema.pre<PartnerAttributes & Document>('save', async function (next) {
+//   try {
+//     const platform = await PlatformModel.findOneAndUpdate(
+//       {},
+//       {
+//         $inc: { 'numericIdTrackers.lastPartnerId': 1 },
+//       },
+//       { new: true }
+//     );
+//     this._id = platform.numericIdTrackers.lastPartnerId;
+//     return next();
+//   } catch (err) {
+//     return next(err);
+//   }
+// });
 
 export const PartnerModel = model<PartnerAttributes>('Partner', partnerSchema);

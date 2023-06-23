@@ -1,7 +1,7 @@
 import { Document } from 'mongoose';
 
 export interface PartnerAttributes extends Document {
-  _id: number;
+  old_id?: number;
   name: string;
   email: string;
   marketplaces: string[];

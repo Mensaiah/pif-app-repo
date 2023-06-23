@@ -3,33 +3,37 @@ import { ObjectId } from 'mongoose';
 import { LanguageCode } from '../../../types/global';
 
 export type UserType = 'customer' | 'platform-admin' | 'partner-admin';
+
+interface Contact {
+  phonePrefix?: string;
+  phone?: string;
+  city?: string;
+  zip?: string;
+  street?: string;
+  country?: string;
+}
+
+interface Social {
+  platformName: string;
+  socialUserId: string;
+}
+
 export interface UserAttributes {
   name?: string;
   email?: string;
   timezone?: string;
   Partner?: ObjectId;
   userType: UserType;
-  username?: string;
   pifId?: string;
   avatar?: string;
-  sex?: string;
+  sex?: 'male' | 'female' | 'others' | 'prefer-not-to-say';
   dob?: Date;
   occupation?: string;
   relationship?: 'married' | 'single' | 'divorced' | 'prefer not to say';
   hasChildren?: boolean;
   interests?: string[];
-  contact?: {
-    phone?: string;
-    phonePrefix?: string;
-    city?: string;
-    zip?: string;
-    street?: string;
-    country?: string;
-  };
-  socials?: Array<{
-    platformName: string;
-    socialUserId: string;
-  }>;
+  contact?: Contact;
+  socials?: Array<Social>;
   kickbackPoints?: Array<{ marketplace: string; points: number }>;
   rewardSystemPoints?: [];
   paymentConfigs?: {
@@ -77,15 +81,15 @@ export interface UserAttributes {
 // contacts, details (UserPifDetails), kickbackPoints, rewardSystemPoints: UserPifRewardSystemPoints, IUserPifProportions (622), PartnerSlicePrices, ProductVouchers, ProductVouchersUses
 
 export interface PartnerPosUserAttributes {
-  Partner: number;
+  Partner: ObjectId;
   name: string;
   avatar?: string;
   isActive: boolean;
+  timezone: string;
   email?: string;
-  contact?: {
-    phone?: string;
-    phonePrefix?: string;
-  };
+  dob: Date;
+  sex?: 'male' | 'female' | 'others' | 'prefer-not-to-say';
+  contact?: Pick<Contact, 'phonePrefix' | 'phone'>;
   Pos: ObjectId;
 }
 

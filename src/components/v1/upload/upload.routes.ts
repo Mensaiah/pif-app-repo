@@ -29,7 +29,7 @@ router.post(
   '/user-avatars/:userId',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-user-data']),
+  hasAnyPermissionMiddleware(['manage-users']),
   upload.single('user-avatar'),
   uploadUserAvatar
 );

@@ -4,7 +4,7 @@ export interface PurchaseAttributes extends Document {
   User: Types.ObjectId;
   Product: ObjectId;
   username: string;
-  Partner: number;
+  Partner: ObjectId;
   Contact?: Types.ObjectId;
   Recipient?: Types.ObjectId;
   recipientPhonePrefix: string;

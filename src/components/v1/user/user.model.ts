@@ -19,17 +19,19 @@ const userSchema = new Schema<UserAttributes>(
     },
     timezone: String,
     Partner: {
-      type: Number,
+      type: ObjectId,
       ref: 'Partner',
     },
     userType: {
       type: String,
       required: true,
     },
-    username: String,
     pifId: String,
     avatar: String,
-    sex: String,
+    sex: {
+      type: String,
+      enum: ['male', 'female', 'others', 'prefer-not-to-say'],
+    },
     dob: Date,
     occupation: String,
     relationship: {
@@ -110,7 +112,7 @@ const userSchema = new Schema<UserAttributes>(
 );
 
 const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
-  Partner: { type: Number, ref: 'Partner', required: true },
+  Partner: { type: ObjectId, ref: 'Partner', required: true },
   name: { type: String, required: true },
   avatar: String,
   isActive: Boolean,
@@ -118,6 +120,12 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
     type: String,
     lowercase: true,
     trim: true,
+  },
+  timezone: String,
+  dob: Date,
+  sex: {
+    type: String,
+    enum: ['male', 'female', 'others', 'prefer-not-to-say'],
   },
   contact: {
     phone: String,
@@ -138,7 +146,7 @@ export const UserInviteSchema = new Schema<UserInviteAttributes>({
   userType: { type: String, required: true },
   email: { type: String, lowercase: true, trim: true, required: true },
   invitedBy: { type: ObjectId, ref: 'User' },
-  Partner: { type: Number, ref: 'Partner' },
+  Partner: { type: ObjectId, ref: 'Partner' },
   marketplaces: [String],
   City: { type: ObjectId, ref: 'City' },
   Pos: { type: ObjectId, ref: 'Pos' },

@@ -1,12 +1,16 @@
 import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
-import { validateTokenMiddleware } from '../auth/authMiddlwares';
+import {
+  hasAnyPermissionMiddleware,
+  validateTokenMiddleware,
+} from '../auth/authMiddlwares';
 import { requireAuthMiddleware } from '../auth/authMiddlwares';
 
 import {
   acceptPlatformInviteSchema,
   createPlatformInviteSchema,
+  updateProfileSchema,
   verifyPlatformInviteSchema,
 } from './user.policy';
 import {
@@ -15,7 +19,9 @@ import {
   verifyPlatformInvite,
   getMyProfile,
   changeMyMarketplace,
+  updateMyProfile,
 } from './userActions';
+import { getUser, getUsers } from './userActions/userProfileActions';
 
 const router = Router();
 
@@ -52,6 +58,30 @@ router.get(
   validateTokenMiddleware,
   requireAuthMiddleware,
   getMyProfile
+);
+
+router.patch(
+  '/my-profile',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  policyMiddleware(updateProfileSchema),
+  updateMyProfile
+);
+
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  hasAnyPermissionMiddleware(['manage-users', 'view-users']),
+  getUsers
+);
+
+router.get(
+  '/:userId',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  hasAnyPermissionMiddleware(['manage-users', 'view-users']),
+  getUser
 );
 
 export default router;

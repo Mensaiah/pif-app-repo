@@ -5,7 +5,7 @@ export interface RevenueAttributes extends Document {
   amount: number;
   currency: number;
   marketplace: string;
-  Partner: number;
+  Partner: Types.ObjectId;
   Product: Types.ObjectId;
   User: Types.ObjectId;
   Purchase: Types.ObjectId;

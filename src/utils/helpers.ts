@@ -80,6 +80,19 @@ export const _omit = (obj: any, blackList: any[]) => {
   return obj;
 };
 
+export const _pick = (obj: any, whiteList: any[]) => {
+  if (isObject(obj)) {
+    return Object.keys(obj)
+      .filter((k) => whiteList.includes(k))
+      .map((k) => Object.assign({}, { [k]: obj[k] }))
+      .reduce((res, o) => Object.assign(res, o), {});
+  } else if (isArray(obj)) {
+    return obj.filter((k: any) => whiteList.includes(k));
+  }
+
+  return obj;
+};
+
 export const capitalize = (word: string) =>
   word
     .split(' ')

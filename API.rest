@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNDNhOWJiMTktYmNiYS00NTZhLTgzMmItMTVkMGM1ZWVlNDNiIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImM5MjNlMzQ4LTFjNDEtNDNjMS05YzQzLTNhNDYxNDUxMjQ0NSIsInJlZiI6IjY0ODg0NjBmNzMyZWFlYTY4ZmQ3NDNmNyIsImlhdCI6MTY4NzM1OTIzNywiZXhwIjoxNjg3NTMyMDM3LCJpc3MiOiJQSUYtZGV2In0.G9lT9W-gh75nkZv3adBmybvFVqws1hHofLR2IR7gd9Q
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNDNhOWJiMTktYmNiYS00NTZhLTgzMmItMTVkMGM1ZWVlNDNiIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImM5MjNlMzQ4LTFjNDEtNDNjMS05YzQzLTNhNDYxNDUxMjQ0NSIsInJlZiI6IjY0ODg0NjBmNzMyZWFlYTY4ZmQ3NDNmNyIsImlhdCI6MTY4NzUxMjM0MCwiZXhwIjoxNjg3Njg1MTQwLCJpc3MiOiJQSUYtZGV2In0.uA0WXq6cGbNYHr72aiI4ZzLpDmD-9UnIldg7iKfOznU
 
 GET {{server}}
 
@@ -22,6 +22,42 @@ Content-Type: application/json
 
 ### my profile
 GET {{api}}/users/my-profile
+Authorization: Bearer {{token}}
+
+### update my profile
+PATCH {{api}}/users/my-profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Abdulsamii Ajala",
+  "phonePrefix": "234",
+  "phone": "8168861541",
+  "sex": "male",
+  "occupation": "software engineer",
+  "relationship": "married",
+  "dob": "1992-01-08",
+  "interests": ["sleeping", "coding"],
+  "city": "Selangor",
+  "country": "Malaysia",
+  "zipCode": "12345",
+  "street": "7 gwagwalada street, fct.",
+  "social": [{
+    "platformName": "facebook",
+    "socialUserId": "jalasem"
+  }],
+  "avatar": "https://pif-space.nyc3.cdn.digitaloceanspaces.com/user-avatars/fake-user-id/0be42d11-f877-42cc-83ae-516dec4087f3.jpeg"
+}
+
+### Get users
+GET {{api}}/users
+Authorization: Bearer {{token}}
+
+### Get user
+GET {{api}}/users/6488460f732eaea68fd743f7
+Authorization: Bearer {{token}}
+### Get users
+GET {{api}}/users
 Authorization: Bearer {{token}}
 
 ### invite users
