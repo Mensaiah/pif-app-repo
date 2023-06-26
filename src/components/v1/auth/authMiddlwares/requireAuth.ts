@@ -115,4 +115,5 @@ const requireAuth = async (
     return handleResponse(res, 'Authentication error', 401, err);
   }
 };
+
 export default requireAuth;

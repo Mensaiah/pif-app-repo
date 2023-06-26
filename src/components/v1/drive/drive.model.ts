@@ -9,7 +9,7 @@ const driveFileSchema = new Schema<DriveFileAttributes>(
     mimeType: String,
     extension: String,
     fullPath: String,
-    size: String,
+    size: Number,
     source: String,
     createdBy: Types.ObjectId,
     updatedBy: Types.ObjectId,

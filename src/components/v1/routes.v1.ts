@@ -6,6 +6,7 @@ import { useWord } from '../../utils/wordSheet';
 
 import authRoutesV1 from './auth/auth.routes';
 import cmsRoutesV1 from './cms/cms.routes';
+import driveRoutesV1 from './drive/drive.routes';
 import partnersRoutesV1 from './partner/partner.routes';
 import platformRoutesV1 from './platform/platform.routes';
 import uploadRoutesV1 from './upload/upload.routes';
@@ -20,6 +21,7 @@ router.use('/platform', platformRoutesV1);
 router.use('/cms', cmsRoutesV1);
 router.use('/partners', partnersRoutesV1);
 router.use('/uploads', uploadRoutesV1);
+router.use('/drive', driveRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));

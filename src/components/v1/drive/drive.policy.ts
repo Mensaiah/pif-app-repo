@@ -29,3 +29,8 @@ export const createNewFileSchema = z.object({
   parentFolderId: z.string().optional(),
   canBeAccessedBy: CanBeAccessedBySchema,
 });
+
+export const newFileMetadataSchema = z.object({
+  name: z.string(),
+  canBeAccessedBy: z.string().optional(),
+});

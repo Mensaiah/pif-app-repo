@@ -4,10 +4,19 @@ import DOMPurify from 'dompurify';
 import { Response } from 'express';
 import { JSDOM } from 'jsdom';
 
-import { uploadToSpace } from '../../../services/s3UploadService';
+import {
+  uploadFileToSpace,
+  uploadToSpace,
+} from '../../../services/s3UploadService';
 import { IRequest } from '../../../types/global';
-import { handleResponse, uuid } from '../../../utils/helpers';
+import {
+  _omit,
+  consoleLog,
+  handleResponse,
+  uuid,
+} from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
+import { DriveFileModel, DriveFolderModel } from '../drive/drive.model';
 
 export const uploadUserAvatar = async (req: IRequest, res: Response) => {
   const userId = req.params.userId || req.user._id;
@@ -56,12 +65,12 @@ export const uploadProductImages = async (req: IRequest, res: Response) => {
     if (files.length > 4) return handleResponse(res, 'max 4 images', 400);
 
     const data = await files.reduce<Promise<string[]>>(
-      async (acc, { buffer, originalname }) => {
+      async (acc, { buffer, originalname, mimetype }) => {
         const fileExt = path.extname(originalname);
         const data = await uploadToSpace({
           Key: `product-images/${marketplace}/${partnerId}/${uuid()}${fileExt}`,
           Body: buffer,
-          ContentType: req.file.mimetype,
+          ContentType: mimetype,
         });
 
         return (await acc).concat(data);
@@ -107,6 +116,85 @@ export const uploadIcon = async (req: IRequest, res: Response) => {
     handleResponse(res, {
       message: 'category-icon uploaded successfully',
       data,
+    });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const uploadFilesToDrive = async (req: IRequest, res: Response) => {
+  try {
+    const files: Express.Multer.File[] = req.files as Express.Multer.File[];
+    const metadata = req.headers['x-metadata'] as string;
+    const metadataObj = metadata ? JSON.parse(metadata) : {};
+
+    if (files.length > 5) return handleResponse(res, 'max 5 images', 400);
+
+    const { canBeAccessedBy, parentId } = metadataObj;
+
+    if (parentId) {
+      const folderExists = await DriveFolderModel.findById(parentId, '_id');
+
+      if (!folderExists)
+        return handleResponse(res, 'folder does not exist', 404);
+    }
+
+    const validAccessOptions = [
+      'partner-admins',
+      'platform-admins',
+      'everyone',
+    ];
+
+    consoleLog(JSON.stringify(files, null, 2));
+
+    // Check if canBeAccessedBy is valid
+    if (canBeAccessedBy) {
+      const accesses = canBeAccessedBy
+        .split(',')
+        .map((s: string) => s.trim().toLowerCase());
+      if (
+        !accesses.every((access: string) => validAccessOptions.includes(access))
+      ) {
+        return handleResponse(
+          res,
+          `canBeAccessedBy must contain only these options: ${validAccessOptions.join(
+            ', '
+          )}`,
+          400
+        );
+      }
+    }
+
+    const uploadedFiles = await Promise.all(
+      files.map(async ({ originalname, buffer, mimetype }) => {
+        const fileExt = path.extname(originalname);
+        const { url, size } = await uploadFileToSpace({
+          Key: `drive-files/${uuid()}${fileExt}`,
+          Body: buffer,
+          ContentType: mimetype,
+        });
+
+        const newFile = await new DriveFileModel({
+          ParentFolder: parentId || null,
+          name: originalname,
+          mimeType: mimetype,
+          extension: fileExt,
+          size,
+          source: url,
+          createdBy: req.user._id,
+          updatedBy: req.user._id,
+          canBeAccessedBy: canBeAccessedBy
+            ? canBeAccessedBy.split(', ')
+            : null || ['everyone'],
+        }).save();
+
+        return _omit(newFile.toObject(), ['deletedAt', 'canBeAccessedBy']);
+      })
+    );
+
+    handleResponse(res, {
+      message: 'files uploaded successfully',
+      data: uploadedFiles,
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);

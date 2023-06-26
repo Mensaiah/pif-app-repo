@@ -43,4 +43,27 @@ export const uploadToSpace = async (uploadParams: {
   }
 };
 
+export const uploadFileToSpace = async (uploadParams: {
+  Key: string;
+  Body: Buffer;
+  ContentType: string;
+}) => {
+  try {
+    const uploadData = {
+      ...uploadParams,
+      Bucket: 'pif-space',
+      ACL: 'public-read',
+    };
+
+    await s3Client.send(new PutObjectCommand(uploadData));
+
+    return {
+      url: `https://${uploadData.Bucket}.nyc3.cdn.digitaloceanspaces.com/${uploadData.Key}`,
+      size: uploadData.Body.byteLength,
+    };
+  } catch (err) {
+    throw err;
+  }
+};
+
 export { s3Client };

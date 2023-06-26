@@ -2,6 +2,7 @@ import { Router } from 'express';
 import multer from 'multer';
 
 import {
+  cannotBeCustomerMiddleware,
   hasAnyPermissionMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
@@ -9,6 +10,7 @@ import {
 
 import {
   uploadContractDocuments,
+  uploadFilesToDrive,
   uploadIcon,
   uploadProductImages,
   uploadUserAvatar,
@@ -59,6 +61,15 @@ router.post(
   // TODO: check permissions
   upload.single('icon'),
   uploadIcon
+);
+
+router.post(
+  '/drive',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  upload.array('files'),
+  uploadFilesToDrive
 );
 
 export default router;

@@ -100,3 +100,13 @@ export const hasAllPermissionsMiddleware =
 
     return next();
   };
+
+export const cannotBeCustomerMiddleware = (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.userType === 'customer') return handleResponse(res, 'Forbidden', 403);
+
+  return next();
+};
