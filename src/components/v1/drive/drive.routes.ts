@@ -29,6 +29,7 @@ router.get('/', getDriveFoldersAndFiles);
 router.get('/:folderId', getDriveFoldersAndFiles);
 
 router.post('/folders', createNewFolder);
+router.post('/folders/:folderId', createNewFolder);
 router.patch('/folders/:folderId', renameFolder);
 router.delete('/folders/:folderId/trash', trashFolder);
 router.patch('/folders/:folderId/restore', trashFolder);
