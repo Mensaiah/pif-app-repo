@@ -65,6 +65,36 @@ driveFileSchema.pre('save', async function (next) {
   next();
 });
 
+driveFileSchema.pre('save', async function (next) {
+  if (this.isNew || this.isModified('name')) {
+    const fileExists = await DriveFileModel.findOne({
+      name: this.name,
+      ParentFolder: this.ParentFolder,
+    });
+
+    if (fileExists) {
+      this.name = `${this.name}_${Math.random().toString(36).slice(2, 7)}`;
+    }
+  }
+
+  next();
+});
+
+driveFolderSchema.pre('save', async function (next) {
+  if (this.isNew || this.isModified('name')) {
+    const folderExists = await DriveFolderModel.findOne({
+      name: this.name,
+      ParentFolder: this.ParentFolder,
+    });
+
+    if (folderExists) {
+      this.name = `${this.name}_${Math.random().toString(36).slice(2, 7)}`;
+    }
+  }
+
+  next();
+});
+
 export const DriveFileModel = model<DriveFileAttributes>(
   'DriveFile',
   driveFileSchema
@@ -73,3 +103,5 @@ export const DriveFolderModel = model<DriveFolderAttributes>(
   'DriveFolder',
   driveFolderSchema
 );
+
+// TODO: fix fullpath to be name of folder or file separated by / and ensure spaces are replaced with _

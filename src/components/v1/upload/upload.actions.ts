@@ -126,7 +126,10 @@ export const uploadFilesToDrive = async (req: IRequest, res: Response) => {
   try {
     const files: Express.Multer.File[] = req.files as Express.Multer.File[];
     const metadata = req.headers['x-metadata'] as string;
-    const metadataObj = metadata ? JSON.parse(metadata) : {};
+
+    const metadataObj = metadata
+      ? JSON.parse(metadata.slice(1, metadata.length - 1))
+      : {};
 
     if (files.length > 5) return handleResponse(res, 'max 5 images', 400);
 

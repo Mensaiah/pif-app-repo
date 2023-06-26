@@ -149,6 +149,7 @@ export const renameFile = async (req: IRequest, res: Response) => {
     if (!file) return handleResponse(res, 'File not found', 404);
 
     const { name } = req.body;
+    // TODO: add validation for name
 
     file.name = name;
     file.updatedBy = req.user._id;
