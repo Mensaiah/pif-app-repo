@@ -33,6 +33,11 @@ const driveFolderSchema = new Schema<DriveFolderAttributes>(
   { timestamps: true }
 );
 
+function sanitizedPath(fullPath: string): string {
+  const path = fullPath.replace(/\s/g, '_');
+  return path.replace(/\\/g, '/');
+}
+
 driveFolderSchema.pre('save', async function (next) {
   if (
     this.isNew ||
@@ -41,7 +46,8 @@ driveFolderSchema.pre('save', async function (next) {
   ) {
     if (this.ParentFolder) {
       const parentFolder = await DriveFolderModel.findById(this.ParentFolder);
-      this.fullPath = `${parentFolder.fullPath}/${this.name}`;
+      const path = `${parentFolder.fullPath}/${this.name}`;
+      this.fullPath = sanitizedPath(path);
     } else {
       this.fullPath = `/${this.name}`;
     }
@@ -57,7 +63,8 @@ driveFileSchema.pre('save', async function (next) {
   ) {
     if (this.ParentFolder) {
       const parentFolder = await DriveFolderModel.findById(this.ParentFolder);
-      this.fullPath = `${parentFolder.fullPath}/${this.name}`;
+      const path = `${parentFolder.fullPath}/${this.name}`;
+      this.fullPath = sanitizedPath(path);
     } else {
       this.fullPath = `/${this.name}`;
     }
