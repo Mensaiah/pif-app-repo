@@ -21,19 +21,20 @@ const router = Router();
 const upload = multer();
 
 router.post(
-  '/user-avatars',
+  '/my-avatar',
   validateTokenMiddleware,
   requireAuthMiddleware,
   upload.single('user-avatar'),
-  uploadUserAvatar
+  uploadUserAvatar(true)
 );
+
 router.post(
   '/user-avatars/:userId',
   validateTokenMiddleware,
   requireAuthMiddleware,
   hasAnyPermissionMiddleware(['manage-users']),
   upload.single('user-avatar'),
-  uploadUserAvatar
+  uploadUserAvatar()
 );
 
 router.post(

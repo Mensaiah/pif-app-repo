@@ -18,24 +18,26 @@ import {
 import { useWord } from '../../../utils/wordSheet';
 import { DriveFileModel, DriveFolderModel } from '../drive/drive.model';
 
-export const uploadUserAvatar = async (req: IRequest, res: Response) => {
-  const userId = req.params.userId || req.user._id;
-  const fileExt = path.extname(req.file.originalname);
+export const uploadUserAvatar =
+  (self = false) =>
+  async (req: IRequest, res: Response) => {
+    const userId = self ? req.user._id : req.params.userId;
+    const fileExt = path.extname(req.file.originalname);
 
-  try {
-    const data = await uploadToSpace({
-      Key: `user-avatars/${userId}/${uuid()}${fileExt}`,
-      Body: req.file.buffer,
-      ContentType: req.file.mimetype,
-    });
-    handleResponse(res, {
-      message: 'image uploaded successfully',
-      data,
-    });
-  } catch (err) {
-    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
-  }
-};
+    try {
+      const data = await uploadToSpace({
+        Key: `user-avatars/${userId}/${uuid()}${fileExt}`,
+        Body: req.file.buffer,
+        ContentType: req.file.mimetype,
+      });
+      handleResponse(res, {
+        message: 'image uploaded successfully',
+        data,
+      });
+    } catch (err) {
+      handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+    }
+  };
 
 export const uploadContractDocuments = async (req: IRequest, res: Response) => {
   const partnerId = req.params.partnerId;
