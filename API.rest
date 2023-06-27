@@ -1,9 +1,8 @@
 # @server = https://pif-api.herokuapp.com
-@server = http://localhost:3030
+@server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNDNhOWJiMTktYmNiYS00NTZhLTgzMmItMTVkMGM1ZWVlNDNiIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImM5MjNlMzQ4LTFjNDEtNDNjMS05YzQzLTNhNDYxNDUxMjQ0NSIsInJlZiI6IjY0ODg0NjBmNzMyZWFlYTY4ZmQ3NDNmNyIsImlhdCI6MTY4NzUxMjM0MCwiZXhwIjoxNjg3Njg1MTQwLCJpc3MiOiJQSUYtZGV2In0.uA0WXq6cGbNYHr72aiI4ZzLpDmD-9UnIldg7iKfOznU
-
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMmZlZmU2MWYtODJiOC00ZWQ3LTllZjQtZWU3MDk0ZGM5MTQ2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6Ijg1YTcyNDAxLWNhNWEtNDA2Ni1hOTEwLWViYzRjZjk4ZGIxMyIsInJlZiI6IjY0OWFmNzZiYjVmODY4Y2Q2YjQ2Y2NjNyIsImlhdCI6MTY4Nzg3NzY1MiwiZXhwIjoxNjg4MDUwNDUyLCJpc3MiOiJQSUYtZGV2In0.HYRMpyHCy1Lc5rVkV-LWp3EHomrpnu2HPuQt7MkWF14
 GET {{server}}
 
 ### API
@@ -68,8 +67,8 @@ Authorization: Bearer {{token}}
 {
   "email": "afeez@pif-app.com",
   "userType": "platform-admin",
-  "role": "country-admin",
-  "marketplaces": ["ghana"]
+  "role": "admin",
+  "marketplaces": ["nigeria"]
 }
 
 ### invite users

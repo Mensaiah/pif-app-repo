@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { handleResponse, uuid } from '../../../../utils/helpers';
+import { consoleLog, handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
@@ -48,6 +48,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
     }
 
     const permissions = getPermissions(
+      platformData,
       existingInvite.userType,
       existingInvite.role
     );
@@ -82,7 +83,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
             },
             userType: existingInvite.userType,
           });
+
     const now = new Date();
+
     let newUserAccess = new UserAccessModel({
       User: newUser._id,
       password,

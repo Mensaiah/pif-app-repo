@@ -184,9 +184,11 @@ export const getUserRolesAndPermissions = (
       return { role: name, permissions };
     }) || [];
 
-export const getPermissions = async (userType: string, userRole: string) => {
-  const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
-
+export const getPermissions = (
+  platform: PlatformAttributes & Document,
+  userType: string,
+  userRole: string
+) => {
   if (!platform) return [];
 
   return (
