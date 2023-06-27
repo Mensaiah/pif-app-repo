@@ -30,6 +30,12 @@ export const uploadUserAvatar =
         Body: req.file.buffer,
         ContentType: req.file.mimetype,
       });
+
+      if (self) {
+        req.user.avatar = data;
+        await req.user.save();
+      }
+
       handleResponse(res, {
         message: 'image uploaded successfully',
         data,
