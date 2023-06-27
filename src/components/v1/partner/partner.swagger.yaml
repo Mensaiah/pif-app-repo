@@ -1,0 +1,565 @@
+/partners/invite:
+  post:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: Invite a new partner admin to the platform.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - adminEmail
+              - adminName
+              - partnerId
+              - role
+              - userType
+            properties:
+              adminEmail:
+                type: string
+                default: xyx@mail.com
+              adminName:
+                type: string
+                default: John Doe
+              partnerId:
+                type: string
+                default: 5fc89b4d63f43d18a0a6753a
+              role:
+                type: string
+                default: partner-admin | local-partner | pos-user
+              userType:
+                type: string
+                default: partner-admin
+    responses:
+      200:
+        description: If an invitation is sent successfully / it exists but the time has expire.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Invitation sent ✉️ / Partner has already been invited but another email has been sent
+
+      409:
+        description: if the partner already exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Partner already exists
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/partners:
+  post:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: adding a new partner after accepting invite to the platform.
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - marketplaces
+              - phonePrefix
+              - phone
+              - headquarterCountry
+              - headquarterCity
+              - bankName
+              - bankCountry
+              - accountName
+              - accountNumber
+              - currency
+              - redeemType
+              - status
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              marketplaces:
+                type: array
+                items:
+                  type: string
+              vat:
+                type: string
+              phonePrefix:
+                type: string
+              phone:
+                type: string
+              fax:
+                type: string
+              website:
+                type: string
+              isCharity:
+                type: boolean
+              headquarterCountry:
+                type: string
+              headquarterCity:
+                type: string
+              headquarterZipCode:
+                type: string
+              headquarterAddress:
+                type: string
+              bankName:
+                type: string
+              bankCountry:
+                type: string
+              accountName:
+                type: string
+              accountNumber:
+                type: string
+              currency:
+                type: string
+              startProportion:
+                type: string
+              finishProportion:
+                type: string
+              pifProportion:
+                type: string
+              fixedFee:
+                type: string
+              isPeriodically:
+                type: boolean
+              periodType:
+                type: string
+                enum:
+                  - daily
+                  - weekly
+                  - monthly
+              isAmountThreshold:
+                type: boolean
+              amountThreshold:
+                type: string
+              enableTransactionFeeManualSettings:
+                type: boolean
+              transactionAmount:
+                type: string
+              transactionMaximumAmount:
+                type: string
+              redeemType:
+                type: string
+                enum:
+                  - mobile-redemption
+                  - unique-codes-offline-with-confirmation
+                  - unique-codes-offline-without-confirmation
+                  - non-unique-codes-offline
+              enableRewardSystem:
+                type: boolean
+              status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+                  - not-verified
+              ftpHost:
+                type: string
+              ftpLogin:
+                type: string
+              ftpPass:
+                type: string
+              ftpLastSync:
+                type: string
+              apiLogin:
+                type: string
+              apiPass:
+                type: string
+              apiCodeType:
+                type: string
+              logoCropData:
+                type: object
+                properties:
+                  scd:
+                    type: string
+                  sd:
+                    type: string
+              contractDocuments:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                  source:
+                    type: string
+                  deletedAt:
+                    type: string
+                    format: date
+              adminEmail:
+                type: string
+              adminName:
+                type: string
+          allOf:
+            - if:
+              properties:
+                isPeriodically:
+                  const: true
+                periodType:
+                  minLength: 3
+              required:
+                - periodType
+            - if:
+              properties:
+                isAmountThreshold:
+                  const: true
+                amountThreshold:
+                  minLength: 3
+              required:
+                - amountThreshold
+            - if:
+              properties:
+                enableTransactionFeeManualSettings:
+                  const: true
+                transactionAmount:
+                  minLength: 3
+                transactionMaximumAmount:
+                  minLength: 3
+              required:
+                - transactionAmount
+                - transactionMaximumAmount
+            - if:
+              properties:
+                adminEmail:
+                  const: true
+                adminName:
+                  minLength: 3
+              required:
+                - adminName
+                - adminEmail
+
+    responses:
+      200:
+        description: Successful creating partner / with admin partner
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Partner added and invitation sent successfully / Partner added successfully
+                data:
+                  type: object
+
+      400:
+        description: If 'all' is specified as marketplace or headquarter country
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: invalid data, please specify marketplace or headquarter country.
+
+      404:
+        description: if wrong marketplace is provided as a value or not supplied at all.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: None of the marketplace(s) supplied exists or is missing.
+
+      409:
+        description: If partner / partner-admin name or email supplied exist.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Partner already exist / The user you're trying to make admin for this new Partner already exists on the platform.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  get:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: fetch all partners
+    parameters:
+    responses:
+      200:
+        description: Return array of partners
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/partners/:marketplace:
+  get:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: fetch all partners based on marketplace supplied.
+    parameters:
+      - name: marketplace
+        in: path
+        required: true
+        description: marketplace to determine partners to be returned.
+        type: string
+    responses:
+      200:
+        description: Return array of partners
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/partners/:partnerId:
+  patch:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: Edit or update partner data.
+    parameters:
+      - name: partnerId
+        in: path
+        description: partner Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              email:
+                type: string
+              marketplaces:
+                type: array
+                items:
+                  type: string
+              vat:
+                type: string
+              phonePrefix:
+                type: string
+              phone:
+                type: string
+              fax:
+                type: string
+              website:
+                type: string
+              isCharity:
+                type: boolean
+              headquarterCountry:
+                type: string
+              headquarterCity:
+                type: string
+              headquarterZipCode:
+                type: string
+              headquarterAddress:
+                type: string
+              bankName:
+                type: string
+              bankCountry:
+                type: string
+              accountName:
+                type: string
+              accountNumber:
+                type: string
+              currency:
+                type: string
+              startProportion:
+                type: string
+              finishProportion:
+                type: string
+              pifProportion:
+                type: string
+              fixedFee:
+                type: string
+              isPeriodically:
+                type: boolean
+              periodType:
+                type: string
+                enum:
+                  - daily
+                  - weekly
+                  - monthly
+              isAmountThreshold:
+                type: boolean
+              amountThreshold:
+                type: string
+              enableTransactionFeeManualSettings:
+                type: boolean
+              transactionAmount:
+                type: string
+              transactionMaximumAmount:
+                type: string
+              redeemType:
+                type: string
+                enum:
+                  - mobile-redemption
+                  - unique-codes-offline-with-confirmation
+                  - unique-codes-offline-without-confirmation
+                  - non-unique-codes-offline
+              enableRewardSystem:
+                type: boolean
+              status:
+                type: string
+                enum:
+                  - active
+                  - inactive
+                  - not-verified
+              ftpHost:
+                type: string
+              ftpLogin:
+                type: string
+              ftpPass:
+                type: string
+              ftpLastSync:
+                type: string
+              apiLogin:
+                type: string
+              apiPass:
+                type: string
+              apiCodeType:
+                type: string
+              logoCropData:
+                type: object
+                properties:
+                  scd:
+                    type: string
+                  sd:
+                    type: string
+              contractDocuments:
+                type: object
+                properties:
+                  filename:
+                    type: string
+                  source:
+                    type: string
+                  deletedAt:
+                    type: string
+                    format: date
+          allOf:
+            - if:
+              properties:
+                isPeriodically:
+                  const: true
+                periodType:
+                  minLength: 3
+              required:
+                - periodType
+            - if:
+              properties:
+                isAmountThreshold:
+                  const: true
+                amountThreshold:
+                  minLength: 3
+              required:
+                - amountThreshold
+            - if:
+              properties:
+                enableTransactionFeeManualSettings:
+                  const: true
+                transactionAmount:
+                  minLength: 3
+                transactionMaximumAmount:
+                  minLength: 3
+              required:
+                - transactionAmount
+                - transactionMaximumAmount
+
+    responses:
+      200:
+        description: Successful updating partner.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Partner updated successfully.
+                data:
+                  type: object
+
+      400:
+        description: If 'all' is specified as marketplace or headquarter country
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: invalid data, please specify marketplace or headquarter country.
+
+      404:
+        description: if wrong marketplace is provided as a value or not supplied at all / partner is not found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: None of the marketplace(s) supplied exists or is missing / error locating Partner
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

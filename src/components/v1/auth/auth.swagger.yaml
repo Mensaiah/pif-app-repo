@@ -48,15 +48,13 @@
                         userType:
                           type: string
                           example: sample-user-type
-                        roleAndPermissions:
+                        role:
+                          type: string
+                          example: user-role
+                        permissions:
                           type: array
-                          example:
-                            [
-                              {
-                                role: sample-role,
-                                permissions: sample-permissions,
-                              },
-                            ]
+                          items:
+                            type: permission
 
       401:
         description: Unauthorized (if the account has been blocked / if the wrong user type is sent / Invalid login credentials )
@@ -67,7 +65,7 @@
               properties:
                 message:
                   type: string
-                  example: Your account has been disabled. If you think this was a mistake, please contact us / Login on the mobile app instead (for wrong user type)
+                  example: Your account has been disabled. If you think this was a mistake, please contact us / Login on the mobile app instead (for wrong user type) / Invalid login credentials (if user account is not found or with invalid data)
       429:
         description: Too many requests
         content:
@@ -78,6 +76,7 @@
                 message:
                   type: string
                   example: Too many failed login attempts. Please wait for specified minutes and try again.
+
       500:
         description: Internal Server Error
         content:
@@ -791,10 +790,10 @@
             properties:
               oldPin:
                 type: string
-                default: 12345
+                default: 1234
               newPin:
                 type: string
-                default: 00000
+                default: 2143
     responses:
       200:
         description: when pin is changed successfully
@@ -816,9 +815,9 @@
               properties:
                 message:
                   type: string
-                  example: Old pin is not correct.
+                  example: Old pin is incorrect.
 
-      500:
+      501:
         description: Internal Server Error
         content:
           application/json:
@@ -846,10 +845,10 @@
             properties:
               oldPassword:
                 type: string
-                default: abcd1234
+                default: Abcd.12
               newPassword:
                 type: string
-                default: 0000abcd
+                default: 1234.AbcD
     responses:
       200:
         description: when password is changed successfully
@@ -871,9 +870,9 @@
               properties:
                 message:
                   type: string
-                  example: Old password is not correct.
+                  example: Old password is incorrect.
 
-      500:
+      501:
         description: Internal Server Error
         content:
           application/json:

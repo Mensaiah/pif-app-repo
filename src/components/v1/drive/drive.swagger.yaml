@@ -1,0 +1,56 @@
+/drive:
+  get:
+    tags:
+      - Drive
+    summary: get all drive folders and files.
+    responses:
+      200:
+        description: returns all folders and files.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/folderId:
+  get:
+    tags:
+      - Drive
+    summary: get all drive folders and files associated with the folderId.
+    parameters:
+      - name: folderId
+        in: path
+        description: folderId to determine if parentfolder exist or it is the root folder.
+        type: string
+    responses:
+      200:
+        description: returns all folders and files contained in them.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

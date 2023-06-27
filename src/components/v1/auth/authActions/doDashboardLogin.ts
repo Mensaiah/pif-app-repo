@@ -5,7 +5,7 @@ import { z } from 'zod';
 import '../../../../services/infobipService';
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse, uuid } from '../../../../utils/helpers';
+import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { UserAccessModel } from '../auth.models';

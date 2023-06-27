@@ -1,7 +1,4 @@
-import path from 'path';
-
 import { Response } from 'express';
-import mime from 'mime';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';

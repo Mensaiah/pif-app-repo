@@ -257,6 +257,7 @@
                 message:
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
+
   patch:
     tags:
       - CMS
