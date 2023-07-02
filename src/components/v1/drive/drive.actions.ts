@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
-import { consoleLog, handleResponse } from '../../../utils/helpers';
+import { handleResponse } from '../../../utils/helpers';
 
 import { DriveFileModel, DriveFolderModel } from './drive.model';
 import { createNewFolderSchema } from './drive.policy';
@@ -23,6 +23,51 @@ export const getDriveFoldersAndFiles = async (req: IRequest, res: Response) => {
     });
   } catch (err) {
     return handleResponse(res, 'internal server error', 500);
+  }
+};
+
+export const getDriveFolderByFullpath = async (
+  req: IRequest,
+  res: Response
+) => {
+  const { path } = req.query;
+  try {
+    const existingFolder = await DriveFolderModel.findOne({
+      fullPath: path,
+    });
+
+    if (!existingFolder) return handleResponse(res, 'Folder not found', 404);
+
+    const folders = await DriveFolderModel.find({
+      ParentFolder: existingFolder._id,
+    });
+
+    const files = await DriveFileModel.find({
+      ParentFolder: existingFolder._id,
+    });
+
+    return handleResponse(res, {
+      data: [...folders, ...files].sort((a, b) => a.name.localeCompare(b.name)),
+    });
+  } catch (err) {
+    return handleResponse(res, 'internal server error', 500, err);
+  }
+};
+
+export const getDriveFileByFullpath = async (req: IRequest, res: Response) => {
+  const { path } = req.query;
+  try {
+    const file = await DriveFileModel.findOne({
+      fullPath: path,
+    });
+
+    if (!file) return handleResponse(res, 'File not found.', 404);
+
+    return handleResponse(res, {
+      data: file,
+    });
+  } catch (err) {
+    return handleResponse(res, 'internal server error', 500, err);
   }
 };
 
@@ -124,8 +169,6 @@ export const deleteFolder = async (req: IRequest, res: Response) => {
     const { folderId } = req.params;
 
     const folder = await DriveFolderModel.findOneAndRemove({ _id: folderId });
-
-    consoleLog({ folder });
 
     if (!folder) return handleResponse(res, 'Folder not found', 404);
 
