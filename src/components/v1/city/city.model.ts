@@ -1,21 +1,11 @@
 import { Schema, model } from 'mongoose';
 
+import { languageValuePairSchema } from '../../../utils/db-helpers';
+
 import { CityAttributes } from './city.types';
 
 export const citySchema = new Schema<CityAttributes>({
-  name: [
-    {
-      language: {
-        type: String,
-        lowercase: true,
-        required: true,
-      },
-      value: {
-        type: String,
-        required: true,
-      },
-    },
-  ],
+  name: [languageValuePairSchema],
   isEnabled: {
     type: Boolean,
     default: true,

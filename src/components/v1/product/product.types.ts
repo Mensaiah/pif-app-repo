@@ -1,12 +1,6 @@
 import { Document, ObjectId } from 'mongoose';
 
 import { LanguageValuePair } from '../../../types/global';
-import {
-  CategoryAttributes,
-  InterCategoryAttributes,
-} from '../category/category.types';
-import { CityAttributes } from '../city/city.types';
-import { PartnerAttributes } from '../partner/partner.types';
 
 export interface ProductAttributes extends Document {
   name: LanguageValuePair[];
@@ -15,16 +9,17 @@ export interface ProductAttributes extends Document {
   disclaimer: LanguageValuePair[];
   textForReceiver: LanguageValuePair[];
   tags: string[];
-  Partner: PartnerAttributes['_id'];
+  Partner: ObjectId;
   price: number;
   isApproved: boolean;
   marketplace: string;
   photo: string;
-  productType: 'regular product' | 'free gift';
-  categories: CategoryAttributes['_id'][];
-  internalCategory: InterCategoryAttributes['_id'];
+  photos: string[];
+  productType: 'regular-product' | 'free-gift';
+  categories: ObjectId[];
+  internalCategory: ObjectId;
   redemptionValidityType: 'date' | 'period';
-  redemptionValidityPeriodType: 'day' | 'weeks' | 'months';
+  redemptionValidityPeriodType: 'days' | 'weeks' | 'months';
   redemptionValidityValue: string;
   extraProduct: {
     description: LanguageValuePair[];
@@ -40,7 +35,7 @@ export interface ProductAttributes extends Document {
   order: boolean;
   quantityAlert: number;
   tax: number;
-  cities: CityAttributes['_id'][];
+  cities: ObjectId[];
   isCountedTowardsReward: boolean;
   canBeRedeemedAsRewards: boolean;
   isBonusProductOnly: boolean;
@@ -56,7 +51,7 @@ export interface ProductAttributes extends Document {
 }
 
 export interface ProductPromotionAttributes extends Document {
-  Product: ProductAttributes['_id'];
+  Product: ObjectId;
   beginDate: string;
   endDate: string;
   deletedAt?: Date;

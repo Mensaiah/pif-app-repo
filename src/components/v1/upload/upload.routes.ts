@@ -24,7 +24,7 @@ router.post(
   '/my-avatar',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  upload.single('user-avatar'),
+  upload.single('avatar'),
   uploadUserAvatar(true)
 );
 
@@ -33,7 +33,7 @@ router.post(
   validateTokenMiddleware,
   requireAuthMiddleware,
   hasAnyPermissionMiddleware(['manage-users']),
-  upload.single('user-avatar'),
+  upload.single('avatar'),
   uploadUserAvatar()
 );
 

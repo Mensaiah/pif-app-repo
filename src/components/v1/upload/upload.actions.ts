@@ -9,14 +9,11 @@ import {
   uploadToSpace,
 } from '../../../services/s3UploadService';
 import { IRequest } from '../../../types/global';
-import {
-  _omit,
-  consoleLog,
-  handleResponse,
-  uuid,
-} from '../../../utils/helpers';
+import { _omit, handleResponse, uuid } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
+import { CategoryIconModel } from '../category/category.model';
 import { DriveFileModel, DriveFolderModel } from '../drive/drive.model';
+import { UserModel } from '../user/user.model';
 
 export const uploadUserAvatar =
   (self = false) =>
@@ -34,6 +31,12 @@ export const uploadUserAvatar =
       if (self) {
         req.user.avatar = data;
         await req.user.save();
+      } else {
+        await UserModel.findOneAndUpdate(
+          { _id: userId },
+          { avatar: data },
+          { new: true }
+        );
       }
 
       handleResponse(res, {
@@ -96,6 +99,13 @@ export const uploadProductImages = async (req: IRequest, res: Response) => {
 };
 
 export const uploadIcon = async (req: IRequest, res: Response) => {
+  const metadata = req.headers['x-metadata'] as string;
+
+  const metadataObj = metadata
+    ? JSON.parse(metadata.slice(1, metadata.length - 1))
+    : {};
+  const { name } = metadataObj;
+
   try {
     const fileExt = path.extname(req.file.originalname);
 
@@ -121,9 +131,14 @@ export const uploadIcon = async (req: IRequest, res: Response) => {
       ContentType: req.file.mimetype,
     });
 
+    const newIcon = await new CategoryIconModel({
+      name,
+      url: data,
+    }).save();
+
     handleResponse(res, {
       message: 'category-icon uploaded successfully',
-      data,
+      data: _omit(newIcon.toObject(), ['isDisabled']),
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
@@ -155,8 +170,6 @@ export const uploadFilesToDrive = async (req: IRequest, res: Response) => {
       'platform-admins',
       'everyone',
     ];
-
-    consoleLog(JSON.stringify(files, null, 2));
 
     // Check if canBeAccessedBy is valid
     if (canBeAccessedBy) {

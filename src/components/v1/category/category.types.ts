@@ -10,20 +10,24 @@ export interface CategoryAttributes extends Document {
   isMain: boolean;
   isFunctional: boolean;
   type: number;
-  Icon: CategoryIconAttributes['_id'];
   isBirthday: boolean;
   deletedAt?: Date;
   marketplaces: Array<string>;
+  Icon: {
+    iconifyName?: string;
+    svg?: string;
+    url?: string;
+  };
 }
-export interface InterCategoryAttributes extends Document {
+export interface InternalCategoryAttributes extends Document {
   name: LanguageValuePair[];
-  deletedAt?: boolean;
+  isDeleted: boolean;
+  deletedBy?: Types.ObjectId;
   addedBy: Types.ObjectId;
 }
 
 export interface CategoryIconAttributes extends Document {
   name: string;
-  iconifyName?: string;
   svg?: string;
   url?: string;
   isDisabled: boolean;
