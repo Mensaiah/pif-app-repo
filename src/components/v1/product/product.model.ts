@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, Types, model } from 'mongoose';
 
 import { languageValuePairSchema } from '../../../utils/db-helpers';
 
@@ -46,6 +46,51 @@ const productSchema = new Schema<ProductAttributes>({
   quantityAlert: Number,
   tax: Number,
   cities: [{ type: Schema.Types.ObjectId, ref: 'City' }],
+  isCountedTowardsReward: Boolean,
+  canBeRedeemedAsRewards: Boolean,
+  isBonusProductOnly: Boolean,
+  slicePrice: Number,
+  isRated18: Boolean,
+  status: {
+    type: String,
+    enum: ['active', 'inactive'],
+  },
+  productCode: {
+    code: String,
+    eanCodeSource: Number,
+    purchaseId: String,
+    validatedAt: Date,
+  },
+  isActive: Boolean,
+  isApproved: Boolean,
+  approvedBy: { type: Types.ObjectId, ref: 'User' },
+  canBeSent: {
+    type: String,
+    enum: ['immediately', 'next-period'],
+  },
+  canBeSentPeriodType: {
+    type: String,
+    enum: ['hour', 'day', 'week', 'month'],
+  },
+  canBeSentPeriodValue: Number,
+  splitPrices: [
+    {
+      code: String,
+      discountType: {
+        type: String,
+        enum: ['fixed', 'percentage'],
+      },
+      value: Number,
+      useCount: Number,
+      default: 0,
+      clickCount: Number,
+      minimumOrderAmount: Number,
+      maximumUseCount: Number,
+      maximumUsePerCustomer: { type: Number, default: 1 },
+      validityStart: Date,
+      validityEnd: Date,
+    },
+  ],
 });
 
 const ProductModel = model<ProductAttributes>('Product', productSchema);

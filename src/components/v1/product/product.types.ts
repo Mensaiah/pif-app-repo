@@ -11,7 +11,6 @@ export interface ProductAttributes extends Document {
   tags: string[];
   Partner: ObjectId;
   price: number;
-  isApproved: boolean;
   marketplace: string;
   photo: string;
   photos: string[];
@@ -48,6 +47,24 @@ export interface ProductAttributes extends Document {
     purchaseId: string;
     validatedAt: Date;
   }; //*
+  isApproved: boolean;
+  isActive: boolean;
+  approvedBy: ObjectId;
+  canBeSent: 'immediately' | 'next-period';
+  canBeSentPeriodType: 'hour' | 'day' | 'week' | 'month';
+  canBeSentPeriodValue: number;
+  splitPrices: {
+    code: string;
+    discountType: 'fixed' | 'percentage';
+    value: number;
+    useCount: number;
+    clickCount: number;
+    minimumOrderAmount: number;
+    maximumUseCount: number;
+    maximumUsePerCustomer: number;
+    validityStart: Date;
+    validityEnd: Date;
+  }[];
 }
 
 export interface ProductPromotionAttributes extends Document {

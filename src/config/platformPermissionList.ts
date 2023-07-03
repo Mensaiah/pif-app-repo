@@ -8,6 +8,7 @@ export const permissionList = {
     'update-social',
   ],
   user: ['manage-users', 'view-users', 'add-user', 'update-user'],
+  products: ['manage-products', 'view-products'],
   cms: [
     'manage-info',
     'add-info',
