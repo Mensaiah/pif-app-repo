@@ -1,5 +1,6 @@
 import { Router } from 'express';
 
+import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
   cannotBeCustomerMiddleware,
   requireAuthMiddleware,
@@ -10,6 +11,8 @@ import {
   createNewFolder,
   deleteFile,
   deleteFolder,
+  getDriveFileByFullpath,
+  getDriveFolderByFullpath,
   getDriveFoldersAndFiles,
   renameFile,
   renameFolder,
@@ -17,6 +20,11 @@ import {
   trashFile,
   trashFolder,
 } from './drive.actions';
+import {
+  createNewFolderSchema,
+  getFullPathSchema,
+  renameFolderSchema,
+} from './drive.policy';
 
 const router = Router();
 router.use(
@@ -26,11 +34,33 @@ router.use(
 );
 
 router.get('/', getDriveFoldersAndFiles);
+router.get(
+  '/folderpath',
+  policyMiddleware(getFullPathSchema, 'query'),
+  getDriveFolderByFullpath
+);
+router.get(
+  '/filepath',
+  policyMiddleware(getFullPathSchema, 'query'),
+  getDriveFileByFullpath
+);
 router.get('/:folderId', getDriveFoldersAndFiles);
 
-router.post('/folders', createNewFolder);
-router.post('/folders/:folderId', createNewFolder);
-router.patch('/folders/:folderId', renameFolder);
+router.post(
+  '/folders',
+  policyMiddleware(createNewFolderSchema),
+  createNewFolder
+);
+router.post(
+  '/folders/:folderId',
+  policyMiddleware(createNewFolderSchema),
+  createNewFolder
+);
+router.patch(
+  '/folders/:folderId',
+  policyMiddleware(renameFolderSchema),
+  renameFolder
+);
 router.delete('/folders/:folderId/trash', trashFolder);
 router.patch('/folders/:folderId/restore', trashFolder);
 router.delete('/folders/:folderId', deleteFolder);

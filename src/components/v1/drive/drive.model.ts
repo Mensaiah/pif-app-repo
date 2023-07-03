@@ -1,5 +1,7 @@
 import { Schema, Types, model } from 'mongoose';
 
+import { sanitizedField } from '../../../utils/helpers';
+
 import { DriveFileAttributes, DriveFolderAttributes } from './drive.types';
 
 const driveFileSchema = new Schema<DriveFileAttributes>(
@@ -33,11 +35,6 @@ const driveFolderSchema = new Schema<DriveFolderAttributes>(
   { timestamps: true }
 );
 
-function sanitizedPath(fullPath: string): string {
-  const path = fullPath.replace(/\s/g, '_');
-  return path.replace(/\\/g, '/');
-}
-
 driveFolderSchema.pre('save', async function (next) {
   if (
     this.isNew ||
@@ -47,9 +44,9 @@ driveFolderSchema.pre('save', async function (next) {
     if (this.ParentFolder) {
       const parentFolder = await DriveFolderModel.findById(this.ParentFolder);
       const path = `${parentFolder.fullPath}/${this.name}`;
-      this.fullPath = sanitizedPath(path);
+      this.fullPath = sanitizedField(path);
     } else {
-      this.fullPath = `/${this.name}`;
+      this.fullPath = sanitizedField(`/${this.name}`);
     }
   }
   next();
@@ -64,9 +61,9 @@ driveFileSchema.pre('save', async function (next) {
     if (this.ParentFolder) {
       const parentFolder = await DriveFolderModel.findById(this.ParentFolder);
       const path = `${parentFolder.fullPath}/${this.name}`;
-      this.fullPath = sanitizedPath(path);
+      this.fullPath = sanitizedField(path);
     } else {
-      this.fullPath = `/${this.name}`;
+      this.fullPath = sanitizedField(`/${this.name}`);
     }
   }
   next();
@@ -110,5 +107,3 @@ export const DriveFolderModel = model<DriveFolderAttributes>(
   'DriveFolder',
   driveFolderSchema
 );
-
-// TODO: fix fullpath to be name of folder or file separated by / and ensure spaces are replaced with _

@@ -288,3 +288,7 @@ export function searchFiles(startPath: string, filter: string): string[] {
   // Return the array of found file paths
   return foundFiles;
 }
+
+export const sanitizedField = (field: string) => {
+  return field.replace(/\s/g, '-').toLowerCase();
+};
