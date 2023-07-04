@@ -53,7 +53,6 @@ const initializeMiddlewares = () => {
   });
 
   app
-    // .use(limiter)
     .use((req, res, next) => {
       rateLimiter
         .consume(req.ip)
