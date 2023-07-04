@@ -41,6 +41,7 @@
     "multer": "1.4.5-lts.1",
     "node-fetch": "^3.3.1",
     "qs": "^6.11.2",
+    "rate-limiter-flexible": "^2.4.1",
     "redis": "^4.6.6",
     "swagger-ui-express": "^4.6.3",
     "typescript": "^5.0.4",
