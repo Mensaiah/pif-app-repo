@@ -176,9 +176,9 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
 
 export const getUsers = async (req: IRequest, res: Response) => {
   try {
-    const users = await UserModel.find().select(
-      '-Partner -paymentConfigs -favoriteProducts'
-    );
+    const users = await UserModel.find({
+      userType: 'customer',
+    }).select('-Partner -paymentConfigs -favoriteProducts');
 
     return handleResponse(res, {
       data: users,
