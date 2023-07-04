@@ -5,17 +5,16 @@ const pathFieldRegex = /^[\w\/.\- ]*$/gi;
 
 const nameFieldRegex = /^[\w\. ]+$/gi;
 
-const ObjectIdSchema = z
-  .string()
-  .refine((value) => Types.ObjectId.isValid(value), {
-    message: 'Must be a valid ObjectId',
-  });
+// const ObjectIdSchema = z
+//   .string()
+//   .refine((value) => Types.ObjectId.isValid(value), {
+//     message: 'Must be a valid ObjectId',
+//   });
 
-const AccessLevelSchema = z.union([
-  z.literal('everyone'),
-  z.literal('admin'),
-  z.literal('partners'),
-  ObjectIdSchema,
+const AccessLevelSchema = z.enum([
+  'everyone',
+  'platform-admin',
+  'partner-admin',
 ]);
 
 const CanBeAccessedBySchema = z.array(AccessLevelSchema).optional();
