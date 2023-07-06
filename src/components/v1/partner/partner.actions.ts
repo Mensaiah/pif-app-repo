@@ -3,7 +3,7 @@ import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
-import { handleResponse, uuid } from '../../../utils/helpers';
+import { _omit, handleResponse, uuid } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import {
   getUserRolesAndPermissions,
@@ -213,6 +213,25 @@ export const getPartners = async (req: IRequest, res: Response) => {
 
     return handleResponse(res, {
       data: partners,
+    });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const getSinglePartner = async (req: IRequest, res: Response) => {
+  const { partnerId } = req.params;
+
+  try {
+    const partner = await PartnerModel.findById(partnerId);
+
+    if (!partner) return handleResponse(res, 'Partner does not exist', 404);
+
+    return handleResponse(res, {
+      data: _omit(partner.toObject(), [
+        'rolesAndPermissions',
+        'contractDocuments',
+      ]),
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);

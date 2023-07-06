@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
+  cannotBeCustomerMiddleware,
   hasAnyPermissionMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
@@ -11,6 +12,7 @@ import {
   addPartner,
   createPartnerInvite,
   getPartners,
+  getSinglePartner,
   updatePartner,
 } from './partner.actions';
 import {
@@ -22,6 +24,7 @@ import {
 const router = Router();
 
 router.get('/', getPartners);
+router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
 router.get('/:marketplace', getPartners);
 router.post(
   '/',

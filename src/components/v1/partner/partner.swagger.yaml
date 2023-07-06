@@ -563,3 +563,40 @@
                 message:
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
+
+  get:
+    tags:
+      - Partner(Supplier) Authentication
+    summary: fetch a single partner based on params supplied.
+    parameters:
+      - name: partnerId
+        in: path
+        required: true
+        description: partnerId to determine partner to be returned.
+        type: string
+    responses:
+      200:
+        description: Return a single partner
+        content:
+          application/json:
+            schema:
+              type: object
+
+      404:
+        description: Not found
+        content:
+          application/json:
+            schema:
+              type: string
+              default: Partner not does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
