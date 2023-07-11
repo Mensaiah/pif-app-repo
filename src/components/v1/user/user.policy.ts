@@ -12,7 +12,13 @@ const User = z.object({
   email: z.string().email(),
   role: Role,
   userType: z.enum(['platform-admin', 'partner-admin']),
-  marketplaces: z.array(z.string()).optional(),
+  marketplaces: z
+    .array(
+      z.string().length(2, {
+        message: 'max-length should be 2 for each marketplace.',
+      })
+    )
+    .optional(),
   partnerId: z.string().optional(),
   cityId: z.string().optional(),
   posId: z.string().optional(),
@@ -69,7 +75,6 @@ export const updateProfileSchema = z.object({
   timezone: z.string().optional(),
   sex: z.enum(['male', 'female', 'others', 'prefer-not-to-say']).optional(),
   userType: z.enum(['customer', 'platform-admin', 'partner-admin']).optional(),
-
   pifId: z.string().optional(),
   dob: z
     .string()

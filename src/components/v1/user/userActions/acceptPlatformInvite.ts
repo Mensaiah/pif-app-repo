@@ -8,11 +8,7 @@ import { consoleLog, handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
-import {
-  generateToken,
-  getPermissions,
-  getRoleAndPermissions,
-} from '../../auth/auth.utils';
+import { generateToken, getPermissions } from '../../auth/auth.utils';
 import CityModel from '../../city/city.model';
 import PlatformModel from '../../platform/platform.model';
 import { PartnerPosUserModel, UserInviteModel, UserModel } from '../user.model';

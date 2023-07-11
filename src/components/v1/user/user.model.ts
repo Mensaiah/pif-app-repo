@@ -128,6 +128,7 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
 });
 
 export const UserModel = model<UserAttributes>('User', userSchema);
+
 export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
   'PartnerPosUser',
   partnerPosUserSchema

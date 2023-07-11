@@ -24,7 +24,9 @@ export const mobileLoginSchema = z.object({
 export const mobileSignupSchema = z.object({
   phonePrefix: z.string(),
   phone: z.string(),
-  marketplace: z.string(),
+  marketplace: z.string().length(2, {
+    message: 'length should be 2.',
+  }),
 });
 
 export const verifyOTP = z.object({

@@ -3,7 +3,11 @@ import { z } from 'zod';
 const partnerSchema = z.object({
   name: z.string(),
   email: z.string(),
-  marketplaces: z.array(z.string()),
+  marketplaces: z.array(
+    z.string().length(2, {
+      message: 'max-length should be two for each marketplace.',
+    })
+  ),
   vat: z.string().optional(),
   phonePrefix: z.string(),
   phone: z.string(),
@@ -106,7 +110,13 @@ export const addPartnerSchema = partnerSchema
 export const updatePartnerSchema = z.object({
   name: z.string().optional(),
   email: z.string().optional(),
-  marketplaces: z.array(z.string()).optional(),
+  marketplaces: z
+    .array(
+      z.string().length(2, {
+        message: 'max-length should be 2 for each marketplace.',
+      })
+    )
+    .optional(),
   vat: z.string().optional(),
   phonePrefix: z.string().optional(),
   phone: z.string().optional(),

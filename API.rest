@@ -1,8 +1,9 @@
 # @server = https://pif-api.herokuapp.com
-@server = http://localhost:3030
+@server = http://localhost:3000
 @api = {{server}}/v1/en
 
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYzNiNDVlZTEtMTE3Mi00YTgyLWI0MzEtMzVhMThiNzM3NDZhIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjEwMjY4NGVjLTRkY2UtNGUyMS04ZDExLWQzYzY5YjZkNmM1NSIsInJlZiI6IjY0YTlhNjg2MzNkNGE5ZWJlM2Q2M2IxNSIsImlhdCI6MTY4OTA2MjM5MywiZXhwIjoxNjg5MjM1MTkzLCJpc3MiOiJQSUYtZGV2In0.4JPXVsFmxlXqCzZNfpGL2cjud_R063ZXVl96pq_7LgY
+
 GET {{server}}
 
 ### API
@@ -68,7 +69,7 @@ Authorization: Bearer {{token}}
   "email": "afeez@pif-app.com",
   "userType": "platform-admin",
   "role": "admin",
-  "marketplaces": ["nigeria"]
+  "marketplaces": ["ng"]
 }
 
 ### invite users
