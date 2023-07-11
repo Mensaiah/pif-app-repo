@@ -3,7 +3,12 @@ import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
-import { _omit, handleResponse, uuid } from '../../../utils/helpers';
+import {
+  _omit,
+  consoleLog,
+  handleResponse,
+  uuid,
+} from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import {
   getUserRolesAndPermissions,
@@ -199,7 +204,22 @@ export const addPartner = async (req: IRequest, res: Response) => {
 };
 
 export const getPartners = async (req: IRequest, res: Response) => {
-  const { marketplace } = req.params;
+  let { marketplace } = req.params;
+
+  if (marketplace) {
+    if (marketplace === 'all') marketplace = '';
+    if (marketplace.length > 2) {
+      const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
+
+      if (platform) {
+        marketplace =
+          platform.marketplaces.find((m) => m.name === marketplace)?.code ||
+          marketplace;
+      }
+    }
+
+    marketplace = marketplace.toLocaleLowerCase();
+  }
 
   try {
     const partners = await (marketplace

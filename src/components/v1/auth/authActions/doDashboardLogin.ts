@@ -120,6 +120,9 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
       userAccess.sessions.push(currentSession);
     }
 
+    if (userAccess.isLegacyData && !userAccess.isLegacyAccountValidated) {
+      userAccess.updatePassword(password);
+    }
     await userAccess.save();
 
     const token = generateToken({

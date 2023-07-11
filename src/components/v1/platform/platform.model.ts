@@ -11,7 +11,7 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
   },
   code: {
     type: String,
-    uppercase: true,
+    lowercase: true,
     required: true,
     trim: true,
   },

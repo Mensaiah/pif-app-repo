@@ -20,6 +20,7 @@ const appConfig = {
   mongoDbURI: env.MONGODB_URL || '',
   redisUrl: env.REDIS_URL || '',
   redisPort: env.REDIS_PORT || '',
+  redisPassword: env.REDIS_PASSWORD || '',
   firebaseConfig: {
     apiKey: env.FIREBASE_API_KEY || '',
     authDomain: env.FIREBASE_AUTH_DOMAIN || '',
@@ -37,6 +38,7 @@ const appConfig = {
   firebaseDatabaseUrl: env.FIREBASE_DATABASE_URL || '',
   authConfigs: {
     saltRounds: 10,
+    hashPepper: env.HASH_PEPPER || '',
     tokenLifespan: ms('3 days'),
     maxInactivity: '3 hours',
     sessionLivespan: '2 days',
@@ -72,6 +74,15 @@ const appConfig = {
     region: env.SPACES_REGION || '',
     endpoint: env.SPACES_ENDPOINT || '',
   },
+  sqlSshHost: env.SQL_SSH_HOST || '',
+  sqlSshUser: env.SQL_SSH_USER || '',
+  sqlSshPass: env.SQL_SSH_PASS || '',
+  sqlSshPort: +env.SQL_SSH_PORT || 22,
+  sqlHost: env.SQL_HOST || '',
+  sqlPort: +env.SQL_PORT || 0,
+  sqlUser: env.SQL_USER || '',
+  sqlPass: env.SQL_PASS || '',
+  sqlDbName: env.SQL_DB_NAME || '',
 };
 
 export default appConfig;

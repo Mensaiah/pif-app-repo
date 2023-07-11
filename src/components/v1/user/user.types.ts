@@ -19,6 +19,8 @@ interface Social {
 }
 
 export interface UserAttributes {
+  old_id?: number;
+  isLegacyData?: boolean;
   name?: string;
   email?: string;
   timezone?: string;
@@ -42,21 +44,14 @@ export interface UserAttributes {
       token: string;
       driver: string;
       method: string;
-    }>;
-    netAxeptPaymentMethods?: Array<{
-      name: string;
-      issuer: string;
-      expiryDate: string;
-      panHash: string;
-    }>;
-    stripeCustomerId?: string;
-    stripeConnectCustomerId?: string;
-    stripePaymentMethods?: Array<{
-      name: string;
+      paymentGateway: string;
+      signature: string;
       issuer: string;
       expiryDate: Date;
       panHash: string;
     }>;
+    stripeCustomerId?: string;
+    stripeConnectCustomerId?: string;
   };
   favoriteProducts?: Array<ObjectId>;
   isConfirmed?: boolean;
@@ -81,6 +76,8 @@ export interface UserAttributes {
 // contacts, details (UserPifDetails), kickbackPoints, rewardSystemPoints: UserPifRewardSystemPoints, IUserPifProportions (622), PartnerSlicePrices, ProductVouchers, ProductVouchersUses
 
 export interface PartnerPosUserAttributes {
+  old_id: number;
+  isLegacyData: boolean;
   Partner: ObjectId;
   name: string;
   avatar?: string;

@@ -14,7 +14,6 @@ var {
   closeRedisConnection,
 } = require('../../src/config/persistence/redisClient');
 var logger = require('../../src/utils/logger');
-// var { closeDbConnection, quitRedisClient } = dbConfig;
 
 /**
  * Get port from environment and store in Express.

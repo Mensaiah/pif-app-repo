@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNzY2ZGE3ZDMtYjMzZS00ZjRmLWExYmEtYzBkOTI2NGFjNWJiIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImU5MDNkNjA3LWRkODgtNGE1MC1hMzhiLTg2Mjc5NTA5ZTgxYSIsInJlZiI6IjY0OWViMzI5MmQ4YjgzNWE3NmRjOWYzOSIsImlhdCI6MTY4ODE0NzI2MiwiZXhwIjoxNjg4MzIwMDYyLCJpc3MiOiJQSUYtZGV2In0.HRdHzRK7_pSmvqkRNX5-ZIvGDSd9H2Gx5bSHZGyckQM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYzNiNDVlZTEtMTE3Mi00YTgyLWI0MzEtMzVhMThiNzM3NDZhIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjEwMjY4NGVjLTRkY2UtNGUyMS04ZDExLWQzYzY5YjZkNmM1NSIsInJlZiI6IjY0YTlhNjg2MzNkNGE5ZWJlM2Q2M2IxNSIsImlhdCI6MTY4OTA2MjM5MywiZXhwIjoxNjg5MjM1MTkzLCJpc3MiOiJQSUYtZGV2In0.4JPXVsFmxlXqCzZNfpGL2cjud_R063ZXVl96pq_7LgY
 GET {{server}}
 
 ### API
@@ -299,7 +299,7 @@ Authorization: Bearer {{token}}
     "headquarterCity": "Abuja",
     "headquarterCountry": "Nigeria",
     "headquarterZipCode": "242201",
-    "marketplaces": ["denmark"],
+    "marketplaces": ["de"],
     "accountName": "Gift Enterprise",
     "accountNumber": "0123456789",
     "bankCountry": "Nigeria",
@@ -311,32 +311,11 @@ Authorization: Bearer {{token}}
     "periodType": "weekly"
   }
 
-  ###
-
-    # "isAmountThreshold": true,
-    # "amountThreshold": "20"
-    # "pifProportion": "",
-    # "startProportion": "",
-    # "transactionAmount": "",
-    # "transactionMaximumAmount": "",
-    # "vat": "",
-    # "website": ""
-    # "enablePushNotification": "",
-    # "enableRewardSystem": "",
-    # "enableTransactionFeeManualSettings": "",
-    # "fax": "",
-    # "finishProportion": "",
-    # "fixedFee": "",
-    # "isCharity": "",
-
-    ###
-
 ### get partner
 GET {{api}}/partners
 
 ### get partner by market
-GET {{api}}/partners/nigeria
-
+GET {{api}}/partners/marketplaces/ng
 
 ### update partner
 PATCH {{api}}/partners/1002

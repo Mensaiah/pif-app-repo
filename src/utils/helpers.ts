@@ -17,7 +17,8 @@ export const consoleLog = (
   data: any,
   type: 'info' | 'error' = 'info'
 ): void => {
-  if (appConfig.environment !== 'dev') return; // handle logging with winston
+  if (appConfig.environment !== 'dev' && appConfig.environment !== 'testing')
+    return; // handle logging with winston
 
   if (isObject(data)) {
     type === 'info'

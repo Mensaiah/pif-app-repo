@@ -3,6 +3,8 @@ import { Document, Types } from 'mongoose';
 import { LanguageValuePair } from '../../../types/global';
 
 export interface CategoryAttributes extends Document {
+  old_id: number;
+  isLegacyData: boolean;
   name: LanguageValuePair[];
   isEnabled: boolean;
   isPromoted: boolean;
@@ -20,6 +22,8 @@ export interface CategoryAttributes extends Document {
   };
 }
 export interface InternalCategoryAttributes extends Document {
+  old_id: number;
+  isLegacyData: boolean;
   name: LanguageValuePair[];
   isDeleted: boolean;
   deletedBy?: Types.ObjectId;

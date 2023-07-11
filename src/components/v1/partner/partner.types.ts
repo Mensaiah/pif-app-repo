@@ -2,6 +2,7 @@ import { Document } from 'mongoose';
 
 export interface PartnerAttributes extends Document {
   old_id?: number;
+  isLegacyData?: boolean;
   name: string;
   email: string;
   marketplaces: string[];
@@ -31,7 +32,7 @@ export interface PartnerAttributes extends Document {
     isPeriodically?: boolean;
     periodType?: 'daily' | 'weekly' | 'monthly';
     isAmountThreshold?: boolean;
-    amountThreshold?: string;
+    amountThreshold?: number;
     startProportion?: string;
     finishProportion?: string;
     pifProportion?: string;
@@ -39,6 +40,9 @@ export interface PartnerAttributes extends Document {
     enableTransactionFeeManualSettings?: boolean;
     transactionAmount?: string;
     transactionMaximumAmount?: string;
+    transactionFee: number;
+    transactionFeeValue: number;
+    settlingType: number;
   };
   redeemType:
     | 'mobile-redemption'
@@ -55,7 +59,25 @@ export interface PartnerAttributes extends Document {
   apiLogin?: string;
   apiPass?: string;
   apiCodeType?: string;
-  logoCropData?: { scd?: string; sd?: string };
+  logoCropData?: {
+    scd: {
+      left: number;
+      top: number;
+      width: number;
+      height: number;
+      naturalWidth: number;
+      naturalHeight: number;
+    };
+    sd: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      rotate: number;
+      scaleX: number;
+      scaleY: number;
+    };
+  };
   contractDocuments?: Array<{
     filename: string;
     source: string;

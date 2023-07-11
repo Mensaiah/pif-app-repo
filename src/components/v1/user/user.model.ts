@@ -11,6 +11,8 @@ import {
 
 const userSchema = new Schema<UserAttributes>(
   {
+    old_id: Number,
+    isLegacyData: Boolean,
     name: String,
     email: {
       type: String,
@@ -63,26 +65,15 @@ const userSchema = new Schema<UserAttributes>(
           token: String,
           driver: String,
           method: String,
-        },
-      ],
-      netAxeptPaymentMethods: [
-        {
-          name: String,
-          issuer: String,
-          expiryDate: String,
-          panHash: String,
-        },
-      ],
-      stripeCustomerId: String,
-      stripeConnectCustomerId: String,
-      stripePaymentMethods: [
-        {
-          name: String,
+          paymentGateway: String,
+          signature: String,
           issuer: String,
           expiryDate: Date,
           panHash: String,
         },
       ],
+      stripeCustomerId: String,
+      stripeConnectCustomerId: String,
     },
     favoriteProducts: [
       {
@@ -112,6 +103,8 @@ const userSchema = new Schema<UserAttributes>(
 );
 
 const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
+  old_id: Number,
+  isLegacyData: Boolean,
   Partner: { type: ObjectId, ref: 'Partner', required: true },
   name: { type: String, required: true },
   avatar: String,

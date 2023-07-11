@@ -16,7 +16,8 @@ const doChangePassword = async (req: IRequest, res: Response) => {
     if (!userAccess.comparePassword(oldPassword))
       return handleResponse(res, 'Old password is incorrect', 401);
 
-    userAccess.password = newPassword;
+    // userAccess.password = newPassword;
+    userAccess.updatePassword(newPassword);
 
     await userAccess.save();
 

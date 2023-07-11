@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 
 export const languageValuePairSchema = new Schema({
-  language: {
+  lang: {
     type: String,
     lowercase: true,
     required: true,

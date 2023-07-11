@@ -14,7 +14,7 @@ const doSetPin = async (req: IRequest, res: Response) => {
 
   if (userAccess.pin) return handleResponse(res, 'Pin is already set', 401);
 
-  userAccess.pin = pin;
+  userAccess.updatePin(pin);
   try {
     await userAccess.save();
 

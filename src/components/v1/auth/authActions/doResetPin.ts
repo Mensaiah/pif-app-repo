@@ -38,7 +38,7 @@ const doResetPin = async (req: IRequest, res: Response) => {
 
     if (!existingUserAccess) return handleResponse(res, 'invalid request', 401);
 
-    existingUserAccess.pin = pin;
+    existingUserAccess.updatePin(pin);
 
     await existingUserAccess.save();
 

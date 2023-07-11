@@ -35,7 +35,8 @@ const doResetPassword = async (req: IRequest, res: Response) => {
 
     if (!existingUserAccess) return handleResponse(res, 'invalid request', 401);
 
-    existingUserAccess.password = password;
+    // existingUserAccess.password = password;
+    existingUserAccess.updatePassword(password);
 
     await existingUserAccess.save();
 

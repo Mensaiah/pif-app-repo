@@ -4,12 +4,13 @@ import { PartnerAttributes } from './partner.types';
 
 const partnerSchema = new Schema<PartnerAttributes>(
   {
+    old_id: Number,
+    isLegacyData: Boolean,
     name: String,
     email: {
       type: String,
       lowercase: true,
     },
-    old_id: Number,
     marketplaces: [String],
     vat: String,
     phonePrefix: String,
@@ -41,7 +42,7 @@ const partnerSchema = new Schema<PartnerAttributes>(
         enum: ['daily', 'weekly', 'monthly'],
       },
       isAmountThreshold: Boolean,
-      amountThreshold: String,
+      amountThreshold: Number,
       startProportion: String,
       finishProportion: String,
       pifProportion: String,
@@ -49,6 +50,9 @@ const partnerSchema = new Schema<PartnerAttributes>(
       enableTransactionFeeManualSettings: Boolean,
       transactionAmount: String,
       transactionMaximumAmount: String,
+      transactionFee: Number,
+      transactionFeeValue: Number,
+      settlingType: Number,
     },
     redeemType: {
       type: String,
@@ -71,7 +75,25 @@ const partnerSchema = new Schema<PartnerAttributes>(
     apiLogin: String,
     apiPass: String,
     apiCodeType: String,
-    logoCropData: { scd: String, sd: String },
+    logoCropData: {
+      scd: {
+        left: Number,
+        top: Number,
+        width: Number,
+        height: Number,
+        naturalWidth: Number,
+        naturalHeight: Number,
+      },
+      sd: {
+        x: Number,
+        y: Number,
+        width: Number,
+        height: Number,
+        rotate: Number,
+        scaleX: Number,
+        scaleY: Number,
+      },
+    },
     contractDocuments: [
       {
         filename: String,

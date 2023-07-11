@@ -5,6 +5,7 @@ import { PlatformAttributes } from '../../components/v1/platform/platform.types'
 import { UserModel } from '../../components/v1/user/user.model';
 import { UserAttributes } from '../../components/v1/user/user.types';
 import { consoleLog } from '../../utils/helpers';
+import defaultUserTypesRolesAndPermissions from '../defaultRolesAndPermissions';
 
 const { seedData } = appConfig;
 
@@ -72,41 +73,7 @@ export const seedNow = async () => {
           currencySymbol: '£',
         },
       ],
-      defaultUserTypesAndRoles: [
-        {
-          userType: 'customer',
-          roles: [
-            {
-              name: 'customer',
-            },
-          ],
-        },
-        {
-          userType: 'platform-admin',
-          roles: [
-            { name: 'super-admin', permissions: ['supreme'] },
-            {
-              name: 'admin',
-              permissions: [
-                'update-marketplace',
-                'update-social',
-                'manage-info',
-                'manage-policies',
-                'manage-faq',
-              ],
-            },
-            { name: 'country-admin' },
-          ],
-        },
-        {
-          userType: 'partner-admin',
-          roles: [
-            { name: 'partner-admin' },
-            { name: 'local-partner' },
-            { name: 'pos-user' },
-          ],
-        },
-      ],
+      defaultUserTypesAndRoles: defaultUserTypesRolesAndPermissions,
     }).save();
     // .save({ session })
     const seeduser = new UserModel<UserAttributes>({

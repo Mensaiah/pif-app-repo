@@ -9,6 +9,8 @@ import {
 } from './category.types';
 
 const categorySchema = new Schema<CategoryAttributes>({
+  old_id: Number,
+  isLegacyData: Boolean,
   name: [languageValuePairSchema],
   isEnabled: Boolean,
   isPromoted: Boolean,
@@ -32,6 +34,8 @@ export const CategoryModel = model<CategoryAttributes>(
 );
 
 const InternalCategorySchema = new Schema<InternalCategoryAttributes>({
+  old_id: Number,
+  isLegacyData: Boolean,
   name: [languageValuePairSchema],
   isDeleted: Boolean,
   deletedBy: { type: Schema.Types.ObjectId, ref: 'User' },

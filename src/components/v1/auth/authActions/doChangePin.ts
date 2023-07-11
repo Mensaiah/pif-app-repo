@@ -16,7 +16,8 @@ const doChangePin = async (req: IRequest, res: Response) => {
     if (!userAccess.comparePin(oldPin))
       return handleResponse(res, 'Old Pin is incorrect.', 401);
 
-    userAccess.pin = newPin;
+    // userAccess.pin = newPin;
+    userAccess.updatePin(newPin);
 
     await userAccess.save();
 

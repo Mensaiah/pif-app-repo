@@ -1,6 +1,9 @@
 import { Schema } from 'mongoose';
 type ObjectId = Schema.Types.ObjectId;
 export interface UserAccessAttributes {
+  old_id?: number;
+  isLegacyData?: boolean;
+  isLegacyAccountValidated?: boolean;
   User?: ObjectId;
   PartnerPosUser?: ObjectId;
   pin?: string; // hashedPin
@@ -20,6 +23,8 @@ export interface UserAccessAttributes {
   // methods
   comparePassword(password: string): boolean;
   comparePin(pin: string): boolean;
+  updatePassword(password: string): void;
+  updatePin(pin: string): void;
 }
 
 export interface UserSessionAttributes {

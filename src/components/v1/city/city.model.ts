@@ -5,6 +5,8 @@ import { languageValuePairSchema } from '../../../utils/db-helpers';
 import { CityAttributes } from './city.types';
 
 export const citySchema = new Schema<CityAttributes>({
+  old_id: Number,
+  isLegacyData: Boolean,
   name: [languageValuePairSchema],
   isEnabled: {
     type: Boolean,

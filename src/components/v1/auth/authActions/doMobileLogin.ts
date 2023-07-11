@@ -120,6 +120,10 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       userAccess.sessions.push(currentSession);
     }
 
+    if (userAccess.isLegacyData && !userAccess.isLegacyAccountValidated) {
+      userAccess.updatePin(pin);
+    }
+
     await userAccess.save();
 
     const token = generateToken({

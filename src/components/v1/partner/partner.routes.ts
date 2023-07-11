@@ -25,7 +25,7 @@ const router = Router();
 
 router.get('/', getPartners);
 router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
-router.get('/:marketplace', getPartners);
+router.get('/marketplaces/:marketplace', getPartners);
 router.post(
   '/',
   validateTokenMiddleware,

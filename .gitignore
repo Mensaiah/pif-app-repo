@@ -37,3 +37,5 @@ coverage/
 # Package management lock files
 yarn.lock
 package-lock.json
+
+src/migration/data/
