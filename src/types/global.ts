@@ -1,5 +1,6 @@
 import { Request } from 'express';
 import { Document, Types } from 'mongoose';
+import { z } from 'zod';
 
 import { FingerprintResult } from '../appMiddlewares/fingerprint.middleware';
 import { UserAccessAttributes } from '../components/v1/auth/auth.types';
@@ -17,6 +18,13 @@ export type LanguageValuePair = {
   lang: LanguageCode;
   value: string;
 };
+
+export const langSchema: Partial<
+  Record<SupportedLangType[number], z.ZodOptional<z.ZodString>>
+> = {};
+appConfig.supportedLanguages.forEach((language) => {
+  langSchema[language] = z.string().optional();
+});
 
 export interface SessionI {
   used: number;
@@ -75,3 +83,7 @@ export interface IToken {
   authKey: string;
   userType: UserType | 'pos-user';
 }
+
+export type langSearchQueryType = { $in: string[] };
+
+export type langSearchType = Record<string, string | langSearchQueryType>;

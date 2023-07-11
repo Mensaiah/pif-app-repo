@@ -1,9 +1,8 @@
 import { Response } from 'express';
 import { z } from 'zod';
 
-import appConfig from '../../../config';
 import { IRequest } from '../../../types/global';
-import { handleResponse } from '../../../utils/helpers';
+import { addSupportedLang, handleResponse } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 
 import { FaqModel, InfoBoxModel, LegalPolicyModel } from './cms.models';
@@ -51,17 +50,7 @@ export const addInfo = async (req: IRequest, res: Response) => {
       LastEditedBy: userId,
     });
 
-    appConfig.supportedLanguages.forEach((lang) => {
-      if (content[lang]) {
-        newInfo.content = [
-          ...newInfo.content,
-          {
-            language: lang,
-            value: content[lang],
-          },
-        ];
-      }
-    });
+    newInfo.content = addSupportedLang(content, newInfo.content);
 
     if (iconifyName) newInfo.icon.iconifyName = iconifyName;
     if (iconSvg) newInfo.icon.svg = iconSvg;
@@ -125,17 +114,7 @@ export const updateInfo = async (req: IRequest, res: Response) => {
 
     if (title) info.title = title;
     if (content) {
-      appConfig.supportedLanguages.forEach((lang) => {
-        if (content[lang]) {
-          info.content = [
-            ...info.content,
-            {
-              language: lang,
-              value: content[lang],
-            },
-          ];
-        }
-      });
+      info.content = addSupportedLang(content, info.content);
     }
 
     if ('isPublished' in req.body) info.isPublished = isPublished;
@@ -193,17 +172,7 @@ export const addLegalPolicy = async (req: IRequest, res: Response) => {
       LastEditedBy: userId,
     });
 
-    appConfig.supportedLanguages.forEach((lang) => {
-      if (content[lang]) {
-        newPolicy.content = [
-          ...newPolicy.content,
-          {
-            language: lang,
-            value: content[lang],
-          },
-        ];
-      }
-    });
+    newPolicy.content = addSupportedLang(content, newPolicy.content);
 
     await newPolicy.save();
 
@@ -257,17 +226,18 @@ export const updateLegalPolicy = async (req: IRequest, res: Response) => {
 
     if (title) policyExists.title = title;
     if (content) {
-      appConfig.supportedLanguages.forEach((lang) => {
-        if (content[lang]) {
-          policyExists.content = [
-            ...policyExists.content,
-            {
-              language: lang,
-              value: content[lang],
-            },
-          ];
-        }
-      });
+      policyExists.content = addSupportedLang(content, policyExists.content);
+      // appConfig.supportedLanguages.forEach((lang) => {
+      //   if (content[lang]) {
+      //     policyExists.content = [
+      //       ...policyExists.content,
+      //       {
+      //         lang,
+      //         value: content[lang],
+      //       },
+      //     ];
+      //   }
+      // });
     }
     if ('isPublished' in req.body) policyExists.isPublished = isPublished;
 

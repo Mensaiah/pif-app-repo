@@ -18,15 +18,15 @@ const categorySchema = new Schema<CategoryAttributes>({
   isMain: Boolean,
   isFunctional: Boolean,
   type: Number,
-  Icon: {
-    iconifyName: String,
-    svg: String,
-    url: String,
-  },
+  Icon: String,
   isBirthday: Boolean,
   deletedAt: Date,
   marketplaces: [String],
 });
+
+//  iconifyName: String,
+//     svg: String,
+//     url: String,
 
 export const CategoryModel = model<CategoryAttributes>(
   'Category',

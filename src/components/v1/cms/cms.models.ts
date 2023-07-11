@@ -1,14 +1,17 @@
 import { Schema, model } from 'mongoose';
 
-const infoBoxSchema = new Schema(
+import { languageValuePairSchema } from '../../../utils/db-helpers';
+
+import {
+  FaqAttribute,
+  InfoBoxAttributes,
+  LegalPolicyAttributes,
+} from './cms.types';
+
+const infoBoxSchema = new Schema<InfoBoxAttributes>(
   {
     title: String,
-    content: [
-      {
-        language: String,
-        value: String,
-      },
-    ],
+    content: [languageValuePairSchema],
     icon: {
       iconifyName: String,
       svg: String,
@@ -28,15 +31,10 @@ const infoBoxSchema = new Schema(
   { timestamps: true }
 );
 
-const legalPolicySchema = new Schema(
+const legalPolicySchema = new Schema<LegalPolicyAttributes>(
   {
     title: String,
-    content: [
-      {
-        language: String,
-        value: String,
-      },
-    ],
+    content: [languageValuePairSchema],
     isPublished: Boolean,
     deletedAt: Date,
     CreatedBy: {
@@ -51,7 +49,7 @@ const legalPolicySchema = new Schema(
   { timestamps: true }
 );
 
-const faqSchema = new Schema(
+const faqSchema = new Schema<FaqAttribute>(
   {
     question: String,
     answer: String,
@@ -70,6 +68,9 @@ const faqSchema = new Schema(
   }
 );
 
-export const InfoBoxModel = model('InfoBox', infoBoxSchema);
-export const LegalPolicyModel = model('LegalPolicy', legalPolicySchema);
-export const FaqModel = model('Faq', faqSchema);
+export const InfoBoxModel = model<InfoBoxAttributes>('InfoBox', infoBoxSchema);
+export const LegalPolicyModel = model<LegalPolicyAttributes>(
+  'LegalPolicy',
+  legalPolicySchema
+);
+export const FaqModel = model<FaqAttribute>('Faq', faqSchema);

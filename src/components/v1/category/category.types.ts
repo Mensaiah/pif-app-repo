@@ -15,11 +15,7 @@ export interface CategoryAttributes extends Document {
   isBirthday: boolean;
   deletedAt?: Date;
   marketplaces: Array<string>;
-  Icon: {
-    iconifyName?: string;
-    svg?: string;
-    url?: string;
-  };
+  Icon?: string;
 }
 export interface InternalCategoryAttributes extends Document {
   old_id: number;

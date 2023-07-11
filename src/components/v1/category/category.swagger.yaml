@@ -1,0 +1,601 @@
+/categories/public:
+  get:
+    tags:
+      - Category
+    summary: returns all categories.
+    responses:
+      200:
+        description: return all categories that are enabled.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/internal:
+  get:
+    tags:
+      - Category
+    summary: returns all internal categories.
+    responses:
+      200:
+        description: return all internal categories.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  post:
+    tags:
+      - Category
+    summary: create new internal category
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    enum: [en, da]
+                  value:
+                    type: string
+
+    responses:
+      201:
+        description: Creating internal category successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal category created successfully
+                data:
+                  type: object
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This internal category already exists
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/category-icon:
+  get:
+    tags:
+      - Category
+    summary: returns all category icons.
+    responses:
+      200:
+        description: return all category icons.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/all:
+  get:
+    tags:
+      - Category
+    summary: returns all categories.
+    responses:
+      200:
+        description: return all categories.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/:marketplace:
+  get:
+    tags:
+      - Category
+    summary: return categories based on marketplace supplied.
+    parameters:
+      - name: marketplace
+        in: path
+        description: marketplace to determine path.
+        type: string
+    responses:
+      200:
+        description: returns all categories based on marketplace.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories:
+  post:
+    tags:
+      - Category
+    summary: create new category
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - marketplaces
+              - isEnabled
+            properties:
+              name:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    enum: [en, da]
+                  value:
+                    type: string
+              isEnabled:
+                type: boolean
+              isPromoted:
+                type: boolean
+              isSupplierList:
+                type: boolean
+              isMain:
+                type: boolean
+              isFunctional:
+                type: boolean
+              type:
+                type: number
+              iconifyName:
+                type: string
+              iconSvg:
+                type: string
+              iconUrl:
+                type: string
+              isBirthday:
+                type: boolean
+              marketplaces:
+                type: array
+                items:
+                  type: string
+
+    responses:
+      201:
+        description: Creating category successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Category created successfully
+                data:
+                  type: object
+
+      404:
+        description: Not Found (if marketplace supplied does not exist or is missing)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: None of the marketplace(s) supplied exists or is missing.
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This category already exists.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/categoryId:
+  patch:
+    tags:
+      - Category
+    summary: edit category based on categoryId supplied.
+    parameters:
+      - name: categoryId
+        in: path
+        description: categoryId to determine path.
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    enum: [en, da]
+                  value:
+                    type: string
+              isEnabled:
+                type: boolean
+              isPromoted:
+                type: boolean
+              isSupplierList:
+                type: boolean
+              isMain:
+                type: boolean
+              isFunctional:
+                type: boolean
+              type:
+                type: number
+              iconifyName:
+                type: string
+              iconSvg:
+                type: string
+              iconUrl:
+                type: string
+              isBirthday:
+                type: boolean
+              marketplaces:
+                type: array
+                items:
+                  type: string
+
+    responses:
+      200:
+        description: update category.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: category updated successfully
+                  data:
+                    type: object
+
+      404:
+        description: Not Found (if marketplace supplied does not exist or is missing / categoryvis not found)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: None of the marketplace(s) supplied exists or is missing. / Category not found
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This marketplace already exist.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  delete:
+    tags:
+      - Category
+    summary: delete category based on categoryId supplied.
+    parameters:
+      - name: categoryId
+        in: path
+        description: categoryId to determine path.
+        type: string
+
+    responses:
+      204:
+        description: delete category.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: category deleted successfully
+
+      403:
+        description: Forbidden.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: Category is in use.
+
+      404:
+        description: Not Found ( if category is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Category does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/internal/:internalCategoryId:
+  patch:
+    tags:
+      - Category
+    summary: edit internal category based on internalCategoryId supplied.
+    parameters:
+      - name: internalCategoryId
+        in: path
+        description: internalCategoryId to determine path.
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: object
+                properties:
+                  key:
+                    type: string
+                    enum: [en, da]
+                  value:
+                    type: string
+
+    responses:
+      200:
+        description: update internal category.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    default: Internal category renamed successfully
+                  data:
+                    type: object
+
+      404:
+        description: Not Found (if internal category is not found)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal category not found
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  delete:
+    tags:
+      - Category
+    summary: delete internal category based on internalCategoryId supplied.
+    parameters:
+      - name: internalCategoryId
+        in: path
+        description: internalCategoryId to determine path.
+        type: string
+
+    responses:
+      204:
+        description: delete internal category.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: internal category deleted successfully
+
+      403:
+        description: Forbidden.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: Internal category is in use.
+
+      404:
+        description: Not Found ( if internal category is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: internal category does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/categoryIconId:
+  delete:
+    tags:
+      - Category
+    summary: delete category icon based on categoryIconId supplied.
+    parameters:
+      - name: categoryIconId
+        in: path
+        description: categoryIconId to determine path.
+        type: string
+
+    responses:
+      204:
+        description: delete category icon.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: category icon deleted successfully
+
+      404:
+        description: Not Found ( if category icon is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: category icon not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

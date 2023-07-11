@@ -28,6 +28,7 @@ import {
 } from './drive.policy';
 
 const router = Router();
+
 router.use(
   validateTokenMiddleware,
   requireAuthMiddleware,

@@ -8,7 +8,13 @@ import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
 import appConfig from '../config';
-import { IRequest, IPaginationData, LanguageValuePair } from '../types/global';
+import {
+  IRequest,
+  IPaginationData,
+  LanguageValuePair,
+  langSearchType,
+  langSearchQueryType,
+} from '../types/global';
 
 // import normalizeLang from './normalizeLang';
 import { isArray, isObject } from './validators';
@@ -213,6 +219,23 @@ export const handleReqSearch = (req: Request, keys: string[]) => {
   return {};
 };
 
+export const handleLangSearch = (data: langSearchType, field: string) => {
+  const values = Object.values(data);
+  const query: langSearchType = {};
+
+  const searchQuery: langSearchQueryType = { $in: [] };
+  if (values.length === 1) {
+    query[field] = values[0];
+  } else {
+    values.forEach((val) => {
+      searchQuery.$in.push(val as string);
+    });
+
+    query[field] = searchQuery;
+  }
+  return query;
+};
+
 export const cleanLangArray = (arr: LanguageValuePair[]) => {
   return arr
     .filter((arr) => arr.value)
@@ -292,4 +315,46 @@ export function searchFiles(startPath: string, filter: string): string[] {
 
 export const sanitizedField = (field: string) => {
   return field.replace(/\s/g, '-').toLowerCase();
+};
+
+export const addSupportedLang = (
+  field: Record<string, string>,
+  updatedField: LanguageValuePair[]
+): LanguageValuePair[] => {
+  const supportedLang = appConfig.supportedLanguages;
+  const langValue = Object.keys(field);
+
+  langValue.forEach((key) => {
+    const filterLang = supportedLang.filter((lang) => key === lang);
+    const existingLangs = updatedField.find(({ lang }) => lang === key);
+
+    if (filterLang && !existingLangs) {
+      updatedField = [
+        ...updatedField,
+        { lang: key as (typeof supportedLang)[number], value: field[key] },
+      ];
+    } else if (filterLang && existingLangs) {
+      updatedField = updatedField.map((oldLang) => {
+        if (oldLang.lang === key) {
+          return {
+            ...oldLang,
+            value: field[key],
+          };
+        }
+        return oldLang;
+      });
+    }
+  });
+
+  return updatedField;
+};
+
+type checkLangParams = Partial<
+  Record<(typeof appConfig.supportedLanguages)[number], string>
+>;
+
+export const checkLang = (value: checkLangParams) => {
+  if (typeof value === 'undefined' || Object.keys(value).length < 1)
+    return false;
+  return appConfig.supportedLanguages.find((lang) => value[lang]);
 };

@@ -362,3 +362,13 @@ Authorization: Bearer {{token}}
 
 GET {{api}}/drive/fullpath
 Authorization: Bearer {{token}}
+
+
+### add category
+POST {{api}}/categories
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "name":{"en": "hello"}
+}

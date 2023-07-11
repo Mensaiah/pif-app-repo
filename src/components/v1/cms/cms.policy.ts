@@ -1,19 +1,10 @@
 import { z } from 'zod';
 
-import appConfig from '../../../config';
-
-const { supportedLanguages } = appConfig;
-
-const contentSchema: Partial<
-  Record<(typeof supportedLanguages)[number], z.ZodString>
-> = {};
-supportedLanguages.forEach((language) => {
-  contentSchema[language] = z.string();
-});
+import { langSchema } from '../../../types/global';
 
 export const addInfoSchema = z.object({
   title: z.string(),
-  content: z.object(contentSchema),
+  content: z.object(langSchema),
   iconifyName: z.string().optional(),
   iconSvg: z.string().optional(),
   iconUrl: z.string().optional(),
@@ -23,7 +14,7 @@ export const addInfoSchema = z.object({
 
 export const updateInfoSchema = z.object({
   title: z.string().optional(),
-  content: z.object(contentSchema).optional(),
+  content: z.object(langSchema).optional(),
   iconifyName: z.string().optional().optional(),
   iconSvg: z.string().optional(),
   iconUrl: z.string().optional(),
@@ -32,14 +23,14 @@ export const updateInfoSchema = z.object({
 
 export const addLegalPolicySchema = z.object({
   title: z.string(),
-  content: z.object(contentSchema),
+  content: z.object(langSchema),
   isPublished: z.boolean(),
   isNewPolicy: z.boolean().optional(),
 });
 
 export const updateLegalPolicySchema = z.object({
   title: z.string().optional(),
-  content: z.object(contentSchema).optional(),
+  content: z.object(langSchema).optional(),
   isPublished: z.boolean().optional(),
 });
 

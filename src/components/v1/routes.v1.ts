@@ -5,6 +5,7 @@ import { handleResponse } from '../../utils/helpers';
 import { useWord } from '../../utils/wordSheet';
 
 import authRoutesV1 from './auth/auth.routes';
+import categoryRoutesV1 from './category/category.routes';
 import cmsRoutesV1 from './cms/cms.routes';
 import driveRoutesV1 from './drive/drive.routes';
 import partnersRoutesV1 from './partner/partner.routes';
@@ -22,6 +23,7 @@ router.use('/cms', cmsRoutesV1);
 router.use('/partners', partnersRoutesV1);
 router.use('/uploads', uploadRoutesV1);
 router.use('/drive', driveRoutesV1);
+router.use('/categories', categoryRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));
