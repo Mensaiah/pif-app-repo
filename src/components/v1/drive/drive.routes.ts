@@ -17,6 +17,7 @@ import {
   renameFile,
   renameFolder,
   restoreFile,
+  restoreFolder,
   trashFile,
   trashFolder,
 } from './drive.actions';
@@ -61,8 +62,9 @@ router.patch(
   policyMiddleware(renameFolderSchema),
   renameFolder
 );
+
 router.delete('/folders/:folderId/trash', trashFolder);
-router.patch('/folders/:folderId/restore', trashFolder);
+router.patch('/folders/:folderId/restore', restoreFolder);
 router.delete('/folders/:folderId', deleteFolder);
 
 router.patch('/files/:fileId', renameFile);

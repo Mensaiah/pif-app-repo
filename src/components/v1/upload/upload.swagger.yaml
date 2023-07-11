@@ -1,0 +1,357 @@
+/uploads/my-avatar:
+  post:
+    tags:
+      - Uploads
+    summary: Upload user avatar (mobile)
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+              - key
+            properties:
+              file:
+                type: string
+                format: binary
+              key:
+                type: string
+                default: avatar
+    responses:
+      200:
+        description: Upload user avatar for mobile.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Image uploaded successfully.
+                data:
+                  types: string
+                  format: url
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/user-avatars/:userId:
+  post:
+    tags:
+      - Uploads
+    summary: Upload user avatar
+    parameters:
+      - name: userId
+        in: path
+        description: user Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+              - key
+            properties:
+              file:
+                type: string
+                format: binary
+              key:
+                type: string
+                default: avatar
+    responses:
+      200:
+        description: Upload user avatar.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Image uploaded successfully.
+                data:
+                  types: string
+                  format: url
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/doc/:partnerId:
+  post:
+    tags:
+      - Uploads
+    summary: Upload contract documents
+    parameters:
+      - name: partnerId
+        in: path
+        description: partner Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+              - key
+            properties:
+              file:
+                type: string
+                format: binary
+              key:
+                type: string
+                default: doc
+    responses:
+      200:
+        description: Upload document successully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: document uploaded successfully
+                data:
+                  types: string
+                  format: url
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/product-images/:marketplace/:partnerId:
+  post:
+    tags:
+      - Uploads
+    summary: Upload product images
+    parameters:
+      - name: marketplace
+        in: path
+        description: marketplace
+        required: true
+        type: string
+      - name: partnerId
+        in: path
+        description: partner Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - files
+              - key
+            properties:
+              files:
+                type: array
+                maxItems: 4
+                items:
+                  type: string
+                  format: binary
+              key:
+                type: string
+                default: images
+    responses:
+      200:
+        description: Upload product image successully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: product image(s) uploaded successfully
+                data:
+                  type: array
+                  items:
+                    type: string
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/icons/:marketplace:
+  post:
+    tags:
+      - Uploads
+    summary: Upload icon
+    parameters:
+      - name: marketplace
+        in: path
+        description: icon marketplace
+        required: true
+        type: string
+      - name: name
+        in: header
+        description: icon name
+        required: true
+        type: string
+
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - file
+              - key
+            properties:
+              file:
+                type: string
+                format: binary
+              key:
+                type: string
+                default: icon
+    responses:
+      200:
+        description: Upload icon successully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: category-icon uploaded successfully
+                data:
+                  types: string
+                  format: url
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/drive:
+  post:
+    tags:
+      - Uploads
+    summary: upload files from drive
+    parameters:
+      - name: parentId
+        in: header
+        description: parent folder Id
+        required: true
+        type: string
+      - name: canBeAccessedBy
+        in: header
+        description: roles who can access the files
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - files
+              - key
+            properties:
+              files:
+                type: array
+                maxItems: 5
+                items:
+                  type: string
+                  format: binary
+              key:
+                type: string
+                default: files
+    responses:
+      200:
+        description: Files uploaded successully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: files uploaded successfully
+                data:
+                  type: array
+                  items:
+                    type: string
+
+      400:
+        description: Bad Request.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: max 5 images.
+
+      404:
+        description: If parent folder id provided does not exist
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: folder does not exist.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

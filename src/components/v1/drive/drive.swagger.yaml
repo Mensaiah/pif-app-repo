@@ -5,7 +5,7 @@
     summary: get all drive folders and files.
     responses:
       200:
-        description: returns all folders and files.
+        description: all folders and files.
         content:
           application/json:
             schema:
@@ -36,13 +36,580 @@
         type: string
     responses:
       200:
-        description: returns all folders and files contained in them.
+        description: all folders and files contained in them.
         content:
           application/json:
             schema:
               type: array
               items:
                 type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/folderpath:
+  get:
+    tags:
+      - Drive
+    summary: Get folders and file available in a specified path
+    parameters:
+      - name: path
+        in: query
+        description: folder path to return all the folder present in it.
+        type: string
+    responses:
+      200:
+        description: all folders and files contained in the path.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+      404:
+        description: Not found (if specified path does not exist).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error
+
+/drive/filepath:
+  get:
+    tags:
+      - Drive
+    summary: Get a single file in a specified path
+    parameters:
+      - name: path
+        in: query
+        description: file path to return its content.
+        type: string
+    responses:
+      200:
+        description: return file belonging to the specified path.
+        content:
+          application/json:
+            schema:
+              type: object
+
+      404:
+        description: Not found (if specified path does not exist).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error.
+
+/drive/folders:
+  post:
+    tags:
+      - Drive
+    summary: create a new folder
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                default: new folder
+
+    responses:
+      201:
+        description: creating a folder successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Successful!
+                data:
+                  type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/folders/:folderId:
+  post:
+    tags:
+      - Drive
+    summary: create a new folder with reference to parent folder id.
+    parameters:
+      - name: folderId
+        in: path
+        description: create a new folder by adding its parent folder id as a params and sending the new name as an object.
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                default: new folder
+              parentFolderId:
+                type: string
+                default: ObjectID
+              canBeAccessedBy:
+                type: array
+                items:
+                  type: string
+    responses:
+      201:
+        description: creating a folder successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Successful!
+                data:
+                  type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  patch:
+    tags:
+      - Drive
+    summary: rename a folder
+    parameters:
+      - name: folderId
+        in: path
+        description: rename a folder by adding its id as a params and sending the new name as an object.
+        type: string
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+                default: new folder
+
+    responses:
+      200:
+        description: renaming a folder.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder renamed successfully
+
+      404:
+        description: Not found (if specified folder id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  delete:
+    tags:
+      - Drive
+    summary: delete a folder
+    parameters:
+      - name: folderId
+        in: path
+        description: delete a folder by adding its id as a params.
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: deleting a folder.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder deleted successfully
+
+      404:
+        description: Not found (if specified folder id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/folders/:folderId/trash:
+  delete:
+    tags:
+      - Drive
+    summary: trash a folder
+    parameters:
+      - name: folderId
+        in: path
+        description: trash a folder by adding its as params
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: trashing a folder
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder trashed successfully
+
+      404:
+        description: Not found (if specified folder id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/folders/:folderId/restore:
+  patch:
+    tags:
+      - Drive
+    summary: restore a folder
+    parameters:
+      - name: folderId
+        in: path
+        description: restore a folder by adding its id as params
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: restoring a folder
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder restored successfully
+
+      404:
+        description: Not found (if specified folder id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Folder not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/files/:fileId:
+  patch:
+    tags:
+      - Drive
+    summary: rename a file
+    parameters:
+      - name: fileId
+        in: path
+        description: rename a file by adding its id as a params and sending the new name as an object.
+        type: string
+        required: true
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: string
+
+    responses:
+      200:
+        description: renaming a file.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File renamed successfully
+
+      404:
+        description: Not found (if specified file id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  delete:
+    tags:
+      - Drive
+    summary: delete a file
+    parameters:
+      - name: fileId
+        in: path
+        description: delete a file by adding its id as a params.
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: deleting a file.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File deleted successfully
+
+      404:
+        description: Not found (if specified file id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/files/:fileId/trash:
+  delete:
+    tags:
+      - Drive
+    summary: trash a file
+    parameters:
+      - name: fileId
+        in: path
+        description: trash a file by adding its id as params
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: trashing a file
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File trashed successfully
+
+      404:
+        description: Not found (if specified file id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File not found.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/drive/files/:fileId/restore:
+  patch:
+    tags:
+      - Drive
+    summary: restore a file
+    parameters:
+      - name: fileId
+        in: path
+        description: restore a file by adding its id as params
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: restoring a file
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File restored successfully
+
+      404:
+        description: Not found (if specified file id is not found).
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: File not found.
 
       500:
         description: Internal Server Error
