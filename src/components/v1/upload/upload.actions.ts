@@ -1,19 +1,29 @@
 import path from 'path';
 
+import axios from 'axios';
 import DOMPurify from 'dompurify';
 import { Response } from 'express';
 import { JSDOM } from 'jsdom';
+import mime from 'mime-types';
+import { z } from 'zod';
 
 import {
   uploadFileToSpace,
   uploadToSpace,
 } from '../../../services/s3UploadService';
 import { IRequest } from '../../../types/global';
-import { _omit, handleResponse, uuid } from '../../../utils/helpers';
+import {
+  _omit,
+  consoleLog,
+  handleResponse,
+  uuid,
+} from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import { CategoryIconModel } from '../category/category.model';
 import { DriveFileModel, DriveFolderModel } from '../drive/drive.model';
 import { UserModel } from '../user/user.model';
+
+import { uploadDirectSchema } from './upload.policy';
 
 export const uploadUserAvatar =
   (self = false) =>
@@ -219,6 +229,33 @@ export const uploadFilesToDrive = async (req: IRequest, res: Response) => {
     handleResponse(res, {
       message: 'files uploaded successfully',
       data: uploadedFiles,
+    });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const uploadDirect = async (req: IRequest, res: Response) => {
+  type dataType = z.infer<typeof uploadDirectSchema>;
+
+  const { url }: dataType = req.body;
+
+  try {
+    const file = await axios.get(url, { responseType: 'arraybuffer' });
+
+    const contentType = file.headers['content-type'];
+
+    const extension = mime.extension(contentType);
+
+    const data = await uploadToSpace({
+      Key: `direct-uploads/${uuid()}.${extension}`,
+      Body: file.data,
+      ContentType: contentType,
+    });
+
+    return handleResponse(res, {
+      message: 'upload successful',
+      data,
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);

@@ -38,4 +38,6 @@ coverage/
 yarn.lock
 package-lock.json
 
+# ignore infisical.json
+.infisical.json
 src/migration/data/

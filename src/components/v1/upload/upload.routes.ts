@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import multer from 'multer';
 
+import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
   cannotBeCustomerMiddleware,
   hasAnyPermissionMiddleware,
@@ -9,12 +10,14 @@ import {
 } from '../auth/authMiddlwares';
 
 import {
+  uploadDirect,
   uploadContractDocuments,
   uploadFilesToDrive,
   uploadIcon,
   uploadProductImages,
   uploadUserAvatar,
 } from './upload.actions';
+import { uploadDirectSchema } from './upload.policy';
 
 const router = Router();
 
@@ -71,6 +74,15 @@ router.post(
   cannotBeCustomerMiddleware,
   upload.array('files'),
   uploadFilesToDrive
+);
+
+router.post(
+  '/direct',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  hasAnyPermissionMiddleware(['manage-uploads', 'upload-data']),
+  policyMiddleware(uploadDirectSchema),
+  uploadDirect
 );
 
 export default router;
