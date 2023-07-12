@@ -28,7 +28,9 @@ const initializePersistenceAndSeeding = () => {
 const initializeMiddlewares = () => {
   const allowedOrigins = [
     'http://localhost:5173',
-    `http:localhost:${appConfig.port}`,
+    'http://127.0.0.1:5173',
+    `http://localhost:${appConfig.port}`,
+    `http://127.0.0.1:${appConfig.port}`,
     'https://pif-dashboard.web.app',
   ];
   const corsOptions = {
