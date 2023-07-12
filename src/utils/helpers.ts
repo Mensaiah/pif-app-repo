@@ -56,7 +56,7 @@ export const handleResponse = (
   }
 
   if (isObject(data) || isArray(data)) {
-    return res.status(status).json(data);
+    return res.status(status).json(transformLangValueArrays(data));
   }
 
   return res.status(status).send(data);
@@ -357,4 +357,38 @@ export const checkLang = (value: checkLangParams) => {
   if (typeof value === 'undefined' || Object.keys(value).length < 1)
     return false;
   return appConfig.supportedLanguages.find((lang) => value[lang]);
+};
+
+export const transformLangValueArrays = (input: any): any => {
+  if (Array.isArray(input)) {
+    // Check if array contains objects with 'lang' and 'value' keys
+    if (
+      input.every(
+        (item) =>
+          typeof item === 'object' &&
+          item !== null &&
+          'lang' in item &&
+          'value' in item
+      )
+    ) {
+      // Convert array to object
+      return input.reduce(
+        (obj, item) => ({ ...obj, [item.lang]: item.value }),
+        {}
+      );
+    } else {
+      // Recurse into array elements
+      return input.map(transformLangValueArrays);
+    }
+  } else if (typeof input === 'object' && input !== null) {
+    // Recurse into object properties
+    return Object.fromEntries(
+      Object.entries(input).map(([key, value]) => [
+        key,
+        transformLangValueArrays(value),
+      ])
+    );
+  } else {
+    return input;
+  }
 };
