@@ -47,7 +47,7 @@ const initializeMiddlewares = () => {
 
   const rateLimiter = new RateLimiterMongo({
     storeClient: mongoose.connection,
-    points: 100, // Number of points
+    points: 1000, // Number of points
     duration: 60 * 15, // Per 15 minutes, expressed as 60 seconds/minute * 15 minutes
     tableName: 'rateLimiter', // Table name for saving rate limit data
   });
