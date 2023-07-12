@@ -55,8 +55,21 @@ export const handleResponse = (
     });
   }
 
-  if (isObject(data) || isArray(data)) {
-    return res.status(status).json(transformLangValueArrays(data));
+  if (isArray(data)) {
+    const convertedArray = data.map((doc: any) =>
+      doc.toObject
+        ? transformLangValueArrays(doc.toObject())
+        : transformLangValueArrays(doc)
+    );
+    return res.status(status).json(convertedArray);
+  }
+
+  if (isObject(data)) {
+    if ('toObject' in data) {
+      return res.status(status).json(transformLangValueArrays(data.toObject()));
+    } else {
+      return res.status(status).json(transformLangValueArrays(data));
+    }
   }
 
   return res.status(status).send(data);
