@@ -36,9 +36,6 @@ export const consoleLog = (
   }
 };
 
-const isMongooseObject = (obj: any): boolean => {
-  return obj instanceof mongoose.Document;
-};
 export const handleResponse = (
   res: Response,
   data: any,
@@ -63,19 +60,12 @@ export const handleResponse = (
     data = JSON.parse(JSON.stringify(data));
   }
   if (isArray(data)) {
-    const convertedArray = data.map((doc: any) => {
-      if (isMongooseObject(doc)) {
-        return transformLangValueArrays(doc.toObject());
-      }
-      return transformLangValueArrays(doc);
-    });
-    return res.status(status).json(convertedArray);
+    return res
+      .status(status)
+      .json(data.map((doc: any) => transformLangValueArrays(doc)));
   }
 
   if (isObject(data)) {
-    if (isMongooseObject(data)) {
-      return res.status(status).json(transformLangValueArrays(data.toObject()));
-    }
     return res.status(status).json(transformLangValueArrays(data));
   }
 
