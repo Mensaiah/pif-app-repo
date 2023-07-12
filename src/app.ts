@@ -2,8 +2,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Response } from 'express';
 import helmet from 'helmet';
-import mongoose from 'mongoose';
-import { RateLimiterMongo } from 'rate-limiter-flexible';
+// import mongoose from 'mongoose';
+// import { RateLimiterMongo } from 'rate-limiter-flexible';
 
 import fingerprintMiddleware from './appMiddlewares/fingerprint.middleware';
 import routerV1 from './components/v1/routes.v1';
@@ -45,28 +45,28 @@ const initializeMiddlewares = () => {
     credentials: true,
   };
 
-  const rateLimiter = new RateLimiterMongo({
-    storeClient: mongoose.connection,
-    points: 1000, // Number of points
-    duration: 60 * 15, // Per 15 minutes, expressed as 60 seconds/minute * 15 minutes
-    tableName: 'rateLimiter', // Table name for saving rate limit data
-  });
+  // const rateLimiter = new RateLimiterMongo({
+  //   storeClient: mongoose.connection,
+  //   points: 1000, // Number of points
+  //   duration: 60 * 15, // Per 15 minutes, expressed as 60 seconds/minute * 15 minutes
+  //   tableName: 'rateLimiter', // Table name for saving rate limit data
+  // });
 
   app
-    .use((req, res, next) => {
-      rateLimiter
-        .consume(req.ip)
-        .then(() => {
-          next();
-        })
-        .catch((_) => {
-          return handleResponse(
-            res,
-            'Too Many Requests, try again after some time',
-            429
-          );
-        });
-    })
+    // .use((req, res, next) => {
+    //   rateLimiter
+    //     .consume(req.ip)
+    //     .then(() => {
+    //       next();
+    //     })
+    //     .catch((_) => {
+    //       return handleResponse(
+    //         res,
+    //         'Too Many Requests, try again after some time',
+    //         429
+    //       );
+    //     });
+    // })
     .use(cors(corsOptions))
     .use(cookieParser())
     .use(express.json({ limit: '1kb' }))
