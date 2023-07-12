@@ -5,6 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { Request, Response } from 'express';
+import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import appConfig from '../config';
@@ -35,13 +36,16 @@ export const consoleLog = (
   }
 };
 
+const isMongooseObject = (obj: any): boolean => {
+  return obj instanceof mongoose.Document;
+};
 export const handleResponse = (
   res: Response,
   data: any,
   status = 200,
   err?: any
 ): Response => {
-  if (err && appConfig.environment === 'dev') consoleLog(err); // TODO: remove before deployments
+  if (err && appConfig.environment === 'dev') consoleLog(err);
 
   if (status >= 400) {
     if (err && err.name && err.name === 'MongoError') {
@@ -55,21 +59,24 @@ export const handleResponse = (
     });
   }
 
+  if (isArray(data) || isObject(data)) {
+    data = JSON.parse(JSON.stringify(data));
+  }
   if (isArray(data)) {
-    const convertedArray = data.map((doc: any) =>
-      doc.toObject
-        ? transformLangValueArrays(doc.toObject())
-        : transformLangValueArrays(doc)
-    );
+    const convertedArray = data.map((doc: any) => {
+      if (isMongooseObject(doc)) {
+        return transformLangValueArrays(doc.toObject());
+      }
+      return transformLangValueArrays(doc);
+    });
     return res.status(status).json(convertedArray);
   }
 
   if (isObject(data)) {
-    if ('toObject' in data) {
+    if (isMongooseObject(data)) {
       return res.status(status).json(transformLangValueArrays(data.toObject()));
-    } else {
-      return res.status(status).json(transformLangValueArrays(data));
     }
+    return res.status(status).json(transformLangValueArrays(data));
   }
 
   return res.status(status).send(data);

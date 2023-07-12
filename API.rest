@@ -1,8 +1,8 @@
 # @server = https://pif-api.herokuapp.com
-@server = http://localhost:3000
+@server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYzNiNDVlZTEtMTE3Mi00YTgyLWI0MzEtMzVhMThiNzM3NDZhIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjEwMjY4NGVjLTRkY2UtNGUyMS04ZDExLWQzYzY5YjZkNmM1NSIsInJlZiI6IjY0YTlhNjg2MzNkNGE5ZWJlM2Q2M2IxNSIsImlhdCI6MTY4OTA2MjM5MywiZXhwIjoxNjg5MjM1MTkzLCJpc3MiOiJQSUYtZGV2In0.4JPXVsFmxlXqCzZNfpGL2cjud_R063ZXVl96pq_7LgY
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY4OTIwMDQ0MSwiZXhwIjoxNjg5MzczMjQxLCJpc3MiOiJQSUYtZGV2In0.f9Xa4p84S7W8ELOqYe37Amt_VrQCS27soq-O39YBfmE
 
 GET {{server}}
 
@@ -363,6 +363,9 @@ Authorization: Bearer {{token}}
 GET {{api}}/drive/fullpath
 Authorization: Bearer {{token}}
 
+###
+GET {{api}}/categories
+Authorization: Bearer {{token}}
 
 ### add category
 POST {{api}}/categories
@@ -370,5 +373,10 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "name":{"en": "hello"}
+    "name":
+      {
+        "en" : "hello"
+      },
+      "isEnabled": true,
+      "marketplaces": ["ng"]
 }
