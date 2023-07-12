@@ -437,7 +437,7 @@
   post:
     tags:
       - Mobile Authentication
-    summary: Set user pin for mobile
+    summary: Set user pin for mobile (request auth)
     requestBody:
       required: true
       content:
@@ -763,7 +763,7 @@
     summary: Logout
     responses:
       200:
-        description: Logging out successfully
+        description: Logging out successfully (request auth)
         content:
           application/json:
             schema:
@@ -777,7 +777,7 @@
   post:
     tags:
       - Mobile Authentication
-    summary: Change mobile users pin, they have to be logged in, it requires authentication.
+    summary: Change mobile users pin, they have to be logged in, it requires authentication. (request auth)
     requestBody:
       required: true
       content:
@@ -832,7 +832,7 @@
   post:
     tags:
       - Dashboard Authentication
-    summary: Change dashboard user password, they have to be logged in, it requires authentication.
+    summary: Change dashboard user password, they have to be logged in, it requires authentication. (request auth)
     requestBody:
       required: true
       content:

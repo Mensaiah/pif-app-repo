@@ -2,7 +2,7 @@
   post:
     tags:
       - Uploads
-    summary: Upload user avatar (mobile)
+    summary: Upload user avatar (mobile) (request auth)
     requestBody:
       required: true
       content:
@@ -45,11 +45,11 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/uploads/user-avatars/:userId:
+/uploads/user-avatars/:{userId}:
   post:
     tags:
       - Uploads
-    summary: Upload user avatar
+    summary: Upload user avatar (request auth)
     parameters:
       - name: userId
         in: path
@@ -98,11 +98,11 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/uploads/doc/:partnerId:
+/uploads/doc/:{partnerId}:
   post:
     tags:
       - Uploads
-    summary: Upload contract documents
+    summary: Upload contract documents (request auth)
     parameters:
       - name: partnerId
         in: path
@@ -151,11 +151,11 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/uploads/product-images/:marketplace/:partnerId:
+/uploads/product-images/:{marketplace}/:{partnerId}:
   post:
     tags:
       - Uploads
-    summary: Upload product images
+    summary: Upload product images (request auth)
     parameters:
       - name: marketplace
         in: path
@@ -213,11 +213,11 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/uploads/icons/:marketplace:
+/uploads/icons/:{marketplace}:
   post:
     tags:
       - Uploads
-    summary: Upload icon
+    summary: Upload icon (request auth)
     parameters:
       - name: marketplace
         in: path
@@ -276,7 +276,7 @@
   post:
     tags:
       - Uploads
-    summary: upload files from drive
+    summary: upload files from drive (request auth)
     parameters:
       - name: parentId
         in: header
@@ -344,6 +344,48 @@
                 message:
                   type: string
                   example: folder does not exist.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/uploads/direct:
+  post:
+    tags:
+      - Uploads
+    summary: upload files direct via url (request auth)
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - url
+            properties:
+              files:
+                type: string
+
+    responses:
+      200:
+        description: uploaded successully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: upload successful
+                data:
+                  type: string
 
       500:
         description: Internal Server Error

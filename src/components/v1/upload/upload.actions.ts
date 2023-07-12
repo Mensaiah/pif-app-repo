@@ -12,12 +12,7 @@ import {
   uploadToSpace,
 } from '../../../services/s3UploadService';
 import { IRequest } from '../../../types/global';
-import {
-  _omit,
-  consoleLog,
-  handleResponse,
-  uuid,
-} from '../../../utils/helpers';
+import { _omit, handleResponse, uuid } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import { CategoryIconModel } from '../category/category.model';
 import { DriveFileModel, DriveFolderModel } from '../drive/drive.model';

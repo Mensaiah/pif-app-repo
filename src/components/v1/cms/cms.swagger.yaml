@@ -69,7 +69,7 @@
   post:
     tags:
       - CMS
-    summary: Adding new Info by either admin or super-admin
+    summary: Adding new Info by either admin or super-admin (request auth)
     requestBody:
       required: true
       content:
@@ -185,7 +185,8 @@
                 message:
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
-/cms/info/:infoId:
+
+/cms/info/:{infoId}:
   get:
     tags:
       - CMS
@@ -257,11 +258,10 @@
                 message:
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
-
   patch:
     tags:
       - CMS
-    summary: Edit or update info data.
+    summary: Edit or update info data. (request auth)
     parameters:
       - name: infoId
         in: path
@@ -453,7 +453,7 @@
   post:
     tags:
       - CMS
-    summary: Adding new policy by either admin or super-admin
+    summary: Adding new policy by either admin or super-admin (request auth)
     requestBody:
       required: true
       content:
@@ -552,7 +552,8 @@
                 message:
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
-/cms/policies/:policyId:
+
+/cms/policies/:{policyId}:
   get:
     tags:
       - CMS
@@ -621,7 +622,7 @@
   patch:
     tags:
       - CMS
-    summary: Edit or update policy data.
+    summary: Edit or update policy data. (request auth)
     parameters:
       - name: policyId
         in: path
@@ -713,6 +714,253 @@
                   type: string
                   example: error locating policy
 
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/cms/faq:
+  get:
+    tags:
+      - CMS
+    summary: fetch all faqs. (request auth)
+    responses:
+      200:
+        description: Return array of faqs
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type:
+                properties:
+                  question:
+                    type: string
+                  answer:
+                    type: string
+                  isDraft:
+                    type: boolean
+
+      404:
+        description: Not found (if the faq does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting info
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+  post:
+    tags:
+      - CMS
+    summary: Adding new faq by either admin or super-admin (request auth)
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - question
+              - answer
+              - isDraft
+            properties:
+              question:
+                type: string
+              answer:
+                type: string
+              isDraft:
+                type: boolean
+                example: true or false
+
+    responses:
+      200:
+        description: faq added successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Faq added successfully
+                data:
+                  type: object
+                  properties:
+                    question:
+                      type: string
+                    answer:
+                      type: string
+                    isDraft:
+                      type: boolean
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error adding info (invalid-user) / You are not authorized to perform this operation. (invalid-user)
+      409:
+        description: If the faq exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: A faq with this question already exists.
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/cms/faq/:{faqId}:
+  get:
+    tags:
+      - CMS
+    summary: fetch single faq (request auth)
+    parameters:
+      - name: faqId
+        in: path
+        description: faq Id
+        required: true
+        type: string
+
+    responses:
+      200:
+        description: Return a single faq
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                question:
+                  type: string
+                answer:
+                  type: string
+                isDraft:
+                  type: boolean
+
+      404:
+        description: Not found (if the faq does not exist)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error getting info
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  patch:
+    tags:
+      - CMS
+    summary: updating faq (request auth)
+    parameters:
+      - name: faqId
+        in: path
+        description: faq Id
+        required: true
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - question
+              - answer
+              - isDraft
+            properties:
+              question:
+                type: string
+              answer:
+                type: string
+              isDraft:
+                type: boolean
+                example: true or false
+    responses:
+      200:
+        description: faq updated successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Faq updated successfully
+                data:
+                  type: object
+                  properties:
+                    question:
+                      type: string
+                    answer:
+                      type: string
+                    isDraft:
+                      type: boolean
+
+      401:
+        description: Unauthorized (if user does not exist / user is not admin or super admin)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: error adding info (invalid-user) / You are not authorized to perform this operation. (invalid-user)
+      404:
+        description: If the faq does exists
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This faq is not found
       500:
         description: Internal Server Error
         content:

@@ -1,8 +1,8 @@
-/categories/public:
+/categories:
   get:
     tags:
       - Category
-    summary: returns all categories.
+    summary: returns all categories. (requires auth)
     responses:
       200:
         description: return all categories that are enabled.
@@ -24,178 +24,10 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/categories/internal:
-  get:
-    tags:
-      - Category
-    summary: returns all internal categories.
-    responses:
-      200:
-        description: return all internal categories.
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
   post:
     tags:
       - Category
-    summary: create new internal category
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            type: object
-            required:
-              - name
-            properties:
-              name:
-                type: object
-                properties:
-                  key:
-                    type: string
-                    enum: [en, da]
-                  value:
-                    type: string
-
-    responses:
-      201:
-        description: Creating internal category successfully.
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal category created successfully
-                data:
-                  type: object
-
-      409:
-        description: Conflict
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: This internal category already exists
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
-/categories/category-icon:
-  get:
-    tags:
-      - Category
-    summary: returns all category icons.
-    responses:
-      200:
-        description: return all category icons.
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
-/categories/all:
-  get:
-    tags:
-      - Category
-    summary: returns all categories.
-    responses:
-      200:
-        description: return all categories.
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
-/categories/:marketplace:
-  get:
-    tags:
-      - Category
-    summary: return categories based on marketplace supplied.
-    parameters:
-      - name: marketplace
-        in: path
-        description: marketplace to determine path.
-        type: string
-    responses:
-      200:
-        description: returns all categories based on marketplace.
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
-/categories:
-  post:
-    tags:
-      - Category
-    summary: create new category
+    summary: create new category (requires auth)
     requestBody:
       required: true
       content:
@@ -210,11 +42,9 @@
               name:
                 type: object
                 properties:
-                  key:
+                  en:
                     type: string
-                    enum: [en, da]
-                  value:
-                    type: string
+                    default: men
               isEnabled:
                 type: boolean
               isPromoted:
@@ -287,11 +117,278 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/categories/categoryId:
+/categories/internal:
+  get:
+    tags:
+      - Category
+    summary: returns all internal categories. (requires auth)
+    responses:
+      200:
+        description: return all internal categories.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  post:
+    tags:
+      - Category
+    summary: create new internal category (requires auth)
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+            properties:
+              name:
+                type: object
+                properties:
+                  en:
+                    type: string
+                    default: men
+
+    responses:
+      201:
+        description: Creating internal category successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal category created successfully
+                data:
+                  type: object
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This internal category already exists
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/category-icons:
+  get:
+    tags:
+      - Category
+    summary: returns all category icons. (requires auth)
+    responses:
+      200:
+        description: return all category icons.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/category-icons/:{categoryIconId}/disable:
   patch:
     tags:
       - Category
-    summary: edit category based on categoryId supplied.
+    summary: disable category icon based on id supplied. (requires auth)
+    parameters:
+      - name: categoryIconId
+        in: path
+        description: categoryIconId to determine icon.
+        type: string
+
+    responses:
+      204:
+        description: Category icon disabled successfully.
+
+      404:
+        description: Not Found (iCategory icon not found)
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/category-icons/:{categoryIconId}/enable:
+  patch:
+    tags:
+      - Category
+    summary: enable category icon based on id supplied. (requires auth)
+    parameters:
+      - name: categoryIconId
+        in: path
+        description: categoryIconId to determine icon.
+        type: string
+
+    responses:
+      200:
+        description: Category icon enabled successfully.
+
+      404:
+        description: Not Found (iCategory icon not found)
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/category-icons/:{categoriesIconId}:
+  delete:
+    tags:
+      - Category
+    summary: delete category icon based on categoryIconId supplied. (requires auth)
+    parameters:
+      - name: categoryIconId
+        in: path
+        description: categoryIconId to determine path.
+        type: string
+
+    responses:
+      204:
+        description: delete category icon.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: category icon deleted successfully
+
+      404:
+        description: Not Found
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Category icon not found
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/all:
+  get:
+    tags:
+      - Category
+    summary: returns all categories.(requires auth)
+    responses:
+      200:
+        description: return all categories.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/:{marketplace}:
+  get:
+    tags:
+      - Category
+    summary: return categories based on marketplace supplied.
+    parameters:
+      - name: marketplace
+        in: path
+        description: marketplace to determine path.
+        type: string
+    responses:
+      200:
+        description: returns all categories based on marketplace.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/categories/:{categoryId}:
+  patch:
+    tags:
+      - Category
+    summary: edit category based on categoryId supplied. (requires auth)
     parameters:
       - name: categoryId
         in: path
@@ -389,7 +486,7 @@
   delete:
     tags:
       - Category
-    summary: delete category based on categoryId supplied.
+    summary: delete category based on categoryId supplied. (requires auth)
     parameters:
       - name: categoryId
         in: path
@@ -439,11 +536,11 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/categories/internal/:internalCategoryId:
+/categories/internal/:{internalCategoryId}:
   patch:
     tags:
       - Category
-    summary: edit internal category based on internalCategoryId supplied.
+    summary: edit internal category based on internalCategoryId supplied. (requires auth)
     parameters:
       - name: internalCategoryId
         in: path
@@ -506,7 +603,7 @@
   delete:
     tags:
       - Category
-    summary: delete internal category based on internalCategoryId supplied.
+    summary: delete internal category based on internalCategoryId supplied. (requires auth)
     parameters:
       - name: internalCategoryId
         in: path
@@ -544,50 +641,6 @@
                 message:
                   type: string
                   example: internal category does not exist
-
-      500:
-        description: Internal Server Error
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: Internal server error. We're duly notified and will fix this. Try again later
-
-/categories/categoryIconId:
-  delete:
-    tags:
-      - Category
-    summary: delete category icon based on categoryIconId supplied.
-    parameters:
-      - name: categoryIconId
-        in: path
-        description: categoryIconId to determine path.
-        type: string
-
-    responses:
-      204:
-        description: delete category icon.
-        content:
-          application/json:
-            schema:
-            properties:
-              message:
-                type: string
-                default: category icon deleted successfully
-
-      404:
-        description: Not Found ( if category icon is not found )
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                message:
-                  type: string
-                  example: category icon not found.
 
       500:
         description: Internal Server Error

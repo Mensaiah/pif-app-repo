@@ -2,7 +2,7 @@
   get:
     tags:
       - Drive
-    summary: get all drive folders and files.
+    summary: get all drive folders and files. (request auth)
     responses:
       200:
         description: all folders and files.
