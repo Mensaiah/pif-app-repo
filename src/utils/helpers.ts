@@ -58,6 +58,12 @@ export const handleResponse = (
 
   if (isArray(data) || isObject(data)) {
     data = JSON.parse(JSON.stringify(data));
+
+    if (isArray(data) && data.length === 0) {
+      return res.status(status).json({
+        data: [],
+      });
+    }
   }
   if (isArray(data)) {
     return res
@@ -371,6 +377,10 @@ export const checkLang = (value: checkLangParams) => {
 
 export const transformLangValueArrays = (input: any): any => {
   if (Array.isArray(input)) {
+    if (input.length === 0) {
+      // Handle empty arrays
+      return [];
+    }
     // Check if array contains objects with 'lang' and 'value' keys
     if (
       input.every(

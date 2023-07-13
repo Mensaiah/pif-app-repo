@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY4OTIwMDQ0MSwiZXhwIjoxNjg5MzczMjQxLCJpc3MiOiJQSUYtZGV2In0.f9Xa4p84S7W8ELOqYe37Amt_VrQCS27soq-O39YBfmE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY4OTIzNjQyNCwiZXhwIjoxNjg5NDA5MjI0LCJpc3MiOiJQSUYtZGV2In0.fBCUywEp3UlDoSGGw1YXesVGQpC7FMLts6ZbbC9OqIE
 
 GET {{server}}
 
@@ -361,6 +361,10 @@ Authorization: Bearer {{token}}
 ### get folder
 
 GET {{api}}/drive/fullpath
+Authorization: Bearer {{token}}
+
+###
+GET {{api}}/categories/internal
 Authorization: Bearer {{token}}
 
 ###

@@ -32,41 +32,33 @@ import {
 const router = Router();
 
 router.get(
-  '/',
+  '/category-icons',
   validateTokenMiddleware,
   requireAuth,
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['category.view']),
-  getCategories
-);
-router.get(
-  '/:marketplace',
-  validateTokenMiddleware,
-  requireAuth,
-  getCategoriesByMarketplace
-);
-router.post(
-  '/',
-  validateTokenMiddleware,
-  requireAuth,
-  policyMiddleware(addCategorySchema),
-  hasAnyPermissionMiddleware(['category.add']),
-  addCategory
+  hasAnyPermissionMiddleware(['category-icon.view']),
+  getUploadedCategoryIcons
 );
 router.patch(
-  '/:categoryId',
+  '/category-icons/:categoryIconId/enable',
   validateTokenMiddleware,
   requireAuth,
-  policyMiddleware(updateCategorySchema),
-  hasAnyPermissionMiddleware(['category.edit']),
-  editCategory
+  hasAnyPermissionMiddleware(['category-icon.edit']),
+  enableUploadedCategoryIcon
+);
+router.patch(
+  '/category-icons/:categoryIconId/disable',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['category-icon.edit']),
+  disableUploadedCategoryIcon
 );
 router.delete(
-  '/:categoryId',
+  '/category-icons/:categoryIconId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category.delete']),
-  removeCategory
+  hasAnyPermissionMiddleware(['category-icon.delete']),
+  removeUploadedCategoryIcon
 );
 
 router.get(
@@ -102,33 +94,41 @@ router.delete(
 );
 
 router.get(
-  '/category-icons',
+  '/',
   validateTokenMiddleware,
   requireAuth,
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['category-icon.view']),
-  getUploadedCategoryIcons
+  hasAnyPermissionMiddleware(['category.view']),
+  getCategories
 );
-router.patch(
-  '/category-icons/:categoryIconId/enable',
+router.post(
+  '/',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.edit']),
-  enableUploadedCategoryIcon
+  policyMiddleware(addCategorySchema),
+  hasAnyPermissionMiddleware(['category.add']),
+  addCategory
 );
-router.patch(
-  '/category-icons/:categoryIconId/disable',
+router.get(
+  '/marketplaces/:marketplace',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.edit']),
-  disableUploadedCategoryIcon
+  getCategoriesByMarketplace
+);
+router.patch(
+  '/:categoryId',
+  validateTokenMiddleware,
+  requireAuth,
+  policyMiddleware(updateCategorySchema),
+  hasAnyPermissionMiddleware(['category.edit']),
+  editCategory
 );
 router.delete(
-  '/category-icons/:categoryIconId',
+  '/:categoryId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.delete']),
-  removeUploadedCategoryIcon
+  hasAnyPermissionMiddleware(['category.delete']),
+  removeCategory
 );
 
 export default router;
