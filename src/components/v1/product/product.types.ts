@@ -57,8 +57,8 @@ export interface ProductAttributes extends Document {
     code: string;
     discountType: 'fixed' | 'percentage';
     value: number;
-    useCount: number;
-    clickCount: number;
+    useCount?: number;
+    clickCount?: number;
     minimumOrderAmount: number;
     maximumUseCount: number;
     maximumUsePerCustomer: number;

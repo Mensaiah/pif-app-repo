@@ -27,6 +27,7 @@ const partnerSchema = new Schema<PartnerAttributes>(
       zipCode: String,
       address: String,
     },
+    productCategories: [{ type: Schema.Types.ObjectId, ref: 'Category' }],
     paymentDetails: {
       bankName: String,
       accountName: String,

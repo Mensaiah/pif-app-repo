@@ -229,7 +229,7 @@ export const getPartners = async (req: IRequest, res: Response) => {
           },
           '-rolesAndPermissions'
         )
-      : PartnerModel.find());
+      : PartnerModel.find({}, '-rolesAndPermissions'));
 
     return handleResponse(res, {
       data: partners,
@@ -442,6 +442,31 @@ export const createPartnerInvite = async (req: IRequest, res: Response) => {
     });
 
     return handleResponse(res, 'Invitation sent ✉️');
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const getPartnersByCategoryAndMarketplace = async (
+  req: IRequest,
+  res: Response
+) => {
+  const { categoryId, marketplace } = req.params;
+  consoleLog(JSON.stringify({ categoryId, marketplace }, null, 2));
+
+  try {
+    const partners = await PartnerModel.find(
+      {
+        marketplaces: { $in: [marketplace] },
+        productCategories: { $in: [categoryId] },
+        status: 'active',
+      },
+      'name logo logoCropData headquarter'
+    );
+
+    return handleResponse(res, {
+      data: partners,
+    });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }

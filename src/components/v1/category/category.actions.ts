@@ -307,17 +307,7 @@ export const editCategory = async (req: IRequest, res: Response) => {
           404
         );
 
-      const existingMarketplace = existingCategory.marketplaces.find((value) =>
-        sanitizedMarketplaces.includes(value)
-      );
-
-      if (existingMarketplace)
-        return handleResponse(res, 'This marketplace already exist', 409);
-
-      existingCategory.marketplaces = [
-        ...existingCategory.marketplaces,
-        ...sanitizedMarketplaces,
-      ];
+      existingCategory.marketplaces = sanitizedMarketplaces;
     }
 
     await existingCategory.save();

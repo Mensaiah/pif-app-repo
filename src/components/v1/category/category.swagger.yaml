@@ -44,7 +44,14 @@
                 properties:
                   en:
                     type: string
-                    default: men
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
               isEnabled:
                 type: boolean
               isPromoted:
@@ -161,7 +168,14 @@
                 properties:
                   en:
                     type: string
-                    default: men
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
 
     responses:
       201:
@@ -327,7 +341,7 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/categories/all:
+/categories/marketplaces/all:
   get:
     tags:
       - Category
@@ -353,7 +367,7 @@
                   type: string
                   example: Internal server error. We're duly notified and will fix this. Try again later
 
-/categories/:{marketplace}:
+/categories/marketplaces/:{marketplace}:
   get:
     tags:
       - Category
@@ -404,10 +418,15 @@
               name:
                 type: object
                 properties:
-                  key:
+                  en:
                     type: string
-                    enum: [en, da]
-                  value:
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
                     type: string
               isEnabled:
                 type: boolean
@@ -556,10 +575,15 @@
               name:
                 type: object
                 properties:
-                  key:
+                  en:
                     type: string
-                    enum: [en, da]
-                  value:
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
                     type: string
 
     responses:

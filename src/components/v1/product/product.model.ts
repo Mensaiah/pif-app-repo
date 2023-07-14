@@ -51,10 +51,6 @@ const productSchema = new Schema<ProductAttributes>({
   isBonusProductOnly: Boolean,
   slicePrice: Number,
   isRated18: Boolean,
-  status: {
-    type: String,
-    enum: ['active', 'inactive'],
-  },
   productCode: {
     code: String,
     eanCodeSource: Number,

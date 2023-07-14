@@ -2,7 +2,7 @@
 @server = http://localhost:3030
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY4OTIzNjQyNCwiZXhwIjoxNjg5NDA5MjI0LCJpc3MiOiJQSUYtZGV2In0.fBCUywEp3UlDoSGGw1YXesVGQpC7FMLts6ZbbC9OqIE
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYmI1OTZmOTEtN2JmNC00NTg5LWIxODYtNzUxZTlkMTRkNzcwIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjdkZDRkZjc2LTkzNTgtNGM0ZC05MTVhLTM5MGFkYWE2OTBhYSIsInJlZiI6IjY0YjAxYmIxMmJjM2Y2MTgxMDhhYjhiYSIsImlhdCI6MTY4OTI2MzA3MiwiZXhwIjoxNjg5NDM1ODcyLCJpc3MiOiJQSUYtZGV2In0.GRgw621OoAAxWfx0aulghPqsucKrdLVtphyi2WXU-Sg
 
 GET {{server}}
 
@@ -283,8 +283,8 @@ Content-Type: application/json
 ### get platform data
 GET {{api}}/platform
 
-### refresh db
-GET {{api}}/platform/refresh
+# ### refresh db // uncomment to refresh db
+# GET {{api}}/platform/refresh
 
 ### add partner
 POST {{api}}/partners
@@ -314,6 +314,7 @@ Authorization: Bearer {{token}}
 
 ### get partner
 GET {{api}}/partners
+Authorization: Bearer {{token}}
 
 ### get partner by market
 GET {{api}}/partners/marketplaces/ng
@@ -384,3 +385,40 @@ Authorization: Bearer {{token}}
       "isEnabled": true,
       "marketplaces": ["ng"]
 }
+
+### GET products
+GET {{api}}/products
+Authorization: Bearer {{token}}
+
+### Add products
+POST {{api}}/products
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": {
+    "en": "flower",
+    "fr": "fleur",
+    "da": "blomst"
+  },
+  "description": {
+    "en": "Sweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
+    "fr": "Fleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
+    "da": "Sød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
+  },
+  "partnerId": "64b019d002ed5ef93120530c",
+  "categories": ["64a9a75a02ed5ef9311de15a"],
+  "marketplace": "dk",
+  "price": 2000,
+  "productType": "regular-product"
+}
+
+### Get products by marketplace, category and partner (no need for auth)
+GET {{api}}/products/marketplace/dk/category/64a9a75a02ed5ef9311de15a/partner/64b019d002ed5ef93120530c
+
+### Get partners by categories and marketplace
+GET {{api}}/partners/marketplace/dk/category/64a9a75a02ed5ef9311de15a
+
+### Get categories
+GET {{api}}/categories/marketplaces/ng
+Authorization: Bearer {{token}}

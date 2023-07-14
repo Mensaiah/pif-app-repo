@@ -1,0 +1,374 @@
+/products:
+  get:
+    tags:
+      - Product
+    summary: returns all product. (requires auth)
+    responses:
+      200:
+        description: return all product that are active and approved.
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  post:
+    tags:
+      - Product
+    summary: create new product (requires auth)
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - partnerId
+              - description
+              - categories
+              - marketplace
+              - productType
+              - status
+            properties:
+              name:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              caption:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              description:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              disclaimer:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              partnerId:
+                type: string
+              tags:
+                type: array
+                items:
+                  type: string
+              categories:
+                type: array
+                items:
+                  type: string
+              internalCategory:
+                type: string
+              isRated18:
+                type: boolean
+              photo:
+                type: string
+              photos:
+                type: array
+                items:
+                  type: string
+              marketplace:
+                type: string
+              price:
+                type: number
+              extraProduct:
+                type: object
+                properties:
+                  description:
+                    type: object
+                    properties:
+                      en:
+                        type: string
+                      da:
+                        type: string
+                      fr:
+                        type: string
+                      sv:
+                        type: string
+                      es:
+                        type: string
+                  photo:
+                    type: string
+              productType:
+                type: string
+                enum: [regular-product, free-gift]
+              validThru:
+                type: string
+              status:
+                type: string
+                enum: [active, inactive]
+              quantity:
+                type: number
+              quantityAlert:
+                type: number
+
+    responses:
+      201:
+        description: Creating product successfully.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Product created successfully
+                data:
+                  type: object
+
+      404:
+        description: Not Found (if marketplace supplied does not exist or is missing)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: None of the marketplace(s) supplied exists or is missing.
+
+      409:
+        description: Conflict
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: This product already exists.
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+/products/:{productId}:
+  patch:
+    tags:
+      - Product
+    summary: edit product based on productId supplied. (requires auth)
+    parameters:
+      - name: productId
+        in: path
+        description: productId to determine path.
+        type: string
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              name:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              caption:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              description:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              disclaimer:
+                type: object
+                properties:
+                  en:
+                    type: string
+                  da:
+                    type: string
+                  fr:
+                    type: string
+                  sv:
+                    type: string
+                  es:
+                    type: string
+              tags:
+                type: array
+                items:
+                  type: string
+              isRated18:
+                type: boolean
+              photo:
+                type: string
+              photos:
+                type: array
+                items:
+                  type: string
+              price:
+                type: number
+              status:
+                type: string
+                enum: [active, inactive]
+              quantity:
+                type: number
+              quantityAlert:
+                type: number
+              isCountedTowardsReward:
+                type: boolean
+              canBeRedeemedAsRewards:
+                type: boolean
+              isBonusProductOnly:
+                type: boolean
+
+    responses:
+      200:
+        description: update product.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  default: product updated successfully
+                data:
+                  type: object
+
+      404:
+        description: Not Found (if product is not found)
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Product does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later
+
+  delete:
+    tags:
+      - Product
+    summary: delete product based on productId supplied. (requires auth)
+    parameters:
+      - name: productId
+        in: path
+        description: productId to determine path.
+        type: string
+
+    responses:
+      204:
+        description: delete product.
+        content:
+          application/json:
+            schema:
+            properties:
+              message:
+                type: string
+                default: product deleted successfully
+
+      404:
+        description: Not Found ( if product is not found )
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Product does not exist
+
+      500:
+        description: Internal Server Error
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  example: Internal server error. We're duly notified and will fix this. Try again later

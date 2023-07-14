@@ -19,9 +19,9 @@ const doMigration = async () => {
 
     // await doCategoryMigrations(sql);
     // await doCityMigrations(sql);
-    // await doPartnersMigrations(sql);
+    await doPartnersMigrations(sql);
     // await doPlatformAccountsMigrations(sql);
-    await doAppUserAccountsMigrations(sql);
+    // await doAppUserAccountsMigrations(sql);
   } catch (err) {
     consoleLog('some error occured' + err, 'error');
   } finally {

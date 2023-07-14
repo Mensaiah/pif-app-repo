@@ -42,6 +42,7 @@ LEFT JOIN
 
   consoleLog('rows length: ' + rows.length);
   const durationTypeKeys = { 1: 'daily', 2: 'monthly', 3: 'weekly' };
+  const statusKeys = { 1: 'active', 2: 'not-verified', 3: 'inactive' };
 
   const mongoWriteOps = await PartnerModel.bulkWrite(
     partners.map((partner: any) => ({
@@ -67,6 +68,7 @@ LEFT JOIN
               zipCode: partner.zipcode,
               address: partner.address,
             },
+            status: statusKeys[partner.status as 1 | 2 | 3],
             paymentDetails: {
               accountNumber: partner.payment_account_number,
               accountName: partner.payment_recipient,

@@ -12,6 +12,7 @@ import {
   addPartner,
   createPartnerInvite,
   getPartners,
+  getPartnersByCategoryAndMarketplace,
   getSinglePartner,
   updatePartner,
 } from './partner.actions';
@@ -23,7 +24,17 @@ import {
 
 const router = Router();
 
-router.get('/', getPartners);
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['partner.view']),
+  getPartners
+);
+router.get(
+  '/marketplace/:marketplace/category/:categoryId',
+  getPartnersByCategoryAndMarketplace
+);
 router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
 router.get('/marketplaces/:marketplace', getPartners);
 router.post(

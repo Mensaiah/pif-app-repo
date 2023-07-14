@@ -7,7 +7,8 @@ export const filterMarketplaces = (
   ...new Set(
     marketplaces.filter((marketplace) => {
       const marketplaceExists = platform.marketplaces.find(
-        ({ code }) => code === marketplace.toLocaleLowerCase()
+        ({ code }) =>
+          code.toLocaleLowerCase() === marketplace.toLocaleLowerCase()
       );
 
       return Boolean(marketplaceExists);

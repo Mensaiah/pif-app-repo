@@ -5,7 +5,7 @@ import fs from 'fs';
 import path from 'path';
 
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
+import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import appConfig from '../config';
@@ -373,6 +373,16 @@ export const checkLang = (value: checkLangParams) => {
   if (typeof value === 'undefined' || Object.keys(value).length < 1)
     return false;
   return appConfig.supportedLanguages.find((lang) => value[lang]);
+};
+
+export const validateObjectId = (val: string) => Types.ObjectId.isValid(val);
+
+export const validateDate = (val: string) => {
+  const date = new Date(val);
+
+  if (isNaN(date.getTime())) return false;
+
+  return true;
 };
 
 export const transformLangValueArrays = (input: any): any => {

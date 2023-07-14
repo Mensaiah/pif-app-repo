@@ -10,6 +10,7 @@ import cmsRoutesV1 from './cms/cms.routes';
 import driveRoutesV1 from './drive/drive.routes';
 import partnersRoutesV1 from './partner/partner.routes';
 import platformRoutesV1 from './platform/platform.routes';
+import productRoutesV1 from './product/product.routes';
 import uploadRoutesV1 from './upload/upload.routes';
 import userRoutesV1 from './user/user.routes';
 
@@ -24,6 +25,7 @@ router.use('/partners', partnersRoutesV1);
 router.use('/uploads', uploadRoutesV1);
 router.use('/drive', driveRoutesV1);
 router.use('/categories', categoryRoutesV1);
+router.use('/products', productRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));

@@ -39,6 +39,7 @@ router.get(
   hasAnyPermissionMiddleware(['category-icon.view']),
   getUploadedCategoryIcons
 );
+
 router.patch(
   '/category-icons/:categoryIconId/enable',
   validateTokenMiddleware,
@@ -46,6 +47,7 @@ router.patch(
   hasAnyPermissionMiddleware(['category-icon.edit']),
   enableUploadedCategoryIcon
 );
+
 router.patch(
   '/category-icons/:categoryIconId/disable',
   validateTokenMiddleware,
@@ -53,6 +55,7 @@ router.patch(
   hasAnyPermissionMiddleware(['category-icon.edit']),
   disableUploadedCategoryIcon
 );
+
 router.delete(
   '/category-icons/:categoryIconId',
   validateTokenMiddleware,
@@ -69,6 +72,7 @@ router.get(
   hasAnyPermissionMiddleware(['internal-category.view']),
   getInternalCategories
 );
+
 router.post(
   '/internal',
   validateTokenMiddleware,
@@ -77,6 +81,7 @@ router.post(
   hasAnyPermissionMiddleware(['internal-category.add']),
   addInternalCategory
 );
+
 router.patch(
   '/internal/:internalCategoryId',
   validateTokenMiddleware,
@@ -85,6 +90,7 @@ router.patch(
   policyMiddleware(addInternalCategorySchema),
   editInternalCategory
 );
+
 router.delete(
   '/internal/:internalCategoryId',
   validateTokenMiddleware,
@@ -101,6 +107,7 @@ router.get(
   hasAnyPermissionMiddleware(['category.view']),
   getCategories
 );
+
 router.post(
   '/',
   validateTokenMiddleware,
@@ -109,12 +116,14 @@ router.post(
   hasAnyPermissionMiddleware(['category.add']),
   addCategory
 );
+
 router.get(
   '/marketplaces/:marketplace',
   validateTokenMiddleware,
   requireAuth,
   getCategoriesByMarketplace
 );
+
 router.patch(
   '/:categoryId',
   validateTokenMiddleware,
@@ -123,6 +132,7 @@ router.patch(
   hasAnyPermissionMiddleware(['category.edit']),
   editCategory
 );
+
 router.delete(
   '/:categoryId',
   validateTokenMiddleware,

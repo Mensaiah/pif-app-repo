@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export interface PartnerAttributes extends Document {
   old_id?: number;
@@ -21,6 +21,7 @@ export interface PartnerAttributes extends Document {
     zipCode: string;
     address: string;
   };
+  productCategories: Array<ObjectId>;
   paymentDetails: {
     bankName: string;
     accountName: string;

@@ -227,17 +227,6 @@ export const updateLegalPolicy = async (req: IRequest, res: Response) => {
     if (title) policyExists.title = title;
     if (content) {
       policyExists.content = addSupportedLang(content, policyExists.content);
-      // appConfig.supportedLanguages.forEach((lang) => {
-      //   if (content[lang]) {
-      //     policyExists.content = [
-      //       ...policyExists.content,
-      //       {
-      //         lang,
-      //         value: content[lang],
-      //       },
-      //     ];
-      //   }
-      // });
     }
     if ('isPublished' in req.body) policyExists.isPublished = isPublished;
 
