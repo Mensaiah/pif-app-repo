@@ -32,7 +32,7 @@ router.get(
   getPartners
 );
 router.get(
-  '/marketplace/:marketplace/category/:categoryId',
+  '/marketplaces/:marketplace/categories/:categoryId',
   getPartnersByCategoryAndMarketplace
 );
 router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
