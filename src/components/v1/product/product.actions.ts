@@ -433,7 +433,10 @@ export const updateProduct = async (req: IRequest, res: Response) => {
 
     // TODO: if the person is a partner-admin, ensure that the product belongs to the partner
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to edit this product.',
@@ -598,7 +601,10 @@ export const removeProduct = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
@@ -676,7 +682,10 @@ export const addProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to add split price to this product.',
@@ -753,7 +762,10 @@ export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to edit the split price of this product.',
@@ -821,7 +833,10 @@ export const removeProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to delete this product split price(s).',
@@ -868,7 +883,10 @@ export const setProductActive = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
@@ -933,7 +951,10 @@ export const setProductInactive = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (userType !== 'partner-admin' && Partner !== existingProduct.Partner)
+    const isSupportedUser =
+      userType === 'partner-admin' || Partner === existingProduct.Partner;
+
+    if (!isSupportedUser)
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
