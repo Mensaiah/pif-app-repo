@@ -266,6 +266,8 @@ export const addProduct = async (req: IRequest, res: Response) => {
     if (quantity && quantityAlert) {
       newProduct.quantity = quantity;
       newProduct.quantityAlert = quantityAlert;
+    } else if (quantity === -1) {
+      newProduct.quantity = quantity;
     }
 
     if (validThru) newProduct.validThru = new Date(validThru);
@@ -495,6 +497,8 @@ export const updateProduct = async (req: IRequest, res: Response) => {
     if (quantity && quantityAlert) {
       existingProduct.quantity = quantity;
       existingProduct.quantityAlert = quantityAlert;
+    } else if (quantity === -1) {
+      existingProduct.quantity = quantity;
     }
 
     if (slicePrice) existingProduct.slicePrice = slicePrice;

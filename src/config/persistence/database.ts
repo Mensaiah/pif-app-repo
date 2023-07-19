@@ -6,7 +6,7 @@ import { consoleLog } from '../../utils/helpers';
 export async function connectMongoDb(): Promise<void> {
   try {
     if (appConfig.isDev) mongoose.set('debug', true);
-    await mongoose.connect(appConfig.mongoDbURI);
+    await mongoose.connect(appConfig.mongoDbURI, { family: 4 });
 
     consoleLog('Database connected');
   } catch (error) {

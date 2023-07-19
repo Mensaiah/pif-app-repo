@@ -105,7 +105,7 @@ export const addProductSchema = z
   .refine(
     ({ quantity, quantityAlert }) => {
       if (!quantity && quantityAlert) return false;
-      if (quantity && !quantityAlert) return false;
+      if (quantity && quantity !== -1 && !quantityAlert) return false;
 
       return true;
     },
@@ -212,7 +212,10 @@ export const updateProductSchema = z
   })
   .refine(
     ({ quantity, quantityAlert }) => {
-      if ((quantity && !quantityAlert) || (!quantity && quantityAlert))
+      if (
+        (quantity && quantity !== -1 && !quantityAlert) ||
+        (!quantity && quantityAlert)
+      )
         return false;
 
       return true;
