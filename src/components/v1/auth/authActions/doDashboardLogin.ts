@@ -151,6 +151,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
           userType: existingUser.userType,
           role: userAccess.role,
           permissions: userAccess.permissions,
+          marketplaces: userAccess.marketplaces
         },
       },
     });
