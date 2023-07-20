@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse, uuid } from '../../../../utils/helpers';
+import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserAccessModel } from '../../auth/auth.models';
 import { UserSessionAttributes } from '../../auth/auth.types';
@@ -57,6 +57,19 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
         400
       );
     }
+
+    const existingUser = await (existingInvite.role === 'pos-user'
+      ? PartnerPosUserModel.findOne({ name, email })
+      : UserModel.findOne({ name, email }));
+
+    if (existingUser)
+      return handleResponse(
+        res,
+        `This ${
+          existingInvite.role === 'pos-user' ? 'pos-user' : 'partner'
+        } is accepted already`,
+        409
+      );
 
     const newUser =
       existingInvite.role === 'pos-user'

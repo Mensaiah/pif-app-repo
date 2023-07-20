@@ -10,10 +10,13 @@ import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
   addPartner,
+  addPartnerAdmins,
   createPartnerInvite,
+  getAllPartnerAdmins,
   getPartners,
   getPartnersByCategoryAndMarketplace,
   getSinglePartner,
+  removePartnerAdmins,
   updatePartner,
 } from './partner.actions';
 import {
@@ -25,31 +28,43 @@ import {
 const router = Router();
 
 router.get(
-  '/',
-  validateTokenMiddleware,
-  requireAuth,
-  hasAnyPermissionMiddleware(['partner.view']),
-  getPartners
-);
-router.get(
   '/marketplaces/:marketplace/categories/:categoryId',
   getPartnersByCategoryAndMarketplace
 );
-router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
-router.get('/marketplaces/:marketplace', getPartners);
-router.post(
-  '/',
+
+router.delete(
+  '/:partnerId/admin/:adminId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['supreme']),
-  policyMiddleware(addPartnerSchema),
-  addPartner
+  hasAnyPermissionMiddleware(['partner.delete']),
+  removePartnerAdmins
 );
+
+router.get('/marketplaces/:marketplace', getPartners);
+
+router.get(
+  '/:partnerId/admins',
+  validateTokenMiddleware,
+  requireAuth,
+  getAllPartnerAdmins
+);
+
+router.post(
+  '/:partnerId/admin',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['partner.add']),
+  policyMiddleware(partnerInviteSchema),
+  addPartnerAdmins
+);
+
+router.get('/:partnerId', cannotBeCustomerMiddleware, getSinglePartner);
+
 router.patch(
   '/:partnerId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['supreme']),
+  hasAnyPermissionMiddleware(['partner.edit']),
   policyMiddleware(updatePartnerSchema),
   updatePartner
 );
@@ -62,4 +77,22 @@ router.post(
   policyMiddleware(partnerInviteSchema),
   createPartnerInvite
 );
+
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['partner.view']),
+  getPartners
+);
+
+router.post(
+  '/',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['supreme']),
+  policyMiddleware(addPartnerSchema),
+  addPartner
+);
+
 export default router;

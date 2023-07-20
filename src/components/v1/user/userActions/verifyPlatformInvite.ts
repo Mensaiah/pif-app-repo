@@ -23,6 +23,12 @@ const verifyPlatformInvite = async (req: IRequest, res: Response) => {
     if (existingInvite.expiresAt < new Date())
       return handleResponse(res, 'Invitation code has expire');
 
+    if (existingInvite.status === 'accepted')
+      return handleResponse(
+        res,
+        'Invitation code has been accepted already, kindly proceed to onboarding.'
+      );
+
     existingInvite.status = 'accepted';
 
     await existingInvite.save();

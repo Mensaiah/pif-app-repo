@@ -432,6 +432,7 @@ export const createPartnerInvite = async (req: IRequest, res: Response) => {
       expiresAt: new Date(Date.now() + ms('1 day')),
       lastSent: new Date(),
       status: 'pending',
+      marketplaces: partner.marketplaces,
     }).save();
 
     await sendPartnerAdminInviteMail({
@@ -467,6 +468,169 @@ export const getPartnersByCategoryAndMarketplace = async (
     return handleResponse(res, {
       data: partners,
     });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const addPartnerAdmins = async (req: IRequest, res: Response) => {
+  const { partnerId } = req.params;
+
+  const { user, userType } = req;
+
+  type partnerInviteType = z.infer<typeof partnerInviteSchema>;
+
+  const {
+    adminEmail,
+    adminName,
+    role,
+    userType: partnerUserType,
+  }: partnerInviteType = req.body;
+
+  try {
+    const partner = await PartnerModel.findById(partnerId);
+
+    // check if usertype is platform admin else if partner admin, check if it has access to the Partner
+
+    const isSupportedUser =
+      userType === 'partner-admin'
+        ? user.Partner.toString() === partnerId
+        : userType === 'platform-admin';
+
+    if (!isSupportedUser) {
+      return handleResponse(
+        res,
+        'You are not authorized to perform this action.',
+        403
+      );
+    }
+
+    const existingPartnerAdmin = await UserModel.findOne({
+      userType: { $ne: 'customer' },
+      email: adminEmail,
+    });
+
+    if (existingPartnerAdmin)
+      return handleResponse(res, 'Partner already exist', 409);
+
+    const existingInvite = await UserInviteModel.findOne({
+      email: adminEmail,
+      role,
+    });
+
+    if (existingInvite) {
+      if (existingInvite.expiresAt < new Date()) {
+        existingInvite.code = uuid();
+      }
+
+      await sendPartnerAdminInviteMail({
+        to: adminEmail,
+        url: createInviteLink(req, existingInvite.code),
+        adminName,
+        partnerName: partner.name,
+      });
+
+      await existingInvite.save();
+
+      return handleResponse(
+        res,
+        'Partner has already been invited but another email has been sent'
+      );
+    }
+
+    const newInvite = await new UserInviteModel({
+      email: adminEmail,
+      code: uuid(),
+      role,
+      userType: partnerUserType,
+      invitedBy: user._id,
+      Partner: partner._id,
+      expiresAt: new Date(Date.now() + ms('1 day')),
+      lastSent: new Date(),
+      status: 'pending',
+      marketplaces: partner.marketplaces,
+    }).save();
+
+    await sendPartnerAdminInviteMail({
+      to: adminEmail,
+      url: createInviteLink(req, newInvite.code),
+      adminName,
+      partnerName: partner.name,
+    });
+
+    return handleResponse(res, 'Invitation sent ✉️');
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const removePartnerAdmins = async (req: IRequest, res: Response) => {
+  const { partnerId, adminId } = req.params;
+
+  const { user, userType } = req;
+
+  try {
+    const isSupportedUser =
+      userType === 'partner-admin'
+        ? user.Partner.toString() === partnerId
+        : userType === 'platform-admin';
+
+    if (!isSupportedUser) {
+      return handleResponse(
+        res,
+        'You are not authorized to perform this action.',
+        403
+      );
+    }
+
+    const partner = await PartnerModel.findById(partnerId);
+
+    if (!partner) return handleResponse(res, 'Partner does not exist', 404);
+
+    const partnerToBeDeleted = await UserModel.findOne({
+      _id: adminId,
+      Partner: partnerId,
+    });
+
+    partnerToBeDeleted.name = 'deleted_user';
+    partnerToBeDeleted.email = null;
+    partnerToBeDeleted.avatar = null;
+    partnerToBeDeleted.deletedAt = new Date();
+
+    await partnerToBeDeleted.save();
+
+    return handleResponse(res, 'Partner deleted successfully', 204);
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const getAllPartnerAdmins = async (req: IRequest, res: Response) => {
+  const { partnerId } = req.params;
+
+  const { user, userType } = req;
+
+  try {
+    const isSupportedUser =
+      userType === 'partner-admin'
+        ? user.Partner.toString() === partnerId
+        : userType === 'platform-admin';
+
+    if (!isSupportedUser) {
+      return handleResponse(
+        res,
+        'You are not authorized to perform this action.',
+        403
+      );
+    }
+
+    const partnerAdmins = await UserModel.find({
+      Partner: partnerId,
+      userType: { $ne: 'customer' },
+      deletedAt: { $exists: false },
+    });
+
+    return handleResponse(res, { data: partnerAdmins });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }

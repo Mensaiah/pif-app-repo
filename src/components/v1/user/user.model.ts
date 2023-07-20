@@ -98,6 +98,7 @@ const userSchema = new Schema<UserAttributes>(
         acceptedAt: { type: Date, required: true },
       },
     ],
+    deletedAt: Date,
   },
   { timestamps: true }
 );
