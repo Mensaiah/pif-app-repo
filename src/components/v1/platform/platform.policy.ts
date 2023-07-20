@@ -1,15 +1,11 @@
 import { z } from 'zod';
 
-const paymentProcessors = z
-  .array(z.enum(['paystack', 'stripe', 'netAxept']))
-  .optional();
+const paymentProcessor = z.enum(['paystack', 'stripe', 'netAxept']);
 
 const social = z.object({
   name: z.string(),
   url: z.string(),
 });
-
-const socials = z.array(social).optional();
 
 export const addMarketplaceSchema = z.object({
   name: z.string(),
@@ -19,8 +15,8 @@ export const addMarketplaceSchema = z.object({
   language: z.string(),
   languageCode: z.string(),
   currencySymbol: z.string(),
-  paymentProcessors,
-  socials,
+  paymentProcessors: z.array(paymentProcessor),
+  socials: z.array(social).optional(),
 });
 
 export const updateMarketplaceSchema = z.object({
@@ -31,8 +27,8 @@ export const updateMarketplaceSchema = z.object({
   language: z.string().optional(),
   languageCode: z.string().optional(),
   currencySymbol: z.string().optional(),
-  paymentProcessors,
-  socials,
+  paymentProcessors: z.array(paymentProcessor).optional(),
+  socials: z.array(social).optional(),
 });
 
 export const addPlatformSocialSchema = z.object({

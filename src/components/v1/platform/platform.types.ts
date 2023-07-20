@@ -8,7 +8,7 @@ export interface MarketplaceAttributes {
   isDisabled?: boolean;
   currencySymbol: string;
   paymentProcessors: Array<'paystack' | 'stripe' | 'netAxept'>;
-  socials?: Array<{
+  socials: Array<{
     name: string;
     url: string;
   }>;
@@ -23,10 +23,7 @@ export interface PlatformAttributes {
       permissions?: string[];
     }>;
   }>;
-  socials?: Array<{
-    name: string;
-    url: string;
-  }>;
+  socials: MarketplaceAttributes['socials'];
   numericIdTrackers?: {
     lastPartnerId?: number;
   };

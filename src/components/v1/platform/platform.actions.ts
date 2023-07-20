@@ -67,7 +67,7 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
       currencyCode,
       language,
       languageCode,
-      paymentProcessors,
+      paymentProcessors: paymentProcessors as any,
       socials: socials as any,
     });
 
