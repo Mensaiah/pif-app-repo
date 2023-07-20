@@ -71,8 +71,8 @@ const initializeMiddlewares = () => {
     // })
     .use(cors(corsOptions))
     .use(cookieParser())
-    .use(express.json({ limit: '1kb' }))
-    .use(express.urlencoded({ limit: '1kb', extended: false }))
+    .use(express.json({ limit: '50kb' }))
+    .use(express.urlencoded({ limit: '50kb', extended: false }))
     .use(helmet())
     .use(fingerprintMiddleware) // TODO: fix lat & long
     .use(swaggerApp)
