@@ -36,7 +36,7 @@ router.get(
   validateTokenMiddleware,
   requireAuth,
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['category-icon.view']),
+  hasAnyPermissionMiddleware(['category-icons.view']),
   getUploadedCategoryIcons
 );
 
@@ -44,7 +44,7 @@ router.patch(
   '/category-icons/:categoryIconId/enable',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.edit']),
+  hasAnyPermissionMiddleware(['category-icons.edit']),
   enableUploadedCategoryIcon
 );
 
@@ -52,7 +52,7 @@ router.patch(
   '/category-icons/:categoryIconId/disable',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.edit']),
+  hasAnyPermissionMiddleware(['category-icons.edit']),
   disableUploadedCategoryIcon
 );
 
@@ -60,7 +60,7 @@ router.delete(
   '/category-icons/:categoryIconId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['category-icon.delete']),
+  hasAnyPermissionMiddleware(['category-icons.delete']),
   removeUploadedCategoryIcon
 );
 
