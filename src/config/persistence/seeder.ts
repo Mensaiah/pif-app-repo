@@ -35,6 +35,8 @@ export const seedNow = async () => {
           language: 'danish',
           languageCode: 'da',
           currencySymbol: 'kr ',
+          paymentProcessors: ['stripe'],
+          socials: [],
         },
         {
           name: 'sweden',
@@ -44,6 +46,8 @@ export const seedNow = async () => {
           language: 'swedish',
           languageCode: 'sv',
           currencySymbol: 'kr ',
+          paymentProcessors: ['stripe'],
+          socials: [],
         },
         {
           name: 'spain',
@@ -53,6 +57,8 @@ export const seedNow = async () => {
           language: 'spanish',
           languageCode: 'es',
           currencySymbol: '€',
+          paymentProcessors: ['stripe'],
+          socials: [],
         },
         {
           name: 'nigeria',
@@ -62,6 +68,8 @@ export const seedNow = async () => {
           language: 'english',
           languageCode: 'en',
           currencySymbol: '₦',
+          paymentProcessors: ['paystack'],
+          socials: [],
         },
         {
           name: 'united kingdom',
@@ -71,9 +79,12 @@ export const seedNow = async () => {
           currency: 'British pound',
           currencyCode: 'GBP',
           currencySymbol: '£',
+          paymentProcessors: ['stripe'],
+          socials: [],
         },
       ],
       defaultUserTypesAndRoles: defaultUserTypesRolesAndPermissions,
+      socials: [],
     }).save();
     // .save({ session })
     const seeduser = new UserModel<UserAttributes>({
