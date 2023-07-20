@@ -7,6 +7,11 @@ export interface MarketplaceAttributes {
   languageCode: string;
   isDisabled?: boolean;
   currencySymbol: string;
+  paymentProcessors: Array<'paystack' | 'stripe' | 'netAxept'>;
+  socials?: Array<{
+    name: string;
+    url: string;
+  }>;
 }
 export interface PlatformAttributes {
   version: string;

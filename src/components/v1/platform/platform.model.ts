@@ -42,6 +42,19 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
     type: String,
   },
   isDisabled: Boolean,
+  paymentProcessors: [
+    {
+      type: String,
+      lowercase: true,
+      enum: ['paystack', 'stripe', 'netAxept'],
+    },
+  ],
+  socials: [
+    {
+      name: String,
+      url: String,
+    },
+  ],
 });
 
 const platformSchema = new Schema<PlatformAttributes>(

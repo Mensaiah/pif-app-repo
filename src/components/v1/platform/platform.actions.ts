@@ -41,6 +41,8 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
     currencySymbol,
     language,
     languageCode,
+    paymentProcessors,
+    socials,
   }: dataType = req.body;
 
   try {
@@ -65,6 +67,8 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
       currencyCode,
       language,
       languageCode,
+      paymentProcessors,
+      socials: socials as any,
     });
 
     await platformData.save();
@@ -91,6 +95,8 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     currencySymbol,
     language,
     languageCode,
+    paymentProcessors,
+    socials,
   }: dataType = req.body;
 
   try {
@@ -115,6 +121,9 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     if ('language' in req.body) marketplaceExists.language = language;
     if ('languageCode' in req.body)
       marketplaceExists.languageCode = languageCode;
+    if ('paymentProcessors' in req.body)
+      marketplaceExists.paymentProcessors = [...new Set(paymentProcessors)];
+    if ('socials' in req.body) (marketplaceExists as any).socials = socials;
 
     platformData.marketplaces = platformData.marketplaces?.map(
       (marketplace) => {
