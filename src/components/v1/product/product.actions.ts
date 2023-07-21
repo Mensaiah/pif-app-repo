@@ -20,6 +20,7 @@ import {
   updateProductSchema,
   updateProductSplitPriceSchema,
 } from './product.policy';
+import { checkProductAccess } from './product.utils';
 
 export const getProducts = async (req: IRequest, res: Response) => {
   const { marketplace } = req.params;
@@ -58,6 +59,7 @@ export const getProductsByCategoryAndPartner = async (
         marketplace,
         isActive: true,
         isApproved: true,
+        deletedAt: { $exists: false },
       },
       {
         name: 1,
@@ -94,7 +96,9 @@ export const getSingleProduct = async (req: IRequest, res: Response) => {
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const query: any = { _id: productId };
+    const query: any = isGuestOrCustomer
+      ? { _id: productId, deletedAt: { $exists: false } }
+      : { _id: productId };
     const selectedFields = isGuestOrCustomer
       ? 'name caption description disclaimer textForReceiver tags price marketplace photo photos slicePrice isRated18'
       : '';
@@ -192,7 +196,6 @@ export const addProduct = async (req: IRequest, res: Response) => {
 
     const newProduct = new ProductModel({
       Partner: partnerId,
-
       tags,
       categories,
       internalCategory,
@@ -390,9 +393,6 @@ export const disapproveProduct = async (req: IRequest, res: Response) => {
 export const updateProduct = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
-
   type dataType = z.infer<typeof updateProductSchema>;
 
   const {
@@ -433,10 +433,7 @@ export const updateProduct = async (req: IRequest, res: Response) => {
 
     // TODO: if the person is a partner-admin, ensure that the product belongs to the partner
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to edit this product.',
@@ -591,9 +588,6 @@ export const updateProduct = async (req: IRequest, res: Response) => {
 export const removeProduct = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
-
   try {
     const existingProduct = await ProductModel.findById(productId);
     const existingProductCopy = { ...existingProduct.toObject() };
@@ -601,10 +595,7 @@ export const removeProduct = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
@@ -618,7 +609,9 @@ export const removeProduct = async (req: IRequest, res: Response) => {
         403
       );
 
-    await existingProduct.deleteOne();
+    existingProduct.deletedAt = new Date();
+
+    await existingProduct.save();
 
     const productSupplier = await PartnerModel.findById(
       existingProductCopy.Partner
@@ -660,8 +653,6 @@ export const removeProduct = async (req: IRequest, res: Response) => {
 
 export const addProductSplitPrice = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
-  const { userType } = req;
-  const { Partner } = req.user;
 
   type dataType = z.infer<typeof addProductSplitPriceSchema>;
 
@@ -682,10 +673,7 @@ export const addProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to add split price to this product.',
@@ -740,9 +728,6 @@ export const addProductSplitPrice = async (req: IRequest, res: Response) => {
 export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
   const { productId, code } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
-
   type dataType = z.infer<typeof updateProductSplitPriceSchema>;
 
   const {
@@ -762,10 +747,7 @@ export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to edit the split price of this product.',
@@ -824,19 +806,13 @@ export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
 export const removeProductSplitPrice = async (req: IRequest, res: Response) => {
   const { productId, code } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
-
   try {
     const existingProduct = await ProductModel.findById(productId);
 
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to delete this product split price(s).',
@@ -875,18 +851,13 @@ export const removeProductSplitPrice = async (req: IRequest, res: Response) => {
 export const setProductActive = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
   try {
     const existingProduct = await ProductModel.findById(productId);
 
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
@@ -943,18 +914,13 @@ export const setProductActive = async (req: IRequest, res: Response) => {
 export const setProductInactive = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
 
-  const { userType } = req;
-  const { Partner } = req.user;
   try {
     const existingProduct = await ProductModel.findById(productId);
 
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    const isSupportedUser =
-      userType === 'partner-admin' || Partner === existingProduct.Partner;
-
-    if (!isSupportedUser)
+    if (!checkProductAccess(req, existingProduct))
       return handleResponse(
         res,
         'You are not authorized to delete this product.',
