@@ -35,7 +35,7 @@ router.post(
   '/info',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-info', 'add-info']),
+  hasAnyPermissionMiddleware(['info-box.add']),
   policyMiddleware(addInfoSchema),
   addInfo
 );
@@ -43,7 +43,7 @@ router.patch(
   '/info/:infoId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-info', 'update-info']),
+  hasAnyPermissionMiddleware(['info-box.edit']),
   policyMiddleware(updateInfoSchema),
   updateInfo
 );
@@ -54,7 +54,7 @@ router.post(
   '/policies',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-policies', 'add-policy']),
+  hasAnyPermissionMiddleware(['policy.add']),
   policyMiddleware(addLegalPolicySchema),
   addLegalPolicy
 );
@@ -62,7 +62,7 @@ router.patch(
   '/policies/:policyId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-policies', 'update-policy']),
+  hasAnyPermissionMiddleware(['policy.edit']),
   policyMiddleware(updateLegalPolicySchema),
   updateLegalPolicy
 );
@@ -74,7 +74,7 @@ router.post(
   '/faq',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-faq', 'add-faq']),
+  hasAnyPermissionMiddleware(['faq.add']),
   policyMiddleware(addFaqSchema),
   addFaq
 );
@@ -83,7 +83,7 @@ router.patch(
   '/faq/:faqId',
   validateTokenMiddleware,
   requireAuth,
-  hasAnyPermissionMiddleware(['manage-faq', 'update-faq']),
+  hasAnyPermissionMiddleware(['faq.edit']),
   policyMiddleware(updateFaqSchema),
   updateFaq
 );
