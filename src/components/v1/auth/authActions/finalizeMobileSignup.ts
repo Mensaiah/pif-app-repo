@@ -68,6 +68,8 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       lastLoginAt: now,
       lastEventTime: now,
       failedLoginAttempts: 0,
+      role: 'customer',
+      permissions: [],
     });
 
     const newSession: UserSessionAttributes = {

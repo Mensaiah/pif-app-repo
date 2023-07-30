@@ -9,6 +9,7 @@ import {
   handleResponse,
 } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
+import DiscountCodeModel from '../discountCode/discountCode.model';
 import { PartnerModel } from '../partner/partner.model';
 import PlatformModel from '../platform/platform.model';
 import { filterMarketplaces } from '../platform/platform.utils';
@@ -211,12 +212,15 @@ export const addProduct = async (req: IRequest, res: Response) => {
       isBonusProductOnly,
       isCountedTowardsReward,
       slicePrice,
+      quantity,
     });
 
     newProduct.name = addSupportedLang(name, newProduct.name);
 
     if (caption)
       newProduct.caption = addSupportedLang(caption, newProduct.caption);
+
+    if (quantityAlert) newProduct.quantityAlert = quantityAlert;
 
     if (disclaimer)
       newProduct.disclaimer = addSupportedLang(
@@ -254,7 +258,7 @@ export const addProduct = async (req: IRequest, res: Response) => {
     ) {
       newProduct.redemptionValidityType = redemptionValidityType;
       newProduct.redemptionValidityPeriodType = redemptionValidityPeriodType;
-      newProduct.redemptionValidityValue = redemptionValidityValue;
+      newProduct.redemptionValidityValue = +redemptionValidityValue;
     }
 
     if (extraProduct) {
@@ -264,13 +268,6 @@ export const addProduct = async (req: IRequest, res: Response) => {
       );
 
       newProduct.extraProduct.photo = extraProduct.photo;
-    }
-
-    if (quantity && quantityAlert) {
-      newProduct.quantity = quantity;
-      newProduct.quantityAlert = quantityAlert;
-    } else if (quantity === -1) {
-      newProduct.quantity = quantity;
     }
 
     if (validThru) newProduct.validThru = new Date(validThru);
@@ -680,38 +677,35 @@ export const addProductSplitPrice = async (req: IRequest, res: Response) => {
         403
       );
 
-    const existingProductSplitPrice = existingProduct.splitPrices.find(
-      (splitPrice) => splitPrice.code === code
-    );
+    const existingProductSplitPrice = await DiscountCodeModel.findOne({
+      code,
+      Product: productId,
+    });
 
     if (existingProductSplitPrice)
       return handleResponse(
         res,
-        'A split price with this code already exists.',
+        'A split price with this code already exists',
         409
       );
 
-    existingProduct.splitPrices = [
-      ...existingProduct.splitPrices,
-      {
-        code,
-        value,
-        discountType,
-        minimumOrderAmount,
-        maximumUseCount,
-        maximumUsePerCustomer,
-        validityStart: new Date(validityStart),
-        validityEnd: new Date(validityEnd),
-      },
-    ];
-
-    await existingProduct.save();
+    const newProductSplitPrice = await new DiscountCodeModel({
+      code,
+      Product: productId,
+      value,
+      discountType,
+      minimumOrderAmount,
+      maximumUseCount,
+      maximumUsePerCustomer,
+      validityStart: new Date(validityStart),
+      validityEnd: new Date(validityEnd),
+    }).save();
 
     return handleResponse(
       res,
       {
         message: 'Split price added to product successfully',
-        data: existingProduct,
+        data: newProductSplitPrice,
       },
       201
     );
@@ -754,23 +748,17 @@ export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
         403
       );
 
-    const existingProductSplitPrice = existingProduct.splitPrices.find(
-      (splitPrice) => splitPrice.code === code
-    );
+    const existingProductSplitPrice = await DiscountCodeModel.findOne({
+      code,
+      Product: productId,
+    });
 
     if (!existingProductSplitPrice)
-      return handleResponse(res, 'The product code does not exist', 404);
-
-    if (existingProductSplitPrice.useCount > 0)
-      // only update if useCount is zero
-
-      return handleResponse(res, 'This split price is in use', 403);
-
-    if (newCode) existingProductSplitPrice.code = newCode;
-
-    if (value) existingProductSplitPrice.value = value;
-
-    if (discountType) existingProductSplitPrice.discountType = discountType;
+      return handleResponse(
+        res,
+        'The product discount code does not exist',
+        409
+      );
 
     if (maximumUseCount)
       existingProductSplitPrice.maximumUseCount = maximumUseCount;
@@ -778,16 +766,37 @@ export const updateProductSplitPrice = async (req: IRequest, res: Response) => {
     if (maximumUsePerCustomer)
       existingProductSplitPrice.maximumUsePerCustomer = maximumUsePerCustomer;
 
+    if (validityEnd)
+      existingProductSplitPrice.validityEnd = new Date(validityEnd);
+
+    // only update if useCount is zero
+    if (existingProductSplitPrice.useCount > 0) {
+      if (existingProductSplitPrice.isModified()) {
+        await existingProductSplitPrice.save();
+        return handleResponse(res, {
+          message: 'Product split price updated successfully',
+          data: existingProductSplitPrice,
+        });
+      }
+
+      return handleResponse(res, 'This split price is in use', 403);
+    }
+
+    if (newCode) existingProductSplitPrice.code = newCode;
+
+    if (value) existingProductSplitPrice.value = value;
+
+    if (discountType) existingProductSplitPrice.discountType = discountType;
+
     if (minimumOrderAmount)
       existingProductSplitPrice.minimumOrderAmount = minimumOrderAmount;
 
     if (validityStart)
       existingProductSplitPrice.validityStart = new Date(validityStart);
 
-    if (validityEnd)
-      existingProductSplitPrice.validityEnd = new Date(validityEnd);
-
-    await existingProduct.save();
+    if (existingProductSplitPrice.isModified()) {
+      await existingProductSplitPrice.save();
+    }
 
     return handleResponse(res, {
       message: 'Product split price updated successfully',
@@ -819,23 +828,23 @@ export const removeProductSplitPrice = async (req: IRequest, res: Response) => {
         403
       );
 
-    const existingProductSplitPrice = existingProduct.splitPrices.find(
-      (splitPrice) => splitPrice.code === code
-    );
-
-    // only remove if useCount is zero
+    const existingProductSplitPrice = await DiscountCodeModel.findOne({
+      code,
+      Product: productId,
+    });
 
     if (!existingProductSplitPrice)
       return handleResponse(res, 'The product code does not exist', 404);
 
+    // only remove if useCount is zero
     if (existingProductSplitPrice.useCount > 0)
-      return handleResponse(res, 'This split price is in use', 403);
+      return handleResponse(
+        res,
+        'Cannot remove split price that is already in use',
+        403
+      );
 
-    await ProductModel.findOneAndUpdate(
-      { _id: existingProduct._id },
-      { $pull: { splitPrices: { code: existingProductSplitPrice.code } } },
-      { returnOriginal: false }
-    );
+    await existingProductSplitPrice.deleteOne();
 
     return handleResponse(res, 'split price deleted successfully', 204);
   } catch (err) {

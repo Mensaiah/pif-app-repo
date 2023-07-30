@@ -1,53 +1,67 @@
-import { Document, ObjectId, Types } from 'mongoose';
+import { ObjectId } from 'mongoose';
 
-export interface PurchaseAttributes extends Document {
-  User: Types.ObjectId;
-  Product: ObjectId;
-  username: string;
+import { LanguageValuePair } from '../../../types/global';
+
+export interface PurchaseAttributes {
+  old_id: number;
+  isLegacyData: boolean;
+  User: ObjectId;
+  Receiver: ObjectId;
   Partner: ObjectId;
-  Contact?: Types.ObjectId;
-  Recipient?: Types.ObjectId;
-  recipientPhonePrefix: string;
-  recipientPhoneNumber: string;
-  Transaction: ObjectId;
-  marketplace: string;
-  transactionFee: number;
+  Product: ObjectId;
+  productName: LanguageValuePair[];
+  productPhoto: string;
+  unitPrice: number;
+  quantity: number;
+  amount: number;
+  txFee: number;
+  netAmount: number;
   rewardSystemPoints: number;
-  price: number;
   priceStart: number;
   priceFinish: number;
-  message: string;
-  code: string;
-  codeType: string;
-  SettlementsDetailsStart: Types.ObjectId;
-  SettlementsDetailsFinish: Types.ObjectId;
-  unwrapedAt: Date;
-  redeemedAt: Date;
-  apiRedeemedProcessAt: Date;
-  apiRedeemedUserConfirmAt: Date;
-  expiredAt: Date;
-  hideValidationCodeAt: Date;
-  Pos: Types.ObjectId;
-  shareNetworks?: string;
-  criteriaId: number;
-  sent: boolean;
-  fixedFee: number;
+  pifIncome: number;
+  SettlementStart: ObjectId;
+  SettlementFinish: ObjectId;
+  Revenue: ObjectId;
   proportion: {
     proportionStart: number;
     proportionFinish: number;
     proportionPif: number;
     fixedFee: number;
   };
-  isPasson: boolean;
+  senderPifId: string;
+  recipientPifId: string;
+  recipientPhonePrefix: string;
+  recipientPhoneNumber: string;
+  Contact?: ObjectId;
+  message: string;
+  code?: string;
+  discountCode?: string;
+  codeType?:
+    | 'alpha_num'
+    | 'code128'
+    | 'qr_code'
+    | 'upc'
+    | 'ean8'
+    | 'ean13'
+    | 'isbn';
+  marketplace: string;
+  Transaction: ObjectId;
+  unwrapedAt: Date;
+  redeemedAt: Date;
+  apiRedepemptionProcessedAt: Date;
+  apiRedemptionUserConfirmAt: Date;
+  expiresBy: Date;
+  hideValidationCodeAt: Date;
   isDelayed: boolean;
   deliveryAt: string;
   isCharity: boolean;
-  settlementsStartStatus: boolean;
-  settlementsFinishStatus: boolean;
   expiryNotifyAt: Date;
   pifHistory: Array<{
-    from: string; // username
-    to: string;
+    from: string; // pifId
+    to: string; // pifId or full phone number
+    recipientPhonePrefix: string;
+    recipientPhoneNumber: string;
     message: string;
   }>;
 }

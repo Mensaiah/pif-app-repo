@@ -105,7 +105,6 @@ export const getCategoriesByMarketplace = async (
 export const getInternalCategories = async (req: IRequest, res: Response) => {
   try {
     const internalCategories = await InternalCategoryModel.find();
-    consoleLog({ internalCategories });
 
     return handleResponse(res, {
       data: internalCategories,

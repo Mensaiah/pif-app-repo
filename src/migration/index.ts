@@ -17,10 +17,10 @@ const doMigration = async () => {
 
     consoleLog('DB connections established. Migration in progress');
 
-    // await doCategoryMigrations(sql);
-    // await doCityMigrations(sql);
+    await doCategoryMigrations(sql);
+    await doCityMigrations(sql);
     await doPartnersMigrations(sql);
-    // await doPlatformAccountsMigrations(sql);
+    await doPlatformAccountsMigrations(sql);
     // await doAppUserAccountsMigrations(sql);
   } catch (err) {
     consoleLog('some error occured' + err, 'error');

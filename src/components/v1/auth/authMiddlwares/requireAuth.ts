@@ -17,7 +17,7 @@ const requireAuth = async (
 
   const { sessionId, ref, authKey, userType, role } = req.decoded;
 
-  // TODO: remove
+  // TODO: fix and remove
   consoleLog(
     JSON.stringify({ sessionId, ref, authKey, userType, role }, null, 2)
   );
@@ -106,6 +106,11 @@ const requireAuth = async (
     req.userType = req.decoded.userType;
     req.userAccess = userAccess;
     req.user = user;
+    req.role = role;
+    req.permissions = userAccess.permissions;
+
+    if ('currentMarketplace' in user)
+      req.currentMarketplace = user.currentMarketplace;
 
     if ('marketplaces' in userAccess)
       req.marketplaces = userAccess.marketplaces;

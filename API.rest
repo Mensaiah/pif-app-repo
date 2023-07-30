@@ -1,8 +1,9 @@
 # @server = https://pif-api.herokuapp.com
-@server = http://localhost:3030
+@server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiYmI1OTZmOTEtN2JmNC00NTg5LWIxODYtNzUxZTlkMTRkNzcwIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjdkZDRkZjc2LTkzNTgtNGM0ZC05MTVhLTM5MGFkYWE2OTBhYSIsInJlZiI6IjY0YjAxYmIxMmJjM2Y2MTgxMDhhYjhiYSIsImlhdCI6MTY4OTI2MzA3MiwiZXhwIjoxNjg5NDM1ODcyLCJpc3MiOiJQSUYtZGV2In0.GRgw621OoAAxWfx0aulghPqsucKrdLVtphyi2WXU-Sg
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNzJkOGYxZDktZjI2My00MTZhLTk1YmMtOGNhNGFjMzE0OTQ0IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjgzZWU3MzEzLWVhYjAtNDQ4Ny1iYTBmLWE5NWQzNzFmNWVhZCIsInJlZiI6IjY0YzY4ZTRiZTlhMmY5NGExODkwNjZhNyIsImlhdCI6MTY5MDc0NTMyMywiZXhwIjoxNjkwOTE4MTIzLCJpc3MiOiJQSUYtZGV2In0.0W0PRpJ4g0zvWHxIDxpLCL8QhbmmanyLyBT0K0RFeZw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZDAyMGZmYTctMTUyMC00OTA2LWJiYjAtNDAwN2EyZWJhYjAyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImZlYTIzN2EwLThmMmUtNDY1OC1iMGUxLTBiN2M2MmVmMTVlMyIsInJlZiI6IjY0YzY4ZWU2ZTlhMmY5NGExODkwNjZhZCIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MDc0Nzk0MiwiZXhwIjoxNjkwOTIwNzQyLCJpc3MiOiJQSUYtZGV2In0.kS4diq0fQAK7vd8KGa6RJmO-se4YFFlHPHJg_GrVJGA
 
 GET {{server}}
 
@@ -164,7 +165,7 @@ Content-Type: application/json
 {
   "phonePrefix": "234",
   "phone": "8103498784",
-  "marketplace": "Nigeria"
+  "marketplace": "ng"
 }
 
 ### mobile - verify otp
@@ -174,7 +175,7 @@ Content-Type: application/json
 {
   "phonePrefix": "234",
   "phone": "8103498784",
-  "code": "55677",
+  "code": "38926",
   "purpose": "signup"
 }
 
@@ -200,7 +201,7 @@ Content-Type: application/json
  "phone": "8103498784",
  "pifId":"wedi",
  "zipCode":"12345",
- "otpCode":"55677"
+ "otpCode":"38926"
 }
 
 ### mobile set pin
@@ -220,7 +221,7 @@ Content-Type: application/json
 {
  "phonePrefix": "234",
  "phone": "8103498784",
- "pin": "1111"
+ "pin": "1234"
 }
 
 ### mobile - forgot pin
@@ -250,6 +251,10 @@ Authorization: Bearer {{token}}
   "oldPin": "1234",
   "newPin": "1111"
 }
+
+### change marketplace
+PUT {{api}}/users/my-marketplace/dk
+Authorization: Bearer {{token}}
 
 ###
 
@@ -283,7 +288,7 @@ Content-Type: application/json
 ### get platform data
 GET {{api}}/platform
 
-# ### refresh db // uncomment to refresh db
+## refresh db // uncomment to refresh db
 # GET {{api}}/platform/refresh
 
 ### add partner
@@ -292,25 +297,25 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "name": "Gift Enterprise",
-    "email": "giftenterprise@mail.com",
-    "phone": "",
-    "phonePrefix": "",
-    "headquarterAddress": "7 gwagwalada street, fct.",
-    "headquarterCity": "Abuja",
-    "headquarterCountry": "Nigeria",
-    "headquarterZipCode": "242201",
-    "marketplaces": ["de"],
-    "accountName": "Gift Enterprise",
-    "accountNumber": "0123456789",
-    "bankCountry": "Nigeria",
-    "bankName": "first-bank",
-    "currency": "naira",
-    "redeemType": "mobile-redemption",
-    "status": "inactive",
-    "isPeriodically": true,
-    "periodType": "weekly"
-  }
+  "name": "Gift Enterprise",
+  "email": "giftenterprise@mail.com",
+  "phone": "",
+  "phonePrefix": "",
+  "headquarterAddress": "7 gwagwalada street, fct.",
+  "headquarterCity": "Abuja",
+  "headquarterCountry": "Nigeria",
+  "headquarterZipCode": "242201",
+  "marketplaces": ["de"],
+  "accountName": "Gift Enterprise",
+  "accountNumber": "0123456789",
+  "bankCountry": "Nigeria",
+  "bankName": "first-bank",
+  "currency": "naira",
+  "redeemType": "mobile-redemption",
+  "status": "inactive",
+  "isPeriodically": true,
+  "periodType": "weekly"
+}
 
 ### get partner
 GET {{api}}/partners
@@ -325,25 +330,25 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-    "currency": "naira",
-    "phonePrefix": "234",
-    "phone": "8123456789",
-    "headquarterAddress": "7 gwagwalada street, fct.",
-    "headquarterCity": "Abuja",
-    "headquarterCountry": "Nigeria",
-    "headquarterZipCode": "242201",
-    "marketplaces": ["nigeria"],
-    "accountName": "Gift Enterprise",
-    "accountNumber": "0123456789",
-    "bankCountry": "Nigeria",
-    "bankName": "first-bank",
-    "redeemType": "mobile-redemption",
-    "status": "inactive",
-    "isAmountThreshold": true,
-    "amountThreshold": "20",
-    "isPeriodically": true,
-    "periodType": "daily"
- }
+  "currency": "naira",
+  "phonePrefix": "234",
+  "phone": "8123456789",
+  "headquarterAddress": "7 gwagwalada street, fct.",
+  "headquarterCity": "Abuja",
+  "headquarterCountry": "Nigeria",
+  "headquarterZipCode": "242201",
+  "marketplaces": ["nigeria"],
+  "accountName": "Gift Enterprise",
+  "accountNumber": "0123456789",
+  "bankCountry": "Nigeria",
+  "bankName": "first-bank",
+  "redeemType": "mobile-redemption",
+  "status": "inactive",
+  "isAmountThreshold": true,
+  "amountThreshold": "20",
+  "isPeriodically": true,
+  "periodType": "daily"
+}
 
 
 ### invite partner
@@ -397,20 +402,24 @@ Authorization: Bearer {{token}}
 
 {
   "name": {
-    "en": "flower",
-    "fr": "fleur",
-    "da": "blomst"
+    "en": "flowerzzzzz",
+    "fr": "fleurzz",
+    "da": "blomstzzz"
   },
   "description": {
-    "en": "Sweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
-    "fr": "Fleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
-    "da": "Sød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
+    "en": "zzzzSweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
+    "fr": "zzzFleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
+    "da": "zzzSød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
   },
-  "partnerId": "64b019d002ed5ef93120530c",
-  "categories": ["64a9a75a02ed5ef9311de15a"],
-  "marketplace": "dk",
+  "partnerId": "64c68e69f54333e62ad54cc6",
+  "categories": ["64c68e68f54333e62ad54b2a"],
+  "marketplace": "ng",
   "price": 2000,
-  "productType": "regular-product"
+  "productType": "regular-product",
+  "quantity": 100,
+  "redemptionValidityType": "period",
+  "redemptionValidityPeriodType": "weeks",
+  "redemptionValidityValue": "2"
 }
 
 ### Get products by marketplace, category and partner (no need for auth)
@@ -422,3 +431,27 @@ GET {{api}}/partners/marketplace/dk/category/64a9a75a02ed5ef9311de15a
 ### Get categories
 GET {{api}}/categories/marketplaces/ng
 Authorization: Bearer {{token}}
+
+### initiate transaction
+POST {{api}}/tx/initiate
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "idempotencyKey": "65337570-da43-417a-9820-be30a0fd07a8",
+  "driver": "paystack",
+  "items": [
+    {
+      "productId": "64c6c5835c63153dead13947",
+      "quantity": 1
+    }
+  ],
+  "recipientPhonePrefix": "234",
+  "recipientPhoneNumber": "8103498784",
+  "toBeDeliveredAt": "2023-07-31T20:38:37.820Z"
+}
+
+### get transaction
+GET {{api}}/tx/payment-callback/paystack?reference=64c6dce71a58bb72c09a0b49
+### payment webhook
+GET {{api}}/tx/payment-webhook/paystack

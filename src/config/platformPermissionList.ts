@@ -365,4 +365,7 @@ export const permissionList = [
   },
 ];
 
+const partnerAdminPermissions = [];
+const platformAdminPermissions = [];
+
 export const allPermissions = permissionList.map((p) => p.value);

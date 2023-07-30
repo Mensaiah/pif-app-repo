@@ -1,12 +1,13 @@
-import { Document, Types } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
 
 export interface RevenueAttributes extends Document {
-  revenueFrom: 'pifProportion' | 'fixedFee';
+  revenueFrom: 'pifProportion' | 'fixedFee' | 'pifExpiry';
   amount: number;
   currency: number;
   marketplace: string;
-  Partner: Types.ObjectId;
-  Product: Types.ObjectId;
-  User: Types.ObjectId;
-  Purchase: Types.ObjectId;
+  Partner: ObjectId;
+  Product: ObjectId;
+  User: ObjectId;
+  Purchase: ObjectId;
+  Transaction: ObjectId;
 }

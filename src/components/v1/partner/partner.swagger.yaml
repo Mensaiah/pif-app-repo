@@ -131,7 +131,7 @@
               currency:
                 type: string
               startProportion:
-                type: string
+                type: number
               finishProportion:
                 type: string
               pifProportion:

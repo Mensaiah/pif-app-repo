@@ -2,23 +2,28 @@ import { Response } from 'express';
 import ms from 'ms';
 import { z } from 'zod';
 
+import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { mobileSignupSchema } from '../auth.policy';
-import { generateRandomCode, sendOTP } from '../auth.utils';
+import { generateRandomCode, sendOTP, verifyCaptcha } from '../auth.utils';
 
-import '../../../../services/infobipService';
+import '../../../../services/infobip.service';
 
 const doMobileSignup = async (req: IRequest, res: Response) => {
   type signUpDatatype = z.infer<typeof mobileSignupSchema>;
 
-  const { phone, phonePrefix, marketplace }: signUpDatatype = req.body;
-  consoleLog({ phone, phonePrefix, marketplace });
+  const { phone, phonePrefix, marketplace, captchaToken }: signUpDatatype =
+    req.body;
 
   try {
+    const isCaptchaValid = await verifyCaptcha(captchaToken);
+    if (!isCaptchaValid && !appConfig.isDev)
+      return handleResponse(res, 'Invalid captcha', 400);
+
     const existingUser = await UserModel.findOne({
       userType: 'customer',
       'contact.phone': phone,

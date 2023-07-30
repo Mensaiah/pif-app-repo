@@ -43,7 +43,7 @@ const fingerprintMiddleware = (
     '';
 
   const geo: Partial<GeoInfo> = geoip.lookup(ipAddress) || {};
-  consoleLog({ geo });
+  consoleLog({ geo }); // TODO: fix
 
   const components = [
     userAgent,

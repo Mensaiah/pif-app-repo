@@ -7,10 +7,7 @@ import { JSDOM } from 'jsdom';
 import mime from 'mime-types';
 import { z } from 'zod';
 
-import {
-  uploadFileToSpace,
-  uploadToSpace,
-} from '../../../services/s3UploadService';
+import { uploadFileToSpace, uploadToSpace } from '../../../services/s3.service';
 import { IRequest } from '../../../types/global';
 import { _omit, handleResponse, uuid } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';

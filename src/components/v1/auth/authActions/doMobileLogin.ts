@@ -7,6 +7,7 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
+import { linkUserToStripe } from '../../user/user.utils';
 import { UserAccessModel } from '../auth.models';
 import { mobileLoginSchema } from '../auth.policy';
 import { UserSessionAttributes } from '../auth.types';
@@ -125,6 +126,9 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     }
 
     await userAccess.save();
+
+    // check if currentMaketplace is supported by stripe and set customerId if it's not set
+    await linkUserToStripe(existingUser);
 
     const token = generateToken({
       authKey: userAccess.securityCode,

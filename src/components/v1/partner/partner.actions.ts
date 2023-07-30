@@ -453,7 +453,6 @@ export const getPartnersByCategoryAndMarketplace = async (
   res: Response
 ) => {
   const { categoryId, marketplace } = req.params;
-  consoleLog(JSON.stringify({ categoryId, marketplace }, null, 2));
 
   try {
     const partners = await PartnerModel.find(

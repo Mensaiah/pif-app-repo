@@ -30,20 +30,42 @@ const productSchema = new Schema<ProductAttributes>({
     type: String,
     enum: ['days', 'weeks', 'months'],
   },
-  redemptionValidityValue: String,
+  redemptionValidityValue: {
+    // String or Number
+    type: Schema.Types.Mixed,
+    validate: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      validator: function (value: any) {
+        if (typeof value === 'string') {
+          const timestamp = Date.parse(value);
+          // check if the string can be converted to a valid date
+          if (!isNaN(timestamp)) {
+            return true;
+          }
+        }
+        if (typeof value === 'number') {
+          // check if the number is positive
+          return value > 0;
+        }
+        return false;
+      },
+      message: (props) =>
+        `Invalid value: ${props.value}! Value should be a valid date string or a positive number.`,
+    },
+  },
   extraProduct: {
     description: [languageValuePairSchema],
     photo: String,
   },
   validThru: Date,
   quantity: Number,
-  qtySold: Number,
+  qtySold: { type: Number, default: 0 },
   deletedAt: Date,
   version: Number,
   isCurrentVersion: Boolean,
   originId: Number,
   order: Boolean,
-  quantityAlert: Number,
+  quantityAlert: { type: Number, default: 0 },
   tax: Number,
   cities: [{ type: Schema.Types.ObjectId, ref: 'City' }],
   isCountedTowardsReward: Boolean,

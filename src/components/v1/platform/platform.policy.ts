@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-const paymentProcessor = z.enum(['paystack', 'stripe', 'netAxept']);
+const paymentProcessor = z.enum(['paystack', 'stripe', 'nets', 'mobilePay']);
 
 const social = z.object({
   name: z.string(),

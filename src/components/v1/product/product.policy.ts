@@ -31,7 +31,7 @@ export const addProductSchema = z
     productType: z.enum(['regular-product', 'free-gift']).optional(),
     validThru: z.string().optional(),
     textForReceiver: z.object(langSchema).optional(),
-    quantity: z.number().optional(),
+    quantity: z.number(),
     quantityAlert: z.number().optional(),
     isCountedTowardsReward: z.boolean().optional(),
     canBeRedeemedAsRewards: z.boolean().optional(),
@@ -39,27 +39,23 @@ export const addProductSchema = z
     canBeSent: z.enum(['immediately', 'next-period']).optional(),
     canBeSentPeriodType: z.enum(['hour', 'day', 'week', 'month']).optional(),
     canBeSentPeriodValue: z.number().optional(),
-    redemptionValidityType: z.enum(['date', 'period']).optional(),
+    redemptionValidityType: z.enum(['date', 'period']),
     redemptionValidityPeriodType: z
       .enum(['days', 'weeks', 'months'])
       .optional(),
-    redemptionValidityValue: z.string().optional(),
+    redemptionValidityValue: z.union([
+      z
+        .number()
+        .positive()
+        .refine((value) => !Number.isNaN(value), {
+          message: 'Value should be a valid positive number.',
+        }),
+      z.string().refine((value) => !Number.isNaN(Date.parse(value)), {
+        message: 'Value should be a valid date string.',
+      }),
+    ]),
     slicePrice: z.number().optional(),
   })
-  .refine(
-    ({ redemptionValidityType, redemptionValidityValue }) => {
-      if (
-        redemptionValidityType === 'date' &&
-        !validateDate(redemptionValidityValue)
-      )
-        return false;
-
-      return true;
-    },
-    {
-      message: 'Redemption validity value is missing date or is invalid',
-    }
-  )
   .refine(
     ({
       redemptionValidityPeriodType,
@@ -101,15 +97,6 @@ export const addProductSchema = z
     {
       message: 'validThru is an invalid date',
     }
-  )
-  .refine(
-    ({ quantity, quantityAlert }) => {
-      if (!quantity && quantityAlert) return false;
-      if (quantity && quantity !== -1 && !quantityAlert) return false;
-
-      return true;
-    },
-    { message: 'quantity or quantity alert is missing.' }
   )
   .refine(
     ({ name, description }) => {

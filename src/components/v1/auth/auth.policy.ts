@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import appConfig from '../../../config';
+
 export const dashLoginSchema = z.object({
   email: z.string().email(),
   password: z.string(),
@@ -27,6 +29,7 @@ export const mobileSignupSchema = z.object({
   marketplace: z.string().length(2, {
     message: 'length should be 2.',
   }),
+  captchaToken: appConfig.isDev ? z.string().optional() : z.string(),
 });
 
 export const verifyOTP = z.object({

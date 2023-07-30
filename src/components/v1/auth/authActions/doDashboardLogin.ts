@@ -2,7 +2,7 @@ import { Response } from 'express';
 import ms from 'ms';
 import { z } from 'zod';
 
-import '../../../../services/infobipService';
+import '../../../../services/infobip.service';
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
@@ -151,7 +151,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
           userType: existingUser.userType,
           role: userAccess.role,
           permissions: userAccess.permissions,
-          marketplaces: userAccess.marketplaces
+          marketplaces: userAccess.marketplaces,
         },
       },
     });

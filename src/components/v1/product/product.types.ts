@@ -19,7 +19,7 @@ export interface ProductAttributes extends Document {
   internalCategory: ObjectId;
   redemptionValidityType: 'date' | 'period';
   redemptionValidityPeriodType: 'days' | 'weeks' | 'months';
-  redemptionValidityValue: string;
+  redemptionValidityValue: string | number;
   extraProduct: {
     description: LanguageValuePair[];
     photo: string;

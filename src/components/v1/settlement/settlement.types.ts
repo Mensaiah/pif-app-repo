@@ -1,19 +1,22 @@
-import { Document, Types } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
+
+import platformConstants from '../../../config/platformConstants';
+import { PaymentDriverType } from '../platform/platform.types';
 
 export interface SettlementAttributes extends Document {
-  totalAmount: number;
+  old_id: number;
+  isLegacyData: boolean;
+  amount: number;
   currency: string;
-  proportionStart: number | null;
-  proportionEnd: number | null;
-  Purchase: Types.ObjectId;
-  Product: Types.ObjectId;
-  status: 'pending' | 'ready' | 'paid' | 'canceled';
-  settledBy: Types.ObjectId | 'system';
+  settlementType: 'start' | 'end';
+  Purchase: ObjectId;
+  Product: ObjectId;
+  Transaction: ObjectId;
+  isSettled: boolean;
   paymentInfo?: {
     bankName: string;
     accountNumber: string;
     accountName: string;
-    paidWith: 'manual transfer' | 'paystack';
-    paidAt: Date;
+    payWith: PaymentDriverType;
   };
 }

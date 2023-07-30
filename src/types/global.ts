@@ -73,6 +73,7 @@ export interface IRequest extends Request {
   permissions?: string[];
   userAccess: Document & UserAccessAttributes;
   marketplaces?: string[];
+  currentMarketplace?: string;
 }
 
 export interface IToken {

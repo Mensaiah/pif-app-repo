@@ -2,7 +2,7 @@ import { Response } from 'express';
 
 import { IRequest } from '../../../../types/global';
 import { capitalize, handleResponse } from '../../../../utils/helpers';
-
+import { linkUserToStripe } from '../user.utils';
 const changeMyMarketplace = async (req: IRequest, res: Response) => {
   const { marketplace } = req.params;
   const myUserData = req.user;
@@ -25,12 +25,15 @@ const changeMyMarketplace = async (req: IRequest, res: Response) => {
   try {
     if ('currentMarketplace' in myUserData) {
       myUserData.currentMarketplace = marketplace;
+
+      await linkUserToStripe(myUserData);
+
       await myUserData.save();
 
       return handleResponse(res, {
         message: `Your marketplace has now been set to ${capitalize(
           marketplace
-        )})}`,
+        )}`,
         data: {
           name: myUserData.name,
           email: myUserData.email,

@@ -72,7 +72,6 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
       );
     }
 
-    consoleLog(`pifId: ${pifId}, currentUser.pifId: ${currentUser.pifId}`);
     if (currentUser.pifId && currentUser.pifId !== pifId) {
       return handleResponse(
         res,

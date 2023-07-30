@@ -47,6 +47,7 @@ const appConfig = {
     allPermissions,
   },
   supportedLanguages: ['en', 'da', 'fr', 'sv', 'es'] as const,
+  paymentProcessors: ['stripe', 'paystack', 'mobilePay', 'nets'] as const,
   paginationConfig: {
     perPage: 20,
     allowedPerPageValues: [20, 30, 50, 100],
@@ -83,6 +84,11 @@ const appConfig = {
   sqlUser: env.SQL_USER || '',
   sqlPass: env.SQL_PASS || '',
   sqlDbName: env.SQL_DB_NAME || '',
+  paystackSecretKey: env.PAYSTACK_SECRET_KEY || '',
+  stripeSecretKey: env.STRIPE_SECRET_KEY || '',
+  stripePublicKey: env.STRIPE_PUBLIC_KEY || '',
+  netsTestSecretKey: env.NETS_TEST_SECRET_KEY || '',
+  netsLiveSecretKey: env.NETS_LIVE_SECRET_KEY || '',
 };
 
 export default appConfig;

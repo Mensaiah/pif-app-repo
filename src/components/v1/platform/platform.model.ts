@@ -1,5 +1,7 @@
 import { Schema, model } from 'mongoose';
 
+import platformConstants from '../../../config/platformConstants';
+
 import { MarketplaceAttributes, PlatformAttributes } from './platform.types';
 
 const marketplaceSchema = new Schema<MarketplaceAttributes>({
@@ -45,8 +47,7 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>({
   paymentProcessors: [
     {
       type: String,
-      lowercase: true,
-      enum: ['paystack', 'stripe', 'netAxept'],
+      enum: platformConstants.paymentProcessors,
     },
   ],
   socials: [

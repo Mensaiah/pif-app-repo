@@ -100,12 +100,11 @@ export const doCategoryMigrations = async (sql: Connection) => {
           isBirthday: Boolean(category.is_birthday),
           deletedAt: category.deleted_at,
           marketplaces: [category.marketplace],
-          Icon: {
-            iconifyName: category.icon,
-            url: category.iconIcon
+          Icon:
+            category.icon ||
+            (category.iconIcon
               ? 'https://admin.pif-app.com/upload/icons/' + category.iconIcon
-              : null,
-          },
+              : ''),
           createdAt: category.created_at,
           updatedAt: category.updated_at,
         },

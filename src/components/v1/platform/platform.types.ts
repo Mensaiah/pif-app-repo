@@ -1,3 +1,5 @@
+import platformConstants from '../../../config/platformConstants';
+
 export interface MarketplaceAttributes {
   name: string;
   code: string;
@@ -7,12 +9,15 @@ export interface MarketplaceAttributes {
   languageCode: string;
   isDisabled?: boolean;
   currencySymbol: string;
-  paymentProcessors: Array<'paystack' | 'stripe' | 'netAxept'>;
+  paymentProcessors: Array<PaymentDriverType>;
   socials: Array<{
     name: string;
     url: string;
   }>;
 }
+export type PaymentDriverType =
+  (typeof platformConstants.paymentProcessors)[number];
+
 export interface PlatformAttributes {
   version: string;
   marketplaces: MarketplaceAttributes[];

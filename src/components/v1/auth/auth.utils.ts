@@ -1,13 +1,33 @@
+import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
 import appConfig from '../../../config';
-import { sendSms } from '../../../services/infobipService';
-import { sendMail } from '../../../services/mailgunService';
+import { sendSms } from '../../../services/infobip.service';
+import { sendMail } from '../../../services/emailServices/mailgun.service';
 import { IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
 import PlatformModel from '../platform/platform.model';
 import { PlatformAttributes } from '../platform/platform.types';
+
+export const verifyCaptcha = async (token: string) => {
+  try {
+    const { data } = await axios.post(
+      'https://www.google.com/recaptcha/api/siteverify',
+      null,
+      {
+        params: {
+          secret: appConfig.reCaptchaSecretKey,
+          response: token,
+        },
+      }
+    );
+
+    return data.success;
+  } catch (error) {
+    return false;
+  }
+};
 
 export const calculateLoginWaitingTime = (
   failedAttempts: number,

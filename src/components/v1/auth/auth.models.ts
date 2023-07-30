@@ -6,7 +6,7 @@ import appConfig from '../../../config';
 
 import { OtpAttributes, UserAccessAttributes } from './auth.types';
 
-const userAccessSchema = new Schema<UserAccessAttributes>({
+const userAccessSchema = new Schema<UserAccessAttributes & Document>({
   old_id: Number,
   isLegacyData: Boolean,
   isLegacyAccountValidated: Boolean,
