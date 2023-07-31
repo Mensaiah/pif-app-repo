@@ -6,6 +6,7 @@ import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
+import PurchaseModel from '../../purchase/purchase.model';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { mobileSignupSchema } from '../auth.policy';
@@ -28,19 +29,41 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       userType: 'customer',
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
+      isConfirmed: true,
     });
 
     if (existingUser)
       return handleResponse(res, 'Account exists, please Login instead', 409);
 
-    await new UserModel({
+    const haveReceivedPifBefore = await PurchaseModel.findOne({
+      recipientPhonePrefix: phonePrefix,
+      recipientPhoneNumber: phone,
+    });
+
+    const newUser = await new UserModel({
       contact: {
         phone,
         phonePrefix,
       },
       currentMarketplace: marketplace,
       userType: 'customer',
+      shouldEnforceConfirmation: haveReceivedPifBefore,
     }).save();
+
+    if (!newUser.shouldEnforceConfirmation) {
+      const referenceCode = `${generateRandomCode(2)}${
+        newUser._id
+      }${generateRandomCode(5)}`;
+
+      return handleResponse(
+        res,
+        {
+          message: 'Account created successfully, proceed to next step',
+          referenceCode,
+        },
+        201
+      );
+    }
 
     const newOtpCode = await new OtpCodeModel({
       code: generateRandomCode(),

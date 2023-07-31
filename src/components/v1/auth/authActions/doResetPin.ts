@@ -11,14 +11,25 @@ import { resetPinSchema } from '../auth.policy';
 const doResetPin = async (req: IRequest, res: Response) => {
   type resetPinDataType = z.infer<typeof resetPinSchema>;
 
-  const { otpCode, pin, phone, phonePrefix }: resetPinDataType = req.body;
+  const { otpCode, pin, phone, phonePrefix, email }: resetPinDataType =
+    req.body;
 
   try {
     const existingOTP = await OtpCodeModel.findOne({
       code: otpCode,
       phonePrefix,
       phone,
+      ...(email && { email }),
     });
+
+    const userCount = await UserModel.countDocuments({
+      'contact.phonePrefix': phonePrefix,
+      'contact.phone': phone,
+      userType: 'customer',
+    });
+    if (userCount > 1 && !email) {
+      return handleResponse(res, 'Please provide email', 401);
+    }
 
     if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);
 

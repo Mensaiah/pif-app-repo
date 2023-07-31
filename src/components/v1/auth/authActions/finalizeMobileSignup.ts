@@ -14,15 +14,28 @@ import { generateToken } from '../auth.utils';
 
 const finalizeSignup = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof finalizeMobileSignupSchema>;
-  const { name, dob, phone, phonePrefix, pifId, zipCode, otpCode }: dataType =
-    req.body;
+  const {
+    name,
+    dob,
+    phone,
+    phonePrefix,
+    email,
+    pifId,
+    zipCode,
+    otpCode,
+    referenceCode,
+  }: dataType = req.body;
+
+  const refCode = referenceCode?.slice(2, -5);
 
   try {
-    const existingUser = await UserModel.findOne({
-      userType: 'customer',
-      'contact.phone': phone,
-      'contact.phonePrefix': phonePrefix,
-    });
+    const existingUser = refCode
+      ? await UserModel.findById(refCode)
+      : await UserModel.findOne({
+          userType: 'customer',
+          'contact.phone': phone,
+          'contact.phonePrefix': phonePrefix,
+        });
 
     if (!existingUser)
       return handleResponse(
@@ -30,7 +43,8 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
         'Invalid operation. Please, let us know if you think this is an error',
         401
       );
-    if (!existingUser.isConfirmed)
+
+    if (existingUser.shouldEnforceConfirmation && !existingUser.isConfirmed)
       return handleResponse(res, 'You need to verify your OTP first', 401);
 
     if (existingUser.isSignupComplete)
@@ -39,27 +53,31 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
         'Signup has already been finalized. No changes were made'
       );
 
-    const otpExists = await OtpCodeModel.findOne({
-      code: otpCode,
-      purpose: 'signup',
-      phone,
-      phonePrefix,
-    });
+    if (otpCode) {
+      const otpExists = await OtpCodeModel.findOne({
+        code: otpCode,
+        purpose: 'signup',
+        phone,
+        phonePrefix,
+      });
 
-    if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
+      if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
 
-    if (!otpExists.isConfirmed) {
-      return handleResponse(res, 'Invalid credentials', 401);
+      if (!otpExists.isConfirmed) {
+        return handleResponse(res, 'Invalid credentials', 401);
+      }
+
+      otpExists.isDeleted = true;
+      await otpExists.save();
     }
 
     existingUser.name = name;
+    existingUser.email = email;
     existingUser.dob = new Date(dob);
     existingUser.pifId = pifId;
     existingUser.contact.zip = zipCode;
     existingUser.isSignupComplete = true;
-    otpExists.isDeleted = true;
     await existingUser.save();
-    await otpExists.save();
 
     const now = new Date();
     const userAccess = new UserAccessModel({
@@ -112,6 +130,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
         userData: {
           name: existingUser.name,
           pifId: existingUser.pifId,
+          email: existingUser.email,
           avatar: existingUser.avatar,
           currentMarketplace: existingUser.currentMarketplace,
           phonePrefix: existingUser.contact.phonePrefix,

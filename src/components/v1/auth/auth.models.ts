@@ -3,6 +3,7 @@ import { Document, Schema, model } from 'mongoose';
 import ms from 'ms';
 
 import appConfig from '../../../config';
+import platformConstants from '../../../config/platformConstants';
 
 import { OtpAttributes, UserAccessAttributes } from './auth.types';
 
@@ -154,7 +155,7 @@ const OtpCodeSchema = new Schema<OtpAttributes>({
   code: String,
   purpose: {
     type: String,
-    enum: ['signup', 'pin-reset', 'password-reset'],
+    enum: platformConstants.otpPurpose,
   },
   expiresAt: Date,
   phone: String,

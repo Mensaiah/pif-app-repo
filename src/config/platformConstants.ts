@@ -6,6 +6,12 @@ const platformConstants = {
     allowedPerPageValues: [20, 30, 50, 100] as const,
   },
   supportedLanguages: ['en', 'da', 'fr', 'sv', 'es'] as const,
+  otpPurpose: [
+    'signup',
+    'pin-reset',
+    'password-reset',
+    'confirm-account',
+  ] as const,
 };
 
 export default platformConstants;

@@ -5,6 +5,7 @@ import ms from 'ms';
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
 import { consoleLog } from '../../../../utils/helpers';
+import { sendOtpToSenderIfNotConfirmed } from '../../auth/auth.utils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
 import { sendPartnerOrderNotification } from '../../notification/notification.util';
 import { PartnerModel } from '../../partner/partner.model';
@@ -182,6 +183,7 @@ const completeTransaction = async (
 
     // 5. receiver and partner of the transaction
     // TODO: send push notification to receiver if receiver is on the platform
+    // TODO: if the account of the receiver is not unique, send them all the push notification and send them OTP as well. Once OTP is confirmed, delete all other duplicate accounts
     await Promise.all(
       purchases.map(async (purchase) => {
         try {
@@ -213,6 +215,8 @@ const completeTransaction = async (
 
     paymentRecord.isOrderProcessed = true;
     await paymentRecord.save();
+
+    await sendOtpToSenderIfNotConfirmed(user);
 
     return {
       message: 'Order processed successfully',

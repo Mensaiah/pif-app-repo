@@ -12,17 +12,28 @@ import { generateRandomCode, sendOTP } from '../auth.utils';
 export const doForgotPin = async (req: IRequest, res: Response) => {
   type forgotPinDataType = z.infer<typeof forgotPinSchema>;
 
-  const { phone, phonePrefix }: forgotPinDataType = req.body;
+  const { phone, phonePrefix, email }: forgotPinDataType = req.body;
 
   try {
-    const existingUser = await UserModel.findOne({
+    const existingUsers = await UserModel.find({
       'contact.phonePrefix': phonePrefix,
       'contact.phone': phone,
       userType: 'customer',
     });
 
-    if (!existingUser)
+    if (existingUsers.length > 1 && !email) {
+      return handleResponse(res, 'Please, provide your email', 401);
+    }
+
+    if (!existingUsers.length)
       return handleResponse(res, 'Account does not exist', 401);
+
+    const existingUser = await UserModel.findOne({
+      'contact.phonePrefix': phonePrefix,
+      'contact.phone': phone,
+      userType: 'customer',
+      ...(email && { email }),
+    });
 
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,

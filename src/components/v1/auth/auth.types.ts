@@ -1,4 +1,6 @@
 import { Schema } from 'mongoose';
+
+import platformConstants from '../../../config/platformConstants';
 type ObjectId = Schema.Types.ObjectId;
 export interface UserAccessAttributes {
   old_id?: number;
@@ -46,7 +48,7 @@ export interface UserSessionAttributes {
 
 export interface OtpAttributes {
   code: string;
-  purpose: 'signup' | 'pin-reset' | 'password-reset';
+  purpose: (typeof platformConstants.otpPurpose)[number];
   expiresAt: Date;
   phone: string;
   phonePrefix: string;

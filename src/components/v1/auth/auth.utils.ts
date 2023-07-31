@@ -3,12 +3,15 @@ import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
 import appConfig from '../../../config';
-import { sendSms } from '../../../services/infobip.service';
 import { sendMail } from '../../../services/emailServices/mailgun.service';
+import { sendSms } from '../../../services/infobip.service';
 import { IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
 import PlatformModel from '../platform/platform.model';
 import { PlatformAttributes } from '../platform/platform.types';
+import { UserAttributes } from '../user/user.types';
+
+import { OtpCodeModel } from './auth.models';
 
 export const verifyCaptcha = async (token: string) => {
   try {
@@ -218,4 +221,29 @@ export const getPermissions = (
       )[0]
       ?.roles.filter(({ name }) => name === userRole)[0]?.permissions || []
   );
+};
+
+export const sendOtpToSenderIfNotConfirmed = async (
+  user: UserAttributes & Document
+) => {
+  try {
+    if (user.isConfirmed) return;
+
+    user.shouldEnforceConfirmation = true;
+
+    const otp = await new OtpCodeModel({
+      code: generateRandomCode(),
+      email: user.email,
+      phone: user.contact.phone,
+      phonePrefix: user.contact.phonePrefix,
+      purpose: 'confirm-account',
+      lastSent: new Date(),
+    }).save();
+
+    await sendOTP(user.contact.phonePrefix + user.contact.phone, otp.code);
+
+    await user.save();
+  } catch (err) {
+    throw err;
+  }
 };

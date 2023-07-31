@@ -55,6 +55,7 @@ export interface UserAttributes {
   };
   favoriteProducts?: Array<ObjectId>;
   isConfirmed?: boolean;
+  shouldEnforceConfirmation?: boolean;
   isSignupComplete?: boolean;
   currentMarketplace?: string;
   lastSelectedPartnerId?: ObjectId;
@@ -88,6 +89,8 @@ export interface PartnerPosUserAttributes {
   sex?: 'male' | 'female' | 'others' | 'prefer-not-to-say';
   contact?: Pick<Contact, 'phonePrefix' | 'phone'>;
   Pos: ObjectId;
+  isConfirmed?: boolean;
+  shouldEnforceConfirmation?: boolean;
 }
 
 export interface UserInviteAttributes {

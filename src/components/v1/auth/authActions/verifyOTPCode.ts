@@ -15,7 +15,14 @@ const verifyOTPCode = async (req: IRequest, res: Response) => {
 
   try {
     const existingUser = await UserModel.findOne(
-      phonePrefix && phone
+      purpose === 'confirm-account'
+        ? {
+            email,
+            userType: 'customer',
+            'contact.phone': phone,
+            'contact.phonePrefix': phonePrefix,
+          }
+        : phonePrefix && phone
         ? {
             userType: 'customer',
             'contact.phone': phone,

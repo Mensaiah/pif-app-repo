@@ -83,6 +83,7 @@ const userSchema = new Schema<UserAttributes>(
     ],
     isConfirmed: Boolean,
     isSignupComplete: Boolean,
+    shouldEnforceConfirmation: Boolean,
     currentMarketplace: String,
     lastSelectedPartnerId: { type: ObjectId, ref: 'Partner' },
     configs: {
@@ -126,6 +127,8 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
     phonePrefix: String,
   },
   Pos: { type: ObjectId, ref: 'Pos', required: true },
+  isConfirmed: Boolean,
+  shouldEnforceConfirmation: Boolean,
 });
 
 export const UserModel = model<UserAttributes>('User', userSchema);

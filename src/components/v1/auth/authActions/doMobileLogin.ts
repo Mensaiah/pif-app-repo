@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { Document } from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -7,10 +8,11 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
+import { UserAttributes } from '../../user/user.types';
 import { linkUserToStripe } from '../../user/user.utils';
 import { UserAccessModel } from '../auth.models';
 import { mobileLoginSchema } from '../auth.policy';
-import { UserSessionAttributes } from '../auth.types';
+import { UserAccessAttributes, UserSessionAttributes } from '../auth.types';
 import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
 
 const doMobileLogin = async (req: IRequest, res: Response) => {
@@ -19,21 +21,50 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
   const { phone, phonePrefix, pin }: LoginDatatype = req.body;
 
   try {
-    const existingUser = await UserModel.findOne({
+    const existingUsers = await UserModel.find({
       userType: 'customer',
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
     });
 
-    if (!existingUser)
+    if (existingUsers.length === 0)
       return handleResponse(res, 'You need to signup first', 401);
 
-    if (!existingUser.isConfirmed && !existingUser.isSignupComplete)
-      return handleResponse(res, 'You need to confirm your OTP', 401);
+    let userAccess: undefined | (UserAccessAttributes & Document);
+    let existingUser: undefined | (UserAttributes & Document);
 
-    const userAccess = await UserAccessModel.findOne({
-      User: existingUser._id,
-    });
+    if (existingUsers.length > 1) {
+      const userIds = existingUsers.map((user) => user._id);
+
+      const userAccesses = await UserAccessModel.find({
+        User: { $in: userIds },
+      });
+
+      if (userAccesses.length === 0)
+        return handleResponse(res, 'You need to sign up first', 401);
+
+      userAccess = userAccesses.find((access) => access.comparePin(pin));
+
+      if (!userAccess)
+        return handleResponse(res, 'invalid login credentials', 401);
+
+      existingUser = existingUsers.find(
+        (user) => user._id.toString() === userAccess.User.toString()
+      );
+    } else {
+      userAccess = await UserAccessModel.findOne({
+        User: existingUsers[0]._id,
+      });
+
+      if (!userAccess)
+        return handleResponse(res, 'invalid login credentials', 401);
+
+      existingUser = existingUsers[0];
+    }
+
+    // if (!existingUser.isConfirmed && !existingUser.isSignupComplete)
+    //   return handleResponse(res, 'You need to confirm your OTP', 401);
+
     if (!userAccess) return handleResponse(res, 'Invalid credentials', 401);
 
     if (userAccess.isBlocked)
@@ -157,6 +188,8 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
           currentMarketplace: existingUser.currentMarketplace,
           phonePrefix: existingUser.contact.phonePrefix,
           phone: existingUser.contact.phone,
+          shouldEnforceConfirmation: existingUser.shouldEnforceConfirmation,
+          isConfirmed: existingUser.isConfirmed,
         },
       },
     });
@@ -164,4 +197,5 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };
+
 export default doMobileLogin;

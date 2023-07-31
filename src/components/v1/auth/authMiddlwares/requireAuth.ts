@@ -53,6 +53,14 @@ const requireAuth = async (
     )
       return handleResponse(res, 'You need to set your pin first!', 403);
 
+    if (
+      userType === 'customer' &&
+      !user.isConfirmed &&
+      user.shouldEnforceConfirmation &&
+      !req.originalUrl.match(/^\/v1\/[a-z]{2}\/auth\/(verify-otp|resend-otp)$/)
+    )
+      return handleResponse(res, 'You need to confirm your account!', 403);
+
     // find session index
     const sessionIndex = userAccess.sessions.findIndex(
       (sesn) => sesn.sessionId === sessionId
