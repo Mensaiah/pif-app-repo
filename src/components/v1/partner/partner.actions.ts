@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import { Document } from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -9,6 +10,8 @@ import {
   getUserRolesAndPermissions,
   sendPartnerAdminInviteMail,
 } from '../auth/auth.utils';
+import { PartnerPosAttributes } from '../partnerPos/partnerPos.types';
+import { PartnerPosModel } from '../partnerPos/partnerPost.model';
 import PlatformModel from '../platform/platform.model';
 import { filterMarketplaces } from '../platform/platform.utils';
 import { UserInviteModel, UserModel } from '../user/user.model';
@@ -480,12 +483,13 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
     adminName,
     role,
     userType: partnerUserType,
+    posId,
   }: partnerInviteType = req.body;
 
   try {
-    const partner = await PartnerModel.findById(partnerId);
-
     // check if usertype is platform admin else if partner admin, check if it has access to the Partner
+
+    const partner = await PartnerModel.findById(partnerId);
 
     const isSupportedUser = checkPartnerAccess(req, partner);
 
@@ -495,6 +499,14 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
         'You are not authorized to perform this action.',
         403
       );
+    }
+
+    let pos: undefined | (PartnerPosAttributes & Document);
+
+    const isLocalPartnerInvite = role === 'local-partner' && posId;
+
+    if (isLocalPartnerInvite) {
+      pos = await PartnerPosModel.findById(posId);
     }
 
     const existingPartnerAdmin = await UserModel.findOne({
@@ -519,7 +531,7 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
         to: adminEmail,
         url: createInviteLink(req, existingInvite.code),
         adminName,
-        partnerName: partner.name,
+        partnerName: isLocalPartnerInvite ? pos.name : partner.name,
       });
 
       await existingInvite.save();
@@ -530,25 +542,32 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
       );
     }
 
-    const newInvite = await new UserInviteModel({
+    const newInvite = new UserInviteModel({
       email: adminEmail,
       code: uuid(),
       role,
       userType: partnerUserType,
       invitedBy: user._id,
-      Partner: partner._id,
       expiresAt: new Date(Date.now() + ms('1 day')),
       lastSent: new Date(),
       status: 'pending',
       marketplaces: partner.marketplaces,
-    }).save();
+    });
+
+    if (isLocalPartnerInvite) {
+      newInvite.PartnerPos = pos._id;
+    } else {
+      newInvite.Partner = partner._id;
+    }
 
     await sendPartnerAdminInviteMail({
       to: adminEmail,
       url: createInviteLink(req, newInvite.code),
       adminName,
-      partnerName: partner.name,
+      partnerName: isLocalPartnerInvite ? pos.name : partner.name,
     });
+
+    await newInvite.save();
 
     return handleResponse(res, 'Invitation sent ✉️');
   } catch (err) {

@@ -145,6 +145,7 @@ export const UserInviteSchema = new Schema<UserInviteAttributes>({
   email: { type: String, lowercase: true, trim: true, required: true },
   invitedBy: { type: ObjectId, ref: 'User' },
   Partner: { type: ObjectId, ref: 'Partner' },
+  PartnerPos: { type: ObjectId, ref: 'PartnerPos' },
   marketplaces: [String],
   City: { type: ObjectId, ref: 'City' },
   Pos: { type: ObjectId, ref: 'Pos' },

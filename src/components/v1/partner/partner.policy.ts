@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+import { isValidId } from '../../../utils/validators';
+
 const partnerSchema = z.object({
   name: z.string(),
   email: z.string(),
@@ -176,11 +178,26 @@ export const updatePartnerSchema = z.object({
   adminName: z.string().optional(),
 });
 
-export const partnerInviteSchema = z.object({
-  adminName: z.string(),
-  adminEmail: z.string().email(),
-  userType: z.enum(['partner-admin']),
-  role: z.enum(['partner-admin', 'local-partner', 'pos-user']),
-  partnerId: z.string().optional(),
-  posId: z.string().optional(),
-});
+export const partnerInviteSchema = z
+  .object({
+    adminName: z.string(),
+    adminEmail: z.string().email(),
+    userType: z.enum(['partner-admin']),
+    role: z.enum(['partner-admin', 'local-partner', 'pos-user']),
+    partnerId: z.string().optional(),
+    posId: z.string().optional(),
+  })
+  .refine(
+    ({ role, posId }) => {
+      const isValidPosID = isValidId(posId);
+
+      if (role === 'local-partner' && !isValidPosID) return false;
+
+      if (isValidPosID && role !== 'local-partner') return false;
+
+      return true;
+    },
+    {
+      message: 'either role is not a local partner or posId is missing',
+    }
+  );

@@ -24,6 +24,12 @@ export interface ProductAttributes extends Document {
     description: LanguageValuePair[];
     photo: string;
   } | null;
+  redeemType?:
+    | 'mobile-redemption'
+    | 'unique-codes-offline-with-confirmation'
+    | 'unique-codes-offline-without-confirmation'
+    | 'non-unique-codes-offline';
+
   validThru: Date;
   quantity: number;
   qtySold: number;

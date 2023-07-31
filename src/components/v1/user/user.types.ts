@@ -101,6 +101,7 @@ export interface UserInviteAttributes {
   invitedBy: ObjectId;
   marketplaces?: string[];
   Partner?: ObjectId;
+  PartnerPos?: ObjectId;
   City?: ObjectId;
   Pos?: ObjectId;
   expiresAt?: Date;

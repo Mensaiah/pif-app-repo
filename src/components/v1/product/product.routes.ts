@@ -11,10 +11,12 @@ import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
   addProduct,
+  generateRedeemCodes,
   addProductSplitPrice,
   approveProduct,
   disapproveProduct,
   getOtherProducts,
+  getProductRedeemCodes,
   getProducts,
   getProductsByCategoryAndPartner,
   getSingleProduct,
@@ -28,6 +30,7 @@ import {
 import {
   addProductSchema,
   addProductSplitPriceSchema,
+  addRedeemCodeSchema,
   updateProductSchema,
   updateProductSplitPriceSchema,
 } from './product.policy';
@@ -67,6 +70,23 @@ router.delete(
   requireAuth,
   hasAnyPermissionMiddleware(['product.edit']),
   removeProductSplitPrice
+);
+
+router.post(
+  '/:productId/redeem-codes/generate',
+  validateTokenMiddleware,
+  requireAuth,
+  policyMiddleware(addRedeemCodeSchema),
+  hasAnyPermissionMiddleware(['product.add']),
+  generateRedeemCodes
+);
+
+router.get(
+  '/:productId/redeem-codes',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['product.view']),
+  getProductRedeemCodes
 );
 
 router.get('/:productId/public', getSingleProduct);
