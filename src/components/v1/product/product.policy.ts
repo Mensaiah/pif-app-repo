@@ -385,3 +385,22 @@ export const updateProductSplitPriceSchema = z
       message: 'either validity start or end has an invalid date',
     }
   );
+
+export const addRedeemCodeSchema = z
+  .object({
+    quantity: z.number().int().positive(),
+    codeType: z
+      .enum(['alpha_num', 'code128', 'qr_code', 'upc', 'ean8', 'ean13', 'isbn'])
+      .optional(),
+    expiresAt: z.string().optional(),
+  })
+  .refine(
+    ({ expiresAt }) => {
+      if (expiresAt && !validateDate(expiresAt)) return false;
+
+      return true;
+    },
+    {
+      message: 'this expiresAt date is not a valid date',
+    }
+  );

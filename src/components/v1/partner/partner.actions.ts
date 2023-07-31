@@ -489,6 +489,8 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
   try {
     // check if usertype is platform admin else if partner admin, check if it has access to the Partner
 
+    const partner = await PartnerModel.findById(partnerId);
+
     const isSupportedUser = checkPartnerAccess(req, partner);
 
     if (!isSupportedUser) {
@@ -502,8 +504,6 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
     let pos: undefined | (PartnerPosAttributes & Document);
 
     const isLocalPartnerInvite = role === 'local-partner' && posId;
-
-    const partner = await PartnerModel.findById(partnerId);
 
     if (isLocalPartnerInvite) {
       pos = await PartnerPosModel.findById(posId);

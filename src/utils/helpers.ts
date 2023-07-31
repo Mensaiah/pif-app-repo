@@ -422,3 +422,11 @@ export const transformLangValueArrays = (input: any): any => {
     return input;
   }
 };
+
+export const generateUniqueAlphanumericCode = () => {
+  const shortUuid = uuid().slice(0, 6);
+
+  const alphanumeric = parseInt(shortUuid, 16).toString(36).toUpperCase();
+
+  return alphanumeric;
+};
