@@ -55,6 +55,14 @@ export const addProductSchema = z
       }),
     ]),
     slicePrice: z.number().optional(),
+    redeemType: z
+      .enum([
+        'mobile-redemption',
+        'unique-codes-offline-with-confirmation',
+        'unique-codes-offline-without-confirmation',
+        'non-unique-codes-offline',
+      ])
+      .optional(),
   })
   .refine(
     ({
@@ -196,6 +204,14 @@ export const updateProductSchema = z
       .optional(),
     redemptionValidityValue: z.string().optional(),
     slicePrice: z.number().optional(),
+    redeemType: z
+      .enum([
+        'mobile-redemption',
+        'unique-codes-offline-with-confirmation',
+        'unique-codes-offline-without-confirmation',
+        'non-unique-codes-offline',
+      ])
+      .optional(),
   })
   .refine(
     ({ quantity, quantityAlert }) => {

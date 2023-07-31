@@ -57,6 +57,15 @@ const productSchema = new Schema<ProductAttributes>({
     description: [languageValuePairSchema],
     photo: String,
   },
+  redeemType: {
+    type: String,
+    enum: [
+      'mobile-redemption',
+      'unique-codes-offline-with-confirmation',
+      'unique-codes-offline-without-confirmation',
+      'non-unique-codes-offline',
+    ],
+  },
   validThru: Date,
   quantity: Number,
   qtySold: { type: Number, default: 0 },

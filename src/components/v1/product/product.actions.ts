@@ -161,6 +161,7 @@ export const addProduct = async (req: IRequest, res: Response) => {
       redemptionValidityType,
       redemptionValidityValue,
       slicePrice,
+      redeemType,
     }: dataType = req.body;
 
     const langQuery = handleLangSearch(name, 'name.value');
@@ -212,6 +213,7 @@ export const addProduct = async (req: IRequest, res: Response) => {
       isBonusProductOnly,
       isCountedTowardsReward,
       slicePrice,
+      redeemType,
       quantity,
     });
 
@@ -420,6 +422,7 @@ export const updateProduct = async (req: IRequest, res: Response) => {
     slicePrice,
     categories,
     internalCategory,
+    redeemType,
   }: dataType = req.body;
 
   try {
@@ -536,6 +539,8 @@ export const updateProduct = async (req: IRequest, res: Response) => {
       // updated partner categories
       existingProduct.categories = categories as unknown as ObjectId[];
     }
+
+    if (redeemType) existingProduct.redeemType = redeemType;
 
     await existingProduct.save();
 
