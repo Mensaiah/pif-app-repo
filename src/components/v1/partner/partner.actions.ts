@@ -3,12 +3,7 @@ import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
-import {
-  _omit,
-  consoleLog,
-  handleResponse,
-  uuid,
-} from '../../../utils/helpers';
+import { _omit, handleResponse, uuid } from '../../../utils/helpers';
 import { useWord } from '../../../utils/wordSheet';
 import {
   getUserRolesAndPermissions,
@@ -25,6 +20,7 @@ import {
   partnerInviteSchema,
   updatePartnerSchema,
 } from './partner.policy';
+import { checkPartnerAccess } from './partner.utils';
 
 export const addPartner = async (req: IRequest, res: Response) => {
   type addPartnerDataType = z.infer<typeof addPartnerSchema>;
@@ -475,7 +471,7 @@ export const getPartnersByCategoryAndMarketplace = async (
 export const addPartnerAdmins = async (req: IRequest, res: Response) => {
   const { partnerId } = req.params;
 
-  const { user, userType } = req;
+  const { user } = req;
 
   type partnerInviteType = z.infer<typeof partnerInviteSchema>;
 
@@ -491,10 +487,7 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
 
     // check if usertype is platform admin else if partner admin, check if it has access to the Partner
 
-    const isSupportedUser =
-      userType === 'partner-admin'
-        ? user.Partner.toString() === partnerId
-        : userType === 'platform-admin';
+    const isSupportedUser = checkPartnerAccess(req, partner);
 
     if (!isSupportedUser) {
       return handleResponse(
@@ -566,13 +559,12 @@ export const addPartnerAdmins = async (req: IRequest, res: Response) => {
 export const removePartnerAdmins = async (req: IRequest, res: Response) => {
   const { partnerId, adminId } = req.params;
 
-  const { user, userType } = req;
-
   try {
-    const isSupportedUser =
-      userType === 'partner-admin'
-        ? user.Partner.toString() === partnerId
-        : userType === 'platform-admin';
+    const partner = await PartnerModel.findById(partnerId);
+
+    if (!partner) return handleResponse(res, 'Partner does not exist', 404);
+
+    const isSupportedUser = checkPartnerAccess(req, partner);
 
     if (!isSupportedUser) {
       return handleResponse(
@@ -581,10 +573,6 @@ export const removePartnerAdmins = async (req: IRequest, res: Response) => {
         403
       );
     }
-
-    const partner = await PartnerModel.findById(partnerId);
-
-    if (!partner) return handleResponse(res, 'Partner does not exist', 404);
 
     const partnerToBeDeleted = await UserModel.findOne({
       _id: adminId,
@@ -630,6 +618,30 @@ export const getAllPartnerAdmins = async (req: IRequest, res: Response) => {
     });
 
     return handleResponse(res, { data: partnerAdmins });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};
+
+export const getPartnerRedeemType = async (req: IRequest, res: Response) => {
+  const { partnerId } = req.params;
+
+  try {
+    const partner = await PartnerModel.findById(partnerId);
+
+    if (!partner) return handleResponse(res, 'Partner does not exist', 404);
+
+    const isSupportedUser = checkPartnerAccess(req, partner);
+
+    if (!isSupportedUser) {
+      return handleResponse(
+        res,
+        'You are not authorized to perform this action.',
+        403
+      );
+    }
+
+    return handleResponse(res, { data: partner.redeemType });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }

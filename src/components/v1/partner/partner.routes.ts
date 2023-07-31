@@ -13,6 +13,7 @@ import {
   addPartnerAdmins,
   createPartnerInvite,
   getAllPartnerAdmins,
+  getPartnerRedeemType,
   getPartners,
   getPartnersByCategoryAndMarketplace,
   getSinglePartner,
@@ -76,6 +77,15 @@ router.post(
   hasAnyPermissionMiddleware(['supreme']),
   policyMiddleware(partnerInviteSchema),
   createPartnerInvite
+);
+
+//since related to product
+router.get(
+  '/:partnerId/redeem-type',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['product.view']),
+  getPartnerRedeemType
 );
 
 router.get(
