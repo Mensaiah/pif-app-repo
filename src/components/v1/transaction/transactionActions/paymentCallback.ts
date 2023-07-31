@@ -16,6 +16,8 @@ const paymentCallbackHandler = async (req: Request, res: Response) => {
   const { driver } = req.params;
   let { reference } = req.query;
 
+  if (!reference) return res.send(paymentFailedTemplate);
+
   if (reference && Array.isArray(reference)) reference = reference[0];
   reference = reference.toString();
 
