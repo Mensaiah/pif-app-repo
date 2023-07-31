@@ -1,10 +1,8 @@
-import { Document, ObjectId, Types } from 'mongoose';
-
-import { PurchaseAttributes } from '../purchase/purchase.types';
+import { Document, ObjectId } from 'mongoose';
 
 export interface RewardSystemPointAtrributes extends Document {
-  User: Types.ObjectId;
-  Partner: Types.ObjectId;
+  User: ObjectId;
+  Partner: ObjectId;
   points: number;
-  Purchase?: PurchaseAttributes['_id'];
+  Purchase?: ObjectId;
 }
