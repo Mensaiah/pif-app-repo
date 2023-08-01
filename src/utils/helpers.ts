@@ -9,6 +9,7 @@ import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import appConfig from '../config';
+import platformConstants from '../config/platformConstants';
 import {
   IRequest,
   IPaginationData,
@@ -18,6 +19,7 @@ import {
 } from '../types/global';
 
 // import normalizeLang from './normalizeLang';
+import { handleReqSearch } from './handleReqSearch';
 import { isArray, isObject } from './validators';
 
 export const consoleLog = (
@@ -176,64 +178,64 @@ export const normalizeLang = (data: DataInput | DataInput[]): any => {
   }
 };
 
-export const handlePaginate = (req: IRequest) => {
-  let page = req.query.page || 1;
-  let perPage = req.query.per_page || 15;
+// export const handlePaginate = (req: IRequest) => {
+//   const { paginationConfig } = platformConstants;
+//   type perPageType = (typeof paginationConfig.allowedPerPageValues)[number];
 
-  if (req.query.per_page) {
-    let q = req.query.per_page;
-    if (Array.isArray(q)) q = q[0];
-  }
+//   const { page, per_page } = handleReqSearch(req, {
+//     page: 'positive',
+//     per_page: 'positive',
+//   });
 
-  if (Array.isArray(page)) page = page[0];
-  if (Array.isArray(perPage)) perPage = perPage[0];
+//   let perPage = per_page || paginationConfig.perPage;
 
-  const currentPage = Number(page);
-  perPage = Number(perPage);
+//   if (!paginationConfig.allowedPerPageValues.includes(perPage as perPageType))
+//     perPage = paginationConfig.perPage;
 
-  const paginationData: IPaginationData = {
-    currentPage,
-    perPage,
-    paginationQueryOptions: {
-      sort: { _id: -1 },
-      skip: perPage * (currentPage - 1),
-      limit: perPage,
-    },
-  };
-  return {
-    paginationData,
-    queryOptions: paginationData.paginationQueryOptions,
-    getMeta: (count: number) => {
-      const totalPages: number = Math.ceil(count / paginationData.perPage);
-      const nextPage = currentPage + 1 <= totalPages ? currentPage + 1 : null;
-      const prevPage = currentPage > 1 ? currentPage - 1 : null;
-      return {
-        totalRows: count,
-        totalPages,
-        currentPage: page,
-        perPage,
-        nextPage,
-        prevPage,
-      };
-    },
-  };
-};
+//   const paginationData: IPaginationData = {
+//     currentPage: page,
+//     perPage,
+//     paginationQueryOptions: {
+//       sort: { _id: -1 },
+//       skip: perPage * (page - 1),
+//       limit: perPage,
+//     },
+//   };
 
-export const handleReqSearch = (req: Request, keys: string[]) => {
-  const searchQuery = (req.query.query as string) || '';
-  if (searchQuery) {
-    const query: {
-      $or: { [x: string]: { $regex: string; $options: string } }[];
-    } = {
-      $or: [],
-    };
-    keys.forEach((key) => {
-      query.$or.push({ [key]: { $regex: searchQuery, $options: 'i' } });
-    });
-    return query;
-  }
-  return {};
-};
+//   return {
+//     paginationData,
+//     queryOptions: paginationData.paginationQueryOptions,
+//     getMeta: (count: number) => {
+//       const totalPages: number = Math.ceil(count / paginationData.perPage);
+//       const nextPage = page + 1 <= totalPages ? page + 1 : null;
+//       const prevPage = page > 1 ? page - 1 : null;
+//       return {
+//         totalRows: count,
+//         totalPages,
+//         currentPage: page,
+//         perPage,
+//         nextPage,
+//         prevPage,
+//       };
+//     },
+//   };
+// };
+
+// export const handleReqSearch = (req: Request, keys: string[]) => {
+//   const searchQuery = (req.query.query as string) || '';
+//   if (searchQuery) {
+//     const query: {
+//       $or: { [x: string]: { $regex: string; $options: string } }[];
+//     } = {
+//       $or: [],
+//     };
+//     keys.forEach((key) => {
+//       query.$or.push({ [key]: { $regex: searchQuery, $options: 'i' } });
+//     });
+//     return query;
+//   }
+//   return {};
+// };
 
 export const handleLangSearch = (data: langSearchType, field: string) => {
   const values = Object.values(data);

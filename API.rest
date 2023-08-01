@@ -472,3 +472,6 @@ Authorization: Bearer {{token}}
 GET {{api}}/tx/payment-callback/paystack?reference=64c6dce71a58bb72c09a0b49
 ### payment webhook
 GET {{api}}/tx/payment-webhook/paystack
+
+### get purchases
+GET {{api}}/purchases?marketplace=ng

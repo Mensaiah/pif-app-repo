@@ -11,6 +11,7 @@ import driveRoutesV1 from './drive/drive.routes';
 import partnersRoutesV1 from './partner/partner.routes';
 import platformRoutesV1 from './platform/platform.routes';
 import productRoutesV1 from './product/product.routes';
+import purchaseRoutesV1 from './purchase/purchase.routes';
 import txRoutesV1 from './transaction/transaction.routes';
 import uploadRoutesV1 from './upload/upload.routes';
 import userRoutesV1 from './user/user.routes';
@@ -28,6 +29,7 @@ router.use('/drive', driveRoutesV1);
 router.use('/categories', categoryRoutesV1);
 router.use('/products', productRoutesV1);
 router.use('/tx', txRoutesV1);
+router.use('/purchases', purchaseRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));

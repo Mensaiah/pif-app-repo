@@ -48,10 +48,6 @@ const appConfig = {
   },
   supportedLanguages: ['en', 'da', 'fr', 'sv', 'es'] as const,
   paymentProcessors: ['stripe', 'paystack', 'mobilePay', 'nets'] as const,
-  paginationConfig: {
-    perPage: 20,
-    allowedPerPageValues: [20, 30, 50, 100],
-  },
   seedData: {
     name: env.SEED_USER_NAME,
     email: env.SEED_USER_EMAIL,
