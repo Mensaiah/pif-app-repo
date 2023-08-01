@@ -1,6 +1,5 @@
 import { Document, ObjectId } from 'mongoose';
 
-import platformConstants from '../../../config/platformConstants';
 import { PaymentDriverType } from '../platform/platform.types';
 
 export interface SettlementAttributes extends Document {
@@ -11,6 +10,7 @@ export interface SettlementAttributes extends Document {
   settlementType: 'start' | 'end';
   Purchase: ObjectId;
   Product: ObjectId;
+  Partner: ObjectId;
   Transaction: ObjectId;
   isSettled: boolean;
   paymentInfo?: {
@@ -19,4 +19,5 @@ export interface SettlementAttributes extends Document {
     accountName: string;
     payWith: PaymentDriverType;
   };
+  marketplace: string;
 }

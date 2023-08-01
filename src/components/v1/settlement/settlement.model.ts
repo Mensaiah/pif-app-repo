@@ -25,6 +25,10 @@ const settlementSchema = new Schema<SettlementAttributes>({
     type: Types.ObjectId,
     ref: 'Transaction',
   },
+  Partner: {
+    type: Types.ObjectId,
+    ref: 'Partner',
+  },
   paymentInfo: {
     bankName: String,
     accountNumber: String,
@@ -38,6 +42,7 @@ const settlementSchema = new Schema<SettlementAttributes>({
     type: Boolean,
     default: true,
   },
+  marketplace: String,
 });
 
 const SettlementModel = model<SettlementAttributes>(

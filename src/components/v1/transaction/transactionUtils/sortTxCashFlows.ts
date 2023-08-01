@@ -22,6 +22,8 @@ const sortTxCashFlows = async (
           settlementType: 'start',
           Purchase: purchase._id,
           Product: purchase.Product,
+          Partner: purchase.Partner,
+          marketplace: purchase.marketplace,
           Transaction: tx._id,
         }).save();
         const settlementEnd = await new SettlementModel({
@@ -30,6 +32,8 @@ const sortTxCashFlows = async (
           settlementType: 'end',
           Purchase: purchase._id,
           Product: purchase.Product,
+          Partner: purchase.Partner,
+          marketplace: purchase.marketplace,
           Transaction: tx._id,
           isSettled: false,
         }).save();

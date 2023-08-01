@@ -62,4 +62,4 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 };
 
 // TODO: ensure the user is allowed to view that purchase
-export const getPurchase = async (req: IRequest, res: Response) => {};
+// export const getPurchase = async (req: IRequest, res: Response) => {};
