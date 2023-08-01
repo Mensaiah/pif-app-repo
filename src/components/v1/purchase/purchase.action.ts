@@ -10,9 +10,10 @@ import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
-  const { marketplace, partner_id } = handleReqSearch(req, {
+  const { marketplace, partner_id, product_id } = handleReqSearch(req, {
     marketplace: 'string',
     partner_id: 'string',
+    product_id: 'string',
   });
   const paginate = handlePaginate(req);
   const query: FilterQuery<PurchaseAttributes & Document> = {};
@@ -23,6 +24,9 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 
   if (partner_id) query.Partner = partner_id;
   // TODO: ensure the user is allowed to query that partner
+
+  if (product_id) query.Product = product_id;
+  // TODO: ensure the user is allowed to view that product
 
   try {
     const purchases = await PurchaseModel.find(
