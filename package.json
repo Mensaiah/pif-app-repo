@@ -16,10 +16,12 @@
     "start:redis": "docker run -p 6379:6379 -it redis/redis-stack-server:latest",
     "check-unused": "npx depcheck",
     "do:migration": "NODE_ENV=testing ts-node-dev src/migration/",
-    "migration:lab": "ts-node-dev src/migration/testLab.ts"
+    "migration:lab": "ts-node-dev src/migration/testLab.ts",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org pif --project pif-node-api ./dist && sentry-cli sourcemaps upload --org pif --project pif-node-api ./dist"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.354.0",
+    "@sentry/node": "^7.61.0",
     "@types/bcrypt": "^5.0.0",
     "axios": "^0.24.0",
     "bcrypt": "^5.1.0",

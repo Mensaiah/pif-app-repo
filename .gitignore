@@ -43,4 +43,5 @@ package-lock.json
 .infisical.json
 src/migration/data/
 
+# Sentry Auth Token
 .sentryclirc

@@ -2,6 +2,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express, { Application, NextFunction, Response } from 'express';
 import helmet from 'helmet';
+
 // import mongoose from 'mongoose';
 // import { RateLimiterMongo } from 'rate-limiter-flexible';
 
@@ -14,8 +15,10 @@ import swaggerApp from './swagger';
 import { IRequest, LanguageCode } from './types/global';
 import { consoleLog, handleResponse } from './utils/helpers';
 import httpRequestLogger from './utils/httpRequestLogger';
+import useSentry from './utils/sentry';
 
 const app: Application = express();
+const Sentry = useSentry(app);
 
 const initializePersistenceAndSeeding = () => {
   connectMongoDb()
@@ -69,6 +72,8 @@ const initializeMiddlewares = () => {
     //       );
     //     });
     // })
+    .use(Sentry.Handlers.requestHandler())
+    .use(Sentry.Handlers.tracingHandler())
     .use(cors(corsOptions))
     .use(cookieParser())
     .use(express.json({ limit: '50kb' }))
@@ -106,6 +111,7 @@ const initializeMiddlewares = () => {
 
 const initializeRoutes = () => {
   app.use('/v1/:lang/', routerV1);
+  app.use(Sentry.Handlers.errorHandler());
   app.get('/', (_req, res) => {
     res.json({ message: 'Up and running in ' + appConfig.environment });
   });
