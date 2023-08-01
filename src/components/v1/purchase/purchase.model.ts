@@ -94,6 +94,15 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>({
   ],
 });
 
+purchaseSchema.index({ old_id: 1 }, { unique: true });
+purchaseSchema.index({
+  marketplace: 1,
+  Parner: 1,
+  Product: 1,
+  User: 1,
+  currency: 1,
+});
+
 const PurchaseModel = model<PurchaseAttributes>('Purchase', purchaseSchema);
 
 export default PurchaseModel;
