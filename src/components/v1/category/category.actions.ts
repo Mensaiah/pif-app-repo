@@ -5,7 +5,6 @@ import { IRequest } from '../../../types/global';
 import {
   addSupportedLang,
   checkLang,
-  consoleLog,
   handleLangSearch,
   handleResponse,
 } from '../../../utils/helpers';
