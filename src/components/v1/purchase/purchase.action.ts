@@ -10,11 +10,14 @@ import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
-  const { marketplace, partner_id, product_id } = handleReqSearch(req, {
-    marketplace: 'string',
-    partner_id: 'string',
-    product_id: 'string',
-  });
+  const { marketplace, partner_id, product_id, user_id, currency } =
+    handleReqSearch(req, {
+      marketplace: 'string',
+      partner_id: 'string',
+      product_id: 'string',
+      user_id: 'string',
+      currency: 'string',
+    });
   const paginate = handlePaginate(req);
   const query: FilterQuery<PurchaseAttributes & Document> = {};
 
@@ -27,6 +30,11 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 
   if (product_id) query.Product = product_id;
   // TODO: ensure the user is allowed to view that product
+
+  if (user_id) query.User = user_id;
+  // TODO: only an admin can use this query and ensure the user is in the same marketplace as the admin
+
+  if (currency) query.currency = currency;
 
   try {
     const purchases = await PurchaseModel.find(
@@ -52,3 +60,6 @@ export const getPurchases = async (req: IRequest, res: Response) => {
     );
   }
 };
+
+// TODO: ensure the user is allowed to view that purchase
+export const getPurchase = async (req: IRequest, res: Response) => {};

@@ -115,6 +115,7 @@ const completeTransaction = async (
           unitPrice: product.price,
           quantity: item.quantity,
           amount: item.amount,
+          currency: paymentRecord.currency,
           txFee,
           netAmount: currency(item.amount).subtract(txFee).value,
           priceStart,

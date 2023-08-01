@@ -28,6 +28,7 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>({
   unitPrice: Number,
   quantity: Number,
   amount: Number,
+  currency: String,
   txFee: Number,
   netAmount: Number,
   rewardSystemPoints: Number,

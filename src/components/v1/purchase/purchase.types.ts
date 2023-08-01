@@ -15,6 +15,7 @@ export interface PurchaseAttributes {
   quantity: number;
   amount: number;
   txFee: number;
+  currency: string;
   netAmount: number;
   rewardSystemPoints: number;
   priceStart: number;
