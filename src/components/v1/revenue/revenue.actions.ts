@@ -6,45 +6,44 @@ import { handlePaginate } from '../../../utils/handlePaginate';
 import { handleReqSearch } from '../../../utils/handleReqSearch';
 import { handleResponse } from '../../../utils/helpers';
 
-import SettlementModel from './settlement.model';
-import { SettlementAttributes } from './settlement.types';
+import RevenueModel from './revenue.model';
+import { RevenueAttributes } from './revenue.types';
 
-export const getSettlements = async (req: IRequest, res: Response) => {
-  const { marketplace, partner_id, product_id, currency, status } =
-    handleReqSearch(req, {
+export const getRevenueList = async (req: IRequest, res: Response) => {
+  const { marketplace, partner_id, product_id, currency } = handleReqSearch(
+    req,
+    {
       marketplace: 'string',
       partner_id: 'string',
       product_id: 'string',
       currency: 'string',
-      status: 'string',
-    });
+    }
+  );
   const paginate = handlePaginate(req);
-  const query: FilterQuery<SettlementAttributes & Document> = {};
+  const query: FilterQuery<RevenueAttributes & Document> = {};
 
   if (marketplace && marketplace.length === 2) query.marketplace = marketplace;
   if (partner_id) query.Partner = partner_id;
   if (product_id) query.Product = product_id;
   if (currency) query.currency = currency.toLocaleLowerCase();
-  if (status && (status === 'settled' || status === 'pending'))
-    query.isSettled = status === 'settled';
 
   try {
-    const settlements = await SettlementModel.find(
+    const revenueList = await RevenueModel.find(
       query,
       null,
       paginate.queryOptions
     ).lean();
 
-    const count = await SettlementModel.countDocuments(query);
+    const count = await RevenueModel.countDocuments(query);
 
     return handleResponse(res, {
-      data: settlements,
+      data: revenueList,
       meta: paginate.getMeta(count),
     });
   } catch (err) {
     handleResponse(
       res,
-      'An error occurred while trying to get settlements',
+      'An error occurred while trying to get income list',
       500,
       err
     );

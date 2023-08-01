@@ -12,6 +12,7 @@ import partnersRoutesV1 from './partner/partner.routes';
 import platformRoutesV1 from './platform/platform.routes';
 import productRoutesV1 from './product/product.routes';
 import purchaseRoutesV1 from './purchase/purchase.routes';
+import revenueRoutesV1 from './revenue/revenue.routes';
 import settlementRoutesV1 from './settlement/settlement.routes';
 import txRoutesV1 from './transaction/transaction.routes';
 import uploadRoutesV1 from './upload/upload.routes';
@@ -32,6 +33,7 @@ router.use('/products', productRoutesV1);
 router.use('/tx', txRoutesV1);
 router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
+router.use('/revenue', revenueRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));
