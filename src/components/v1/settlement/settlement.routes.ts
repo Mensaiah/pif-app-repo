@@ -5,10 +5,10 @@ import {
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
-import { getPurchases } from './purchase.action';
+import { getSettlements } from './settlement.actions';
 
 const router = Router();
 
-router.get('/', validateTokenMiddleware, requireAuthMiddleware, getPurchases);
+router.get('/', validateTokenMiddleware, requireAuthMiddleware, getSettlements);
 
 export default router;
