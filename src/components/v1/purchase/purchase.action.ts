@@ -10,6 +10,7 @@ import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
+  const { userAccess, userType, role } = req;
   const { marketplace, partner_id, product_id, user_id, currency } =
     handleReqSearch(req, {
       marketplace: 'string',
@@ -31,7 +32,15 @@ export const getPurchases = async (req: IRequest, res: Response) => {
   if (product_id) query.Product = product_id;
   // TODO: ensure the user is allowed to view that product
 
-  if (user_id) query.User = user_id;
+  if (user_id) {
+    if (userType === 'partner-admin')
+      return handleResponse(
+        res,
+        'You are not allowed to perform this operation',
+        403
+      );
+    query.User = user_id;
+  }
   // TODO: only an admin can use this query and ensure the user is in the same marketplace as the admin
 
   if (currency) query.currency = currency;
@@ -51,13 +60,14 @@ export const getPurchases = async (req: IRequest, res: Response) => {
       data: purchases,
       meta: paginate.getMeta(count),
     });
-  } catch (error) {
+  } catch (err) {
     handleResponse(
       res,
       'An error occurred while trying to get purchases',
       500,
-      error
+      err
     );
+    throw err;
   }
 };
 

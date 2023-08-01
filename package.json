@@ -9,7 +9,7 @@
     "dev": "concurrently \"pnpm run start-mongo\" \"ts-node-dev -r tsconfig-paths/register --respawn --exit-child --clear bin/dev/www\" ",
     "build": "tsc -p tsconfig.prod.json",
     "lint": "eslint 'src/**/*.{js,ts}' --fix",
-    "test": "jest src --detectOpenHandles",
+    "test": "jest src --detectOpenHandles --watch",
     "docker:build": "docker build -t pif-api-img .",
     "docker:run": "docker run -d -p 3000:3000 --name pif-container pif-api-img",
     "docker:dev": "docker-compose up --build",

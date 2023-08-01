@@ -16,8 +16,11 @@ const appConfig = {
     env.NODE_ENV === 'dev' || env.NODE_ENV === 'development' || !env.NODE_ENV,
   isProd: env.NODE_ENV === 'prod' || env.NODE_ENV === 'production',
   isStaging: env.NODE_ENV === 'staging',
-  isTesting: env.NODE_ENV === 'testing',
-  mongoDbURI: env.MONGODB_URL || '',
+  isTesting: env.NODE_ENV === 'testing' || env.NODE_ENV === 'test',
+  mongoDbURI:
+    env.NODE_ENV === 'test' || env.NODE_ENV === 'testing'
+      ? env.MONGODB_TEST_URL
+      : env.MONGODB_URL || '',
   redisUrl: env.REDIS_URL || '',
   redisPort: env.REDIS_PORT || '',
   redisPassword: env.REDIS_PASSWORD || '',
