@@ -58,8 +58,8 @@ export const resendOTPSchema = verifyOTP
 
 export const finalizeMobileSignupSchema = z
   .object({
-    phonePrefix: z.string(),
-    phone: z.string(),
+    phonePrefix: z.string().optional(),
+    phone: z.string().optional(),
     name: z.string(),
     zipCode: z.string(),
     dob: z.string(),
@@ -68,7 +68,10 @@ export const finalizeMobileSignupSchema = z
     otpCode: z.string().optional(),
     referenceCode: z.string().optional(),
   })
-  .refine(({ otpCode, referenceCode }) => otpCode || referenceCode)
+  .refine(
+    ({ otpCode, phone, phonePrefix, referenceCode }) =>
+      (otpCode && phone && phonePrefix) || referenceCode
+  )
   .refine(
     ({ referenceCode }) => {
       if (!referenceCode) return true;

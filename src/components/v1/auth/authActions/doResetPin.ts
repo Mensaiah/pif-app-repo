@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
@@ -13,6 +13,7 @@ const doResetPin = async (req: IRequest, res: Response) => {
 
   const { otpCode, pin, phone, phonePrefix, email }: resetPinDataType =
     req.body;
+  consoleLog({ otpCode, pin, phone, phonePrefix, email });
 
   try {
     const existingOTP = await OtpCodeModel.findOne({
@@ -20,14 +21,17 @@ const doResetPin = async (req: IRequest, res: Response) => {
       phonePrefix,
       phone,
       ...(email && { email }),
-    });
+    }).sort({ createdAt: -1 });
+    consoleLog({ existingOTP });
 
-    const userCount = await UserModel.countDocuments({
+    if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);
+
+    const users = await UserModel.find({
       'contact.phonePrefix': phonePrefix,
       'contact.phone': phone,
       userType: 'customer',
     });
-    if (userCount > 1 && !email) {
+    if ((users.length > 1 || !users[0].isConfirmed) && !email) {
       return handleResponse(res, 'Please provide email', 401);
     }
 
@@ -39,6 +43,8 @@ const doResetPin = async (req: IRequest, res: Response) => {
     const existingUser = await UserModel.findOne({
       'contact.phonePrefix': existingOTP.phonePrefix,
       'contact.phone': existingOTP.phone,
+      userType: 'customer',
+      ...(email && { email }),
     });
 
     if (!existingUser) return handleResponse(res, 'User does not exist', 401);

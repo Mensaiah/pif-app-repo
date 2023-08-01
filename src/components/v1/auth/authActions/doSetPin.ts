@@ -21,16 +21,21 @@ const doSetPin = async (req: IRequest, res: Response) => {
     'contact.phonePrefix': user.contact.phonePrefix,
   });
 
+  let errorMessage = '';
   if (similarAccounts.length) {
     for (let i = 0; i < similarAccounts.length; i++) {
+      if (errorMessage) break;
       const accountAccess = await UserAccessModel.findOne({
         User: similarAccounts[i]._id,
       });
 
-      if (accountAccess.comparePin(pin))
-        return handleResponse(res, 'Use a more secure pin', 401);
+      if (accountAccess.comparePin(pin)) {
+        errorMessage = 'Use a more secure pin';
+        break;
+      }
     }
   }
+  if (errorMessage) return handleResponse(res, errorMessage, 401);
 
   if (userAccess.pin) return handleResponse(res, 'Pin is already set', 401);
 

@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
+import { sendOtpEmail } from '../../notification/notification.util';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { forgotPinSchema } from '../auth.policy';
@@ -21,7 +22,7 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
       userType: 'customer',
     });
 
-    if (existingUsers.length > 1 && !email) {
+    if ((existingUsers.length > 1 || !existingUsers[0].isConfirmed) && !email) {
       return handleResponse(res, 'Please, provide your email', 401);
     }
 
@@ -34,6 +35,13 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
       userType: 'customer',
       ...(email && { email }),
     });
+
+    if (!existingUser)
+      return handleResponse(
+        res,
+        'One or all details supplied are incorrect',
+        401
+      );
 
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,
@@ -48,9 +56,14 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
       phone,
       phonePrefix,
       lastSent: new Date(),
+      ...(email && { email }),
     }).save();
 
-    await sendOTP(phonePrefix + phone, newOtpCode.code);
+    if (existingUser.isConfirmed) {
+      await sendOTP(phonePrefix + phone, newOtpCode.code);
+    } else {
+      await sendOtpEmail(email, newOtpCode.code);
+    }
 
     return handleResponse(res, 'Enter OTP and new pin to proceed');
   } catch (err) {

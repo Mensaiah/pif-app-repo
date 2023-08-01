@@ -28,7 +28,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     });
 
     if (existingUsers.length === 0)
-      return handleResponse(res, 'You need to signup first', 401);
+      return handleResponse(res, 'Account does not exist', 401);
 
     let userAccess: undefined | (UserAccessAttributes & Document);
     let existingUser: undefined | (UserAttributes & Document);
@@ -43,7 +43,9 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       if (userAccesses.length === 0)
         return handleResponse(res, 'You need to sign up first', 401);
 
-      userAccess = userAccesses.find((access) => access.comparePin(pin));
+      userAccess = userAccesses.find(
+        (access) => access.pin && access.comparePin(pin)
+      );
 
       if (!userAccess)
         return handleResponse(res, 'invalid login credentials', 401);
@@ -95,6 +97,14 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
         res,
         `Too many failed login attempts. Please wait for ${waitMinutes} minutes and try again.`,
         429
+      );
+    }
+
+    if (!userAccess.pin) {
+      return handleResponse(
+        res,
+        "You didn't set your pin, please use forgot pin",
+        401
       );
     }
 

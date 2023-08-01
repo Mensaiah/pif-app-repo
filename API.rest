@@ -2,8 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiNzJkOGYxZDktZjI2My00MTZhLTk1YmMtOGNhNGFjMzE0OTQ0IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjgzZWU3MzEzLWVhYjAtNDQ4Ny1iYTBmLWE5NWQzNzFmNWVhZCIsInJlZiI6IjY0YzY4ZTRiZTlhMmY5NGExODkwNjZhNyIsImlhdCI6MTY5MDc0NTMyMywiZXhwIjoxNjkwOTE4MTIzLCJpc3MiOiJQSUYtZGV2In0.0W0PRpJ4g0zvWHxIDxpLCL8QhbmmanyLyBT0K0RFeZw
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZDAyMGZmYTctMTUyMC00OTA2LWJiYjAtNDAwN2EyZWJhYjAyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImZlYTIzN2EwLThmMmUtNDY1OC1iMGUxLTBiN2M2MmVmMTVlMyIsInJlZiI6IjY0YzY4ZWU2ZTlhMmY5NGExODkwNjZhZCIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MDc0Nzk0MiwiZXhwIjoxNjkwOTIwNzQyLCJpc3MiOiJQSUYtZGV2In0.kS4diq0fQAK7vd8KGa6RJmO-se4YFFlHPHJg_GrVJGA
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMTNhODU3ZTEtYmNhYi00MGIxLWIzZTktMjU4YTVhMGFmNWE4IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6IjVmMzRkY2M4LWE4YTctNDQyZi1hMjFkLTAxMWY5OGQ2M2Q0OSIsInJlZiI6IjY0YzdkMjIxMWM0ODE3MGExMDk0YjE2NCIsImlhdCI6MTY5MDgzMzc0MywiZXhwIjoxNjkxMDA2NTQzLCJpc3MiOiJQSUYtZGV2In0.42mCwcNNyB3f7fcI0c33rwMfQ0VQWIpo2JhD5xgpvUk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZWJiZDBkYzUtYjIyNS00ZDhiLThlMDgtZWEyY2MyYzM0M2Y0IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6IjUzZDY1ZWIzLWQyYTctNDEzZC05Y2I0LWFmNDdkYmI4Y2FlMiIsInJlZiI6IjY0YzgxNGVhNTYxN2JkMDZhNWI1ZjU5OSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MDg3OTY2OSwiZXhwIjoxNjkxMDUyNDY5LCJpc3MiOiJQSUYtZGV2In0.UVWMFEfIx8wAvp6sUI2PdMgTpew9hghCDNBJjo4vS10
 
 GET {{server}}
 
@@ -164,7 +164,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8103498784",
+  "phone": "8168861541",
   "marketplace": "ng"
 }
 
@@ -190,18 +190,31 @@ Content-Type: application/json
 }
 
 
-### mobile finalize signup
+### mobile finalize signup (if user signup with phone number
 POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Aweds wedi",
+ "name": "Lekan Ajala",
  "dob": "1990-02-20",
- "phonePrefix": "234",
- "phone": "8103498784",
- "pifId":"wedi",
+ "pifId":"semite",
  "zipCode":"12345",
- "otpCode":"38926"
+ "email": "jalasem@abdulsamii.com",
+ "referenceCode": "9764c814ea5617bd06a5b5f59988569"
+}
+### mobile finalize signup (if user signup with phone and Google or has ever received a gift before joinning the platform)
+POST {{api}}/auth/finalize-m-signup
+Content-Type: application/json
+
+{
+ "name": "Lekan Ajala",
+ "dob": "1990-02-20",
+ "pifId":"semite",
+ "zipCode":"12345",
+ "phonePrefix": "234",
+ "phone": "8168861541",
+ "otpCode":"38926",
+ "email": "jalasem@abdulsamii.com",
 }
 
 ### mobile set pin
@@ -220,7 +233,7 @@ Content-Type: application/json
 
 {
  "phonePrefix": "234",
- "phone": "8103498784",
+ "phone": "8168861541",
  "pin": "1234"
 }
 
@@ -230,7 +243,8 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8103498784"
+  "phone": "8168861541",
+  "email": "jalasem@abdulsamii.com"
 }
 
 ### mobile - reset pin
@@ -238,8 +252,11 @@ POST {{api}}/auth/reset-pin
 Content-Type: application/json
 
 {
-  "otpCode": "24691",
-  "pin": "0000"
+  "otpCode": "63025",
+  "pin": "1234",
+  "phonePrefix": "234",
+  "phone": "8168861541",
+  "email": "jalasem@abdulsamii.com"
 }
 
 ### mobile - change pin
@@ -402,19 +419,19 @@ Authorization: Bearer {{token}}
 
 {
   "name": {
-    "en": "flowerzzzzz",
-    "fr": "fleurzz",
-    "da": "blomstzzz"
+    "en": "flower",
+    "fr": "fleurz",
+    "da": "blomst"
   },
   "description": {
-    "en": "zzzzSweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
-    "fr": "zzzFleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
-    "da": "zzzSød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
+    "en": "Sweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
+    "fr": "Fleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
+    "da": "Sød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
   },
-  "partnerId": "64c68e69f54333e62ad54cc6",
-  "categories": ["64c68e68f54333e62ad54b2a"],
+  "partnerId": "64c7d903597cad7ddb5482fc",
+  "categories": ["64c7d903597cad7ddb548079", "64c7d903597cad7ddb54807c"],
   "marketplace": "ng",
-  "price": 2000,
+  "price": 3000,
   "productType": "regular-product",
   "quantity": 100,
   "redemptionValidityType": "period",
@@ -442,13 +459,13 @@ Authorization: Bearer {{token}}
   "driver": "paystack",
   "items": [
     {
-      "productId": "64c6c5835c63153dead13947",
-      "quantity": 1
+      "productId": "64c8148d5617bd06a5b5f58c",
+      "quantity": 2
     }
   ],
   "recipientPhonePrefix": "234",
   "recipientPhoneNumber": "8103498784",
-  "toBeDeliveredAt": "2023-07-31T20:38:37.820Z"
+  "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
 }
 
 ### get transaction

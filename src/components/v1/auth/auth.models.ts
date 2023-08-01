@@ -121,7 +121,7 @@ userAccessSchema.methods.comparePin = function (pin: string): boolean {
 
   return bcrypt.compareSync(
     pinString,
-    this.pin.replace(/^\$2y/, '$2b') // replace $2y with $2b for bcrypt to work
+    this.pin?.replace(/^\$2y/, '$2b') // replace $2y with $2b for bcrypt to work
   );
 };
 // updatePassword
