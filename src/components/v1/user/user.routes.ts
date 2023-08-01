@@ -20,6 +20,7 @@ import {
   getMyProfile,
   changeMyMarketplace,
   updateMyProfile,
+  verifyPifId,
 } from './userActions';
 import { getUser, getUsers } from './userActions/userProfileActions';
 
@@ -75,6 +76,7 @@ router.get(
   hasAnyPermissionMiddleware(['manage-users', 'view-users']),
   getUsers
 );
+router.get('/verify/:pifId', verifyPifId);
 
 router.get(
   '/:userId',
