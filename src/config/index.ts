@@ -85,6 +85,7 @@ const appConfig = {
   stripePublicKey: env.STRIPE_PUBLIC_KEY || '',
   netsTestSecretKey: env.NETS_TEST_SECRET_KEY || '',
   netsLiveSecretKey: env.NETS_LIVE_SECRET_KEY || '',
+  sentryDSN: env.SENTRY_DSN || '',
 };
 
 export default appConfig;
