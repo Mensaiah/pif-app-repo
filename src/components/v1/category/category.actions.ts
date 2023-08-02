@@ -28,12 +28,13 @@ export const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
   try {
     const categories = await CategoryModel.find(
-      userType !== 'platform-admin'
-        ? {
+      {
+        ...(userType !== 'platform-admin' && {
             isEnabled: true,
             deletedAt: { $exists: false },
-          }
-        : {}
+          }),
+        'marketplaces.0': { $exists: true }
+      }
     );
 
     return handleResponse(res, {
