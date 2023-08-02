@@ -1,10 +1,12 @@
 import { Response } from 'express';
+import { FilterQuery } from 'mongoose';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
 import {
   addSupportedLang,
   checkLang,
+  consoleLog,
   handleLangSearch,
   handleResponse,
 } from '../../../utils/helpers';
@@ -27,6 +29,7 @@ import {
   addInternalCategorySchema,
   updateCategorySchema,
 } from './category.policy';
+import { CategoryAttributes } from './category.types';
 
 export const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
@@ -34,15 +37,17 @@ export const getCategories = async (req: IRequest, res: Response) => {
   const { marketplace } = handleReqSearch(req, { marketplace: 'string' });
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  const query: FilterQuery<CategoryAttributes & Document> = {
+    ...(userType !== 'platform-admin' && {
+      isEnabled: true,
+      deletedAt: { $exists: false },
+    }),
+    $and: [{ 'marketplaces.0': { $exists: true } }, marketplaceQuery],
+  };
+  consoleLog(JSON.stringify({ query }, null, 2));
 
   try {
-    const categories = await CategoryModel.find({
-      ...(userType !== 'platform-admin' && {
-        isEnabled: true,
-        deletedAt: { $exists: false },
-      }),
-      $and: [{ 'marketplaces.0': { $exists: true } }, marketplaceQuery],
-    });
+    const categories = await CategoryModel.find(query).lean();
 
     return handleResponse(res, {
       data: categories,

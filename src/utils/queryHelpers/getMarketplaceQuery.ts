@@ -13,10 +13,12 @@ const determineMarketplaceQueryForAdmin = (
 
   if (userType === 'platform-admin') {
     if (!platformConstants.topAdminRoles.includes(role as any)) {
-      marketplaceQuery =
-        marketplace !== 'all' && userAccess.marketplaces?.includes(marketplace)
-          ? marketplace
-          : { $in: userAccess.marketplaces };
+      if (
+        marketplace !== 'all' &&
+        userAccess.marketplaces?.includes(marketplace)
+      ) {
+        marketplaceQuery = marketplace;
+      }
     } else if (marketplace !== 'all') {
       marketplaceQuery = marketplace;
     }
@@ -65,7 +67,7 @@ export const getMarketplaceQuery = <T extends Document>(
 
   if (marketplaceQueryForAdmin || marketplaceQueryForPartner) {
     query.marketplace = marketplaceQueryForAdmin || marketplaceQueryForPartner;
-  } else if (marketplace === 'all' || marketplace.length === 2) {
+  } else if (marketplace === 'all' || marketplace?.length === 2) {
     query.marketplace = marketplace;
   }
 
