@@ -99,15 +99,6 @@ router.delete(
   removeInternalCategory
 );
 
-router.get(
-  '/',
-  validateTokenMiddleware,
-  requireAuth,
-  cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['category.view']),
-  getCategories
-);
-
 router.post(
   '/',
   validateTokenMiddleware,
@@ -115,13 +106,6 @@ router.post(
   policyMiddleware(addCategorySchema),
   hasAnyPermissionMiddleware(['category.add']),
   addCategory
-);
-
-router.get(
-  '/marketplaces/:marketplace',
-  validateTokenMiddleware,
-  requireAuth,
-  getCategoriesByMarketplace
 );
 
 router.patch(
@@ -139,6 +123,15 @@ router.delete(
   requireAuth,
   hasAnyPermissionMiddleware(['category.delete']),
   removeCategory
+);
+
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuth,
+  cannotBeCustomerMiddleware,
+  hasAnyPermissionMiddleware(['category.view']),
+  getCategories
 );
 
 export default router;

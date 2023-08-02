@@ -74,6 +74,7 @@ export interface IRequest extends Request {
   userAccess: Document & UserAccessAttributes;
   marketplaces?: string[];
   currentMarketplace?: string;
+  sendEmptyData?: boolean;
 }
 
 export interface IToken {

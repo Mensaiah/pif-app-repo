@@ -1,8 +1,8 @@
 import platformConstants from '../config/platformConstants';
 import { IRequest } from '../types/global';
 
-import { handleReqSearch } from './handleReqSearch';
 import { consoleLog } from './helpers';
+import { handleReqSearch } from './queryHelpers';
 
 const { paginationConfig } = platformConstants;
 

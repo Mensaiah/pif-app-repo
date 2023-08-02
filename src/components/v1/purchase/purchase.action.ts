@@ -3,14 +3,20 @@ import { FilterQuery, Document } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
-import { handleReqSearch } from '../../../utils/handleReqSearch';
 import { handleResponse } from '../../../utils/helpers';
+import {
+  getCurrencyQuery,
+  getMarketplaceQuery,
+  getPartnerQuery,
+  getProductQuery,
+  getUserQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
 
 import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
-  const { userType } = req;
   const { marketplace, partner_id, product_id, user_id, currency } =
     handleReqSearch(req, {
       marketplace: 'string',
@@ -20,30 +26,21 @@ export const getPurchases = async (req: IRequest, res: Response) => {
       currency: 'string',
     });
   const paginate = handlePaginate(req);
-  const query: FilterQuery<PurchaseAttributes & Document> = {};
 
-  if (marketplace && marketplace.length === 2) query.marketplace = marketplace;
-  // TODO: ensure the user is allowed to query that marketplace
-  // check userAccess in req and also check role
+  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  const partnerQuery = await getPartnerQuery(req, partner_id);
+  const productQuery = await getProductQuery(req, product_id);
+  const userQuery = await getUserQuery(req, user_id);
+  const currencyQuery = await getCurrencyQuery(req, currency);
+  if (req.sendEmptyData) return handleResponse(res, { data: [] });
 
-  if (partner_id) query.Partner = partner_id;
-  // TODO: ensure the user is allowed to query that partner
-
-  if (product_id) query.Product = product_id;
-  // TODO: ensure the user is allowed to view that product
-
-  if (user_id) {
-    if (userType === 'partner-admin')
-      return handleResponse(
-        res,
-        'You are not allowed to perform this operation',
-        403
-      );
-    query.User = user_id;
-  }
-  // TODO: only an admin can use this query and ensure the user is in the same marketplace as the admin
-
-  if (currency) query.currency = currency;
+  const query: FilterQuery<PurchaseAttributes & Document> = {
+    ...currencyQuery,
+    ...partnerQuery,
+    ...productQuery,
+    ...userQuery,
+    ...marketplaceQuery,
+  };
 
   try {
     const purchases = await PurchaseModel.find(

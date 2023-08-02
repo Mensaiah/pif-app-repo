@@ -3,9 +3,10 @@ import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
 import appConfig from '../../../config';
+import platformConstants from '../../../config/platformConstants';
 import { sendMail } from '../../../services/emailServices/mailgun.service';
 import { sendSms } from '../../../services/infobip.service';
-import { IToken } from '../../../types/global';
+import { IRequest, IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
 import PlatformModel from '../platform/platform.model';
 import { PlatformAttributes } from '../platform/platform.types';
@@ -245,5 +246,27 @@ export const sendOtpToSenderIfNotConfirmed = async (
     await user.save();
   } catch (err) {
     throw err;
+  }
+};
+
+export const isPlatformAdminWithMarketplaceAccess = (
+  req: IRequest,
+  marketplace: string | string[]
+): boolean => {
+  const { userType, role, userAccess } = req;
+
+  // Check if the user's role is included in the topAdminRoles
+  if (
+    userType === 'platform-admin' &&
+    platformConstants.topAdminRoles.includes(role as any)
+  ) {
+    return true;
+  }
+
+  // Check if the user has access to the marketplace(s)
+  if (Array.isArray(marketplace)) {
+    return marketplace.every((m) => userAccess.marketplaces?.includes(m));
+  } else {
+    return userAccess.marketplaces?.includes(marketplace) ?? false;
   }
 };

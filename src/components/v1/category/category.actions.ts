@@ -8,6 +8,10 @@ import {
   handleLangSearch,
   handleResponse,
 } from '../../../utils/helpers';
+import {
+  getMarketplaceQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
 import { useWord } from '../../../utils/wordSheet';
 import PlatformModel from '../platform/platform.model';
 import { filterMarketplaces } from '../platform/platform.utils';
@@ -26,67 +30,18 @@ import {
 
 export const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
-  try {
-    const categories = await CategoryModel.find(
-      userType !== 'platform-admin'
-        ? {
-            isEnabled: true,
-            deletedAt: { $exists: false },
-          }
-        : {}
-    );
+  const { marketplace } = handleReqSearch(req, { marketplace: 'string' });
 
-    return handleResponse(res, {
-      data: categories,
+  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+
+  try {
+    const categories = await CategoryModel.find({
+      ...marketplaceQuery,
+      ...(userType !== 'platform-admin' && {
+        isEnabled: true,
+        deletedAt: { $exists: false },
+      }),
     });
-  } catch (err) {
-    return handleResponse(
-      res,
-      useWord('internalServerError', req.lang),
-      500,
-      err
-    );
-  }
-};
-
-export const getCategoriesByMarketplace = async (
-  req: IRequest,
-  res: Response
-) => {
-  const userType = req.userType;
-
-  const { marketplace } = req.params;
-  try {
-    if (marketplace === 'all') {
-      if (userType === 'customer') {
-        return handleResponse(res, {
-          data: [],
-        });
-      }
-
-      const allCategories = await CategoryModel.find(
-        userType !== 'platform-admin'
-          ? {
-              deletedAt: { $exists: false },
-              isEnabled: true,
-            }
-          : {}
-      );
-
-      return handleResponse(res, {
-        data: allCategories,
-      });
-    }
-
-    const categories = await CategoryModel.find(
-      userType !== 'platform-admin'
-        ? {
-            marketplaces: { $in: [marketplace] },
-            isEnabled: true,
-            deletedAt: { $exists: false },
-          }
-        : { marketplaces: { $in: [marketplace] } }
-    );
 
     return handleResponse(res, {
       data: categories,

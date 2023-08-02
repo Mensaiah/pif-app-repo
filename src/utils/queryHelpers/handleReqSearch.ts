@@ -2,19 +2,7 @@ import { Request } from 'express';
 import { ParsedQs } from 'qs';
 import validator from 'validator';
 
-type QueryMap = {
-  [key: string]: 'number' | 'positive' | 'string' | 'email' | 'boolean';
-};
-
-type ValueType<T> = T extends 'number' | 'positive'
-  ? number
-  : T extends 'boolean'
-  ? boolean
-  : string | null;
-
-type QueryResult<T extends QueryMap> = {
-  [K in keyof T]: ValueType<T[K]>;
-};
+import { ValueType, QueryMap, QueryResult } from './queryHelperTypes';
 
 const parseType = <
   T extends 'number' | 'positive' | 'string' | 'email' | 'boolean'

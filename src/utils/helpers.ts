@@ -19,7 +19,7 @@ import {
 } from '../types/global';
 
 // import normalizeLang from './normalizeLang';
-import { handleReqSearch } from './handleReqSearch';
+import { handleReqSearch } from './queryHelpers';
 import { isArray, isObject } from './validators';
 
 export const consoleLog = (
