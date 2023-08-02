@@ -443,7 +443,7 @@ GET {{api}}/products/marketplace/dk/category/64a9a75a02ed5ef9311de15a/partner/64
 GET {{api}}/partners/marketplace/dk/category/64a9a75a02ed5ef9311de15a
 
 ### Get categories
-GET {{api}}/categories/marketplaces/ng
+GET {{api}}/categories?marketplaces=ng
 Authorization: Bearer {{token}}
 
 ### initiate transaction

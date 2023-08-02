@@ -49,7 +49,7 @@ const appConfig = {
     permissionList,
     allPermissions,
   },
-  supportedLanguages: ['en', 'da', 'fr', 'sv', 'es'] as const,
+  supportedLanguages: ['en', 'da', 'fr', 'sv', 'es', 'uk', 'it'] as const,
   paymentProcessors: ['stripe', 'paystack', 'mobilePay', 'nets'] as const,
   seedData: {
     name: env.SEED_USER_NAME,
