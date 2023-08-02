@@ -8,6 +8,7 @@ import authRoutesV1 from './auth/auth.routes';
 import categoryRoutesV1 from './category/category.routes';
 import cmsRoutesV1 from './cms/cms.routes';
 import driveRoutesV1 from './drive/drive.routes';
+import generalRoutesV1 from './general.routes';
 import partnersRoutesV1 from './partner/partner.routes';
 import platformRoutesV1 from './platform/platform.routes';
 import productRoutesV1 from './product/product.routes';
@@ -34,6 +35,7 @@ router.use('/tx', txRoutesV1);
 router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
 router.use('/revenue', revenueRoutesV1);
+router.use('/', generalRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
   return handleResponse(res, useWord('welcomeToAPI', req.lang));

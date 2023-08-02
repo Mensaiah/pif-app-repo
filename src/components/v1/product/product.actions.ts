@@ -77,9 +77,6 @@ export const getProducts = async (req: IRequest, res: Response) => {
   const query: FilterQuery<ProductAttributes & Document> = {
     ...marketplaceQuery,
     ...partnerQuery,
-    ...(low_stock && {
-      quantity: { $lte: '$quantityAlert' },
-    }),
     ...(is_approved && { isApproved: true }),
     ...(is_pending && { isApproved: false }),
     ...(is_inactive && { isActive: false }),
@@ -87,17 +84,41 @@ export const getProducts = async (req: IRequest, res: Response) => {
     ...(regular_product && { productType: 'regular-product' }),
   };
 
-  try {
-    const selectedFields = '-isApproved -categories -internalCategory';
+  const aggregationQuery: any[] = [
+    { $match: query },
+    ...(low_stock
+      ? [{ $match: { $expr: { $lte: ['$quantity', '$quantityAlert'] } } }]
+      : []),
+    { $count: 'count' },
+  ];
 
-    const allProducts = await ProductModel.find(
-      query,
-      selectedFields,
-      paginate.queryOptions
-    )
-      .populate('Partner', 'name')
-      .lean();
-    const count = await ProductModel.countDocuments(query);
+  try {
+    const selectedFields = {
+      isApproved: 0,
+      categories: 0,
+      internalCategory: 0,
+    };
+
+    const allProductsAndCount = await ProductModel.aggregate(aggregationQuery)
+      .project(selectedFields)
+      .skip(paginate.queryOptions.skip)
+      .limit(paginate.queryOptions.limit)
+      .lookup({
+        from: 'partners',
+        localField: 'Partner',
+        foreignField: '_id',
+        as: 'Partner',
+      })
+      .unwind('Partner');
+
+    // Extract the products and the count from the aggregation results
+    const allProducts = allProductsAndCount.slice(0, -1);
+    const count = allProductsAndCount[allProductsAndCount.length - 1].count;
+
+    // if you want Partner to be an object, not an array:
+    allProducts.forEach((product) => {
+      product.Partner = product.Partner[0];
+    });
 
     return handleResponse(res, {
       data: allProducts,

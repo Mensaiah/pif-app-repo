@@ -111,6 +111,16 @@ export const cannotBeCustomerMiddleware = (
   return next();
 };
 
+export const mustBeCustomerMiddleware = (
+  req: IRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.userType !== 'customer') return handleResponse(res, 'Forbidden', 403);
+
+  return next();
+};
+
 export const mustBePlatformAdminMiddleware = (
   req: IRequest,
   res: Response,
