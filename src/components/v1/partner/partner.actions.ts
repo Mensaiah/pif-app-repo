@@ -1,10 +1,15 @@
 import { Response } from 'express';
-import { Document } from 'mongoose';
+import { Document, FilterQuery } from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
+import { handlePaginate } from '../../../utils/handlePaginate';
 import { _omit, handleResponse, uuid } from '../../../utils/helpers';
+import {
+  getMarketplaceQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
 import { useWord } from '../../../utils/wordSheet';
 import {
   getUserRolesAndPermissions,
@@ -203,35 +208,30 @@ export const addPartner = async (req: IRequest, res: Response) => {
 };
 
 export const getPartners = async (req: IRequest, res: Response) => {
-  let { marketplace } = req.params;
+  const { marketplace } = handleReqSearch(req, {
+    marketplace: 'string',
+  });
 
-  if (marketplace) {
-    if (marketplace === 'all') marketplace = '';
-    if (marketplace.length > 2) {
-      const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
+  const paginate = handlePaginate(req);
 
-      if (platform) {
-        marketplace =
-          platform.marketplaces.find((m) => m.name === marketplace)?.code ||
-          marketplace;
-      }
-    }
-
-    marketplace = marketplace.toLocaleLowerCase();
-  }
+  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  const query: FilterQuery<PartnerPosAttributes & Document> = {
+    ...(marketplaceQuery.marketplace && '$in' in marketplaceQuery.marketplace
+      ? { marketplaces: { $in: marketplaceQuery.marketplace.$in } }
+      : { marketplaces: { $in: [marketplaceQuery.marketplace] } }),
+  };
 
   try {
-    const partners = await (marketplace
-      ? PartnerModel.find(
-          {
-            marketplaces: { $elemMatch: { $eq: marketplace } },
-          },
-          '-rolesAndPermissions'
-        )
-      : PartnerModel.find({}, '-rolesAndPermissions'));
+    const partners = await PartnerModel.find(
+      query,
+      '-rolesAndPermissions',
+      paginate.queryOptions
+    ).lean();
+    const count = await PartnerModel.countDocuments(query);
 
     return handleResponse(res, {
       data: partners,
+      meta: paginate.getMeta(count),
     });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);

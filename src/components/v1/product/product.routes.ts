@@ -47,14 +47,6 @@ router.get(
   getProductsByCategoryAndPartner
 );
 
-router.get(
-  '/marketplace/:marketplace',
-  validateTokenMiddleware,
-  requireAuth,
-  hasAnyPermissionMiddleware(['product.view']),
-  getProducts
-);
-
 router.patch(
   '/:productId/split-price/:code',
   validateTokenMiddleware,

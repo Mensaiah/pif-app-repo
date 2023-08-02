@@ -51,7 +51,6 @@ export const getCategories = async (req: IRequest, res: Response) => {
       },
     ],
   };
-  consoleLog(JSON.stringify({ query }, null, 2));
 
   try {
     const categories = await CategoryModel.find(query).lean();

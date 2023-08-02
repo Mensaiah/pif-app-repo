@@ -41,8 +41,6 @@ router.delete(
   removePartnerAdmins
 );
 
-router.get('/marketplaces/:marketplace', getPartners);
-
 router.get(
   '/:partnerId/admins',
   validateTokenMiddleware,
