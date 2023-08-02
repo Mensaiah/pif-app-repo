@@ -30,17 +30,18 @@ import {
 
 export const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
+
   const { marketplace } = handleReqSearch(req, { marketplace: 'string' });
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
 
   try {
     const categories = await CategoryModel.find({
-      ...marketplaceQuery,
       ...(userType !== 'platform-admin' && {
         isEnabled: true,
         deletedAt: { $exists: false },
       }),
+      $and: [{ 'marketplaces.0': { $exists: true } }, marketplaceQuery],
     });
 
     return handleResponse(res, {

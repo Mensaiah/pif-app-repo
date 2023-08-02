@@ -16,7 +16,6 @@ import {
   editInternalCategory,
   enableUploadedCategoryIcon,
   getCategories,
-  getCategoriesByMarketplace,
   getInternalCategories,
   getUploadedCategoryIcons,
   removeCategory,
