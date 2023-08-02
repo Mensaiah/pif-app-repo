@@ -68,6 +68,33 @@ export const getCategories = async (req: IRequest, res: Response) => {
   }
 };
 
+export const getCategoryByMarketplace = async (
+  req: IRequest,
+  res: Response
+) => {
+  const { marketplace } = req.params;
+
+  if (marketplace.length !== 2)
+    return handleResponse(res, 'invalid marketplace', 400);
+
+  try {
+    const categories = await CategoryModel.find(
+      {
+        isEnabled: true,
+        isFunctional: true,
+        marketplaces: { $in: [marketplace] },
+      },
+      'name Icon'
+    ).lean();
+
+    return handleResponse(res, {
+      data: categories,
+    });
+  } catch (err) {
+    handleResponse(res, 'error fetching categories', 500, err);
+  }
+};
+
 export const getInternalCategories = async (req: IRequest, res: Response) => {
   try {
     const internalCategories = await InternalCategoryModel.find();

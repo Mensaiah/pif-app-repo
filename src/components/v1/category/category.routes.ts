@@ -16,6 +16,7 @@ import {
   editInternalCategory,
   enableUploadedCategoryIcon,
   getCategories,
+  getCategoryByMarketplace,
   getInternalCategories,
   getUploadedCategoryIcons,
   removeCategory,
@@ -97,6 +98,8 @@ router.delete(
   hasAnyPermissionMiddleware(['internal-category.delete']),
   removeInternalCategory
 );
+
+router.get('/marketplaces/:marketplace', getCategoryByMarketplace);
 
 router.post(
   '/',

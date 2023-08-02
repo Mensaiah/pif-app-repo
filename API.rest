@@ -485,3 +485,6 @@ Authorization: Bearer {{token}}
 ### unwrap PIF
 PATCH {{api}}/received-pifs/64cabb481886e1c8b409e044/unwrap
 Authorization: Bearer {{token}}
+
+###
+GET {{api}}/categories/marketplaces/ng
