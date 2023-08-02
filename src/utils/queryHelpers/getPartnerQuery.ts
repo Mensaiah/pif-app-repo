@@ -2,6 +2,7 @@ import { FilterQuery, Document } from 'mongoose';
 
 import { PartnerModel } from '../../components/v1/partner/partner.model';
 import { IRequest } from '../../types/global';
+import { consoleLog } from '../helpers';
 
 import { handleObjectIdQuery } from './helpers';
 
@@ -17,6 +18,7 @@ export const getPartnerQuery = async <T extends Document>(
     return query;
   }
 
+  consoleLog('partner_id: ' + partner_id);
   if (!partner_id) return query;
 
   try {

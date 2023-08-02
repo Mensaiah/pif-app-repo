@@ -36,6 +36,7 @@ export interface ProductAttributes extends Document {
   deletedAt?: Date;
   version: number;
   isCurrentVersion: boolean;
+  isLowStock: boolean;
   originId: number;
   order: boolean;
   quantityAlert: number;

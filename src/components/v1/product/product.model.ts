@@ -72,6 +72,7 @@ const productSchema = new Schema<ProductAttributes>({
   deletedAt: Date,
   version: Number,
   isCurrentVersion: Boolean,
+  isLowStock: Boolean,
   originId: Number,
   order: Boolean,
   quantityAlert: { type: Number, default: 0 },

@@ -1,4 +1,7 @@
+import platformConstants from '../config/platformConstants';
 import { LanguageCode } from '../types/global';
+
+const languageCodes = platformConstants.supportedLanguages;
 
 const wordSheet = {
   upAndRunning: {
@@ -255,7 +258,28 @@ const wordSheet = {
   },
 };
 
+// loop through word sheet and add missing language codes with value of empty string is not present
+for (const word in wordSheet) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const wordMap = wordSheet[word];
+  for (const lang of languageCodes) {
+    if (!wordMap[lang]) wordMap[lang] = '';
+  }
+}
+
 export const useWord = (
   word: keyof typeof wordSheet,
   lang: LanguageCode = 'en'
-) => (wordSheet[word] ? wordSheet[word][lang] : word);
+) => {
+  // wordSheet[word] ? wordSheet[word][lang] : word;
+  if (wordSheet[word]) {
+    const wordMap = wordSheet[word];
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (wordMap[lang]) return wordMap[lang];
+    else if (wordMap.en) return wordMap.en;
+    else return Object.values(wordSheet[word])[0] || '';
+  } else return word;
+};

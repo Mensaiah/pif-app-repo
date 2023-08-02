@@ -74,6 +74,13 @@ const completeTransaction = async (
           product.quantity !== platformConstants.unlimited ? item.quantity : 0;
         product.qtySold += item.quantity;
 
+        if (
+          product.quantity !== platformConstants.unlimited &&
+          product.quantity <= product.quantityAlert
+        ) {
+          product.isLowStock = true;
+        }
+
         await product.save();
 
         const txFee = currency(paymentRecord.txFee)
