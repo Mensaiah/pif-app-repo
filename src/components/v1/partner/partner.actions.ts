@@ -5,7 +5,12 @@ import { z } from 'zod';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
-import { _omit, handleResponse, uuid } from '../../../utils/helpers';
+import {
+  _omit,
+  consoleLog,
+  handleResponse,
+  uuid,
+} from '../../../utils/helpers';
 import {
   getMarketplaceQuery,
   handleReqSearch,
@@ -215,11 +220,30 @@ export const getPartners = async (req: IRequest, res: Response) => {
   const paginate = handlePaginate(req);
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  if (req.sendEmptyData) return handleResponse(res, { data: [] });
+
   const query: FilterQuery<PartnerPosAttributes & Document> = {
-    ...(marketplaceQuery.marketplace && '$in' in marketplaceQuery.marketplace
-      ? { marketplaces: { $in: marketplaceQuery.marketplace.$in } }
-      : { marketplaces: { $in: [marketplaceQuery.marketplace] } }),
+    ...(marketplaceQuery.marketplace &&
+      (typeof marketplaceQuery.marketplace === 'object' &&
+      '$in' in marketplaceQuery.marketplace
+        ? { marketplaces: { $in: marketplaceQuery.marketplace.$in } }
+        : { marketplaces: { $in: [marketplaceQuery.marketplace] } })),
   };
+
+  consoleLog(
+    ':::::::::::::' +
+      JSON.stringify(
+        {
+          query,
+          userAccess: {
+            role: req.userAccess.role,
+            marketplaces: req.userAccess.marketplaces,
+          },
+        },
+        null,
+        2
+      )
+  );
 
   try {
     const partners = await PartnerModel.find(

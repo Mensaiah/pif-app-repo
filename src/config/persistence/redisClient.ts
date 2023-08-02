@@ -22,8 +22,14 @@ const redisGetAsync = promisify(client.get).bind(client);
 const redisSetAsync = promisify(client.set).bind(client);
 const redisDelAsync = promisify(client.del).bind(client);
 
-const closeRedisConnection = () => {
-  client.quit();
+const closeRedisConnection = async (): Promise<void> => {
+  try {
+    client.quit();
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error while quitting Redis client: ' + error);
+    throw error;
+  }
 };
 
 const redisClient = client;

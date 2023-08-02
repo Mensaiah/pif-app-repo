@@ -12,7 +12,7 @@ const platformConstants = {
     'password-reset',
     'confirm-account',
   ] as const,
-  topAdminRoles: ['superadmin', 'admin'] as const,
+  topAdminRoles: ['super-admin', 'admin'] as const,
 };
 
 export default platformConstants;
