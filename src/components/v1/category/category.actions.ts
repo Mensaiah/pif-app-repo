@@ -42,7 +42,14 @@ export const getCategories = async (req: IRequest, res: Response) => {
       isEnabled: true,
       deletedAt: { $exists: false },
     }),
-    $and: [{ 'marketplaces.0': { $exists: true } }, marketplaceQuery],
+    $and: [
+      { 'marketplaces.0': { $exists: true } },
+      {
+        ...(marketplaceQuery.marketplace && {
+          marketplaces: marketplaceQuery.marketplace,
+        }),
+      },
+    ],
   };
   consoleLog(JSON.stringify({ query }, null, 2));
 

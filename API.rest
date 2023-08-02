@@ -391,7 +391,7 @@ GET {{api}}/categories/internal
 Authorization: Bearer {{token}}
 
 ###
-GET {{api}}/categories
+GET {{api}}/categories?marketplace=ng
 Authorization: Bearer {{token}}
 
 ### add category
