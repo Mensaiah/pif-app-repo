@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 
+import platformConstants from './platformConstants';
 import { allPermissions, permissionList } from './platformPermissionList';
 
 /* eslint-disable @typescript-eslint/no-var-requires */
@@ -49,8 +50,8 @@ const appConfig = {
     permissionList,
     allPermissions,
   },
-  supportedLanguages: ['en', 'da', 'fr', 'sv', 'es', 'uk', 'it'] as const,
-  paymentProcessors: ['stripe', 'paystack', 'mobilePay', 'nets'] as const,
+  supportedLanguages: platformConstants.supportedLanguages,
+  paymentProcessors: platformConstants.paymentProcessors,
   seedData: {
     name: env.SEED_USER_NAME,
     email: env.SEED_USER_EMAIL,

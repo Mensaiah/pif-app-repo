@@ -5,7 +5,7 @@ const platformConstants = {
     perPage: 20,
     allowedPerPageValues: [20, 30, 50, 100] as const,
   },
-  supportedLanguages: ['en', 'da', 'fr', 'sv', 'es'] as const,
+  supportedLanguages: ['en', 'da', 'fr', 'sv', 'es', 'uk', 'it'] as const,
   otpPurpose: [
     'signup',
     'pin-reset',
