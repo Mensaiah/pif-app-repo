@@ -10,7 +10,7 @@ import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
-  const { userAccess, userType, role } = req;
+  const { userType } = req;
   const { marketplace, partner_id, product_id, user_id, currency } =
     handleReqSearch(req, {
       marketplace: 'string',

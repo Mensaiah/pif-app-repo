@@ -6,7 +6,9 @@ import appConfig from '..';
 import { consoleLog } from '../../utils/helpers';
 
 const client = createClient({
+  password: appConfig.redisPassword,
   socket: {
+    host: appConfig.redisUrl,
     port: +appConfig.redisPort,
   },
 });
@@ -16,9 +18,9 @@ client.on('error', (error) => {
 });
 
 // Promisify Redis client for async/await usage
-const getAsync = promisify(client.get).bind(client);
-const setAsync = promisify(client.set).bind(client);
-const delAsync = promisify(client.del).bind(client);
+const redisGetAsync = promisify(client.get).bind(client);
+const redisSetAsync = promisify(client.set).bind(client);
+const redisDelAsync = promisify(client.del).bind(client);
 
 const closeRedisConnection = () => {
   client.quit();
@@ -26,4 +28,10 @@ const closeRedisConnection = () => {
 
 const redisClient = client;
 
-export { redisClient, getAsync, setAsync, delAsync, closeRedisConnection };
+export {
+  redisClient,
+  redisGetAsync,
+  redisSetAsync,
+  redisDelAsync,
+  closeRedisConnection,
+};
