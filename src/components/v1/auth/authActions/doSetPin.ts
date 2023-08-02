@@ -19,6 +19,7 @@ const doSetPin = async (req: IRequest, res: Response) => {
     _id: { $ne: user._id },
     'contact.phone': user.contact.phone,
     'contact.phonePrefix': user.contact.phonePrefix,
+    userType: 'customer',
   });
 
   let errorMessage = '';

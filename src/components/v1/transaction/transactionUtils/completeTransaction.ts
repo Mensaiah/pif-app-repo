@@ -5,6 +5,7 @@ import ms from 'ms';
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
 import { consoleLog } from '../../../../utils/helpers';
+import { isDate } from '../../../../utils/validators';
 import { sendOtpToSenderIfNotConfirmed } from '../../auth/auth.utils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
 import { sendPartnerOrderNotification } from '../../notification/notification.util';
@@ -91,15 +92,45 @@ const completeTransaction = async (
         // TODO: fetch redemption code if applicable
 
         // determine expiry based on the redemptionValidityType (date or period), use the redemptionValidityPeriodType (days, weeks, months) and redemptionValidityValue
-        const expiresBy =
-          product.redemptionValidityType === 'date'
-            ? product.redemptionValidityValue
-            : new Date(
-                Date.now() +
-                  ms(
-                    `${product.redemptionValidityValue} ${product.redemptionValidityPeriodType}`
-                  )
-              );
+        let expiresBy;
+
+        if (
+          product.redemptionValidityType &&
+          product.redemptionValidityValue &&
+          product.redemptionValidityPeriodType
+        ) {
+          if (product.redemptionValidityType === 'date') {
+            expiresBy = product.redemptionValidityValue;
+          } else {
+            const calculatedDate = new Date(
+              Date.now() +
+                ms(
+                  `${product.redemptionValidityValue} ${product.redemptionValidityPeriodType}`
+                )
+            );
+            if (isDate(calculatedDate)) {
+              expiresBy = calculatedDate;
+            }
+          }
+        }
+
+        // If no valid date was calculated, set expiresBy to 2 weeks from now
+        if (!expiresBy || !isDate(expiresBy)) {
+          expiresBy = new Date(Date.now() + ms('2 weeks'));
+        }
+        consoleLog(
+          JSON.stringify(
+            {
+              expiresBy,
+              redemptionValidityType: product.redemptionValidityType,
+              redemptionValidityValue: product.redemptionValidityValue,
+              redemptionValidityPeriodType:
+                product.redemptionValidityPeriodType,
+            },
+            null,
+            2
+          ) + ' :::info:: expiresBy'
+        );
 
         const priceStart = currency(supplier.settlingDetails.startProportion)
           .divide(100)

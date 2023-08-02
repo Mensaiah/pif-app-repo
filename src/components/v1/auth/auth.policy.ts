@@ -46,8 +46,12 @@ export const verifyOTPSchema = verifyOTP
   .refine(({ phone, phonePrefix, email }) => (phonePrefix && phone) || email, {
     message: 'You must provide either email or phone and phonePrefix.',
   })
-  .refine(({ phone, phonePrefix, purpose, email }) =>
-    purpose === 'confirm-account' ? phone && phonePrefix && email : true
+  .refine(
+    ({ phone, phonePrefix, purpose, email }) =>
+      purpose === 'confirm-account' ? phone && phonePrefix && email : true,
+    {
+      message: 'You must provide email, phone and phonePrefix.',
+    }
   );
 
 export const resendOTPSchema = verifyOTP

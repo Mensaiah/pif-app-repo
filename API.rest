@@ -2,8 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MTAwMDY2NywiZXhwIjoxNjkxMTczNDY3LCJpc3MiOiJQSUYtZGV2In0.Np5gTSbqAb5Ii6n3dCMyrBhLYZvnMZb5KgfXjpy3_tM
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZWJiZDBkYzUtYjIyNS00ZDhiLThlMDgtZWEyY2MyYzM0M2Y0IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6IjUzZDY1ZWIzLWQyYTctNDEzZC05Y2I0LWFmNDdkYmI4Y2FlMiIsInJlZiI6IjY0YzgxNGVhNTYxN2JkMDZhNWI1ZjU5OSIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MDg3OTY2OSwiZXhwIjoxNjkxMDUyNDY5LCJpc3MiOiJQSUYtZGV2In0.UVWMFEfIx8wAvp6sUI2PdMgTpew9hghCDNBJjo4vS10
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MTAwMDY2NywiZXhwIjoxNjkxMTczNDY3LCJpc3MiOiJQSUYtZGV2In0.Np5gTSbqAb5Ii6n3dCMyrBhLYZvnMZb5KgfXjpy3_tM
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTAwODM5OSwiZXhwIjoxNjkxMTgxMTk5LCJpc3MiOiJQSUYtZGV2In0.TqsddeR-nc2koIsq6K-ZhB3T5QglWJHzbCiwva1QKJ0
 
 GET {{server}}
 
@@ -174,9 +174,10 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8103498784",
-  "code": "38926",
-  "purpose": "signup"
+  "phone": "8168861541",
+  "code": "46100",
+  "email": "jalasem@abdulsamii.com",
+  "purpose": "confirm-account"
 }
 
 ### mobile resend otp
@@ -200,7 +201,7 @@ Content-Type: application/json
  "pifId":"semite",
  "zipCode":"12345",
  "email": "jalasem@abdulsamii.com",
- "referenceCode": "9764c814ea5617bd06a5b5f59988569"
+ "referenceCode": "2864cab58aa1e0a12c98f9dcd221635"
 }
 ### mobile finalize signup (if user signup with phone and Google or has ever received a gift before joinning the platform)
 POST {{api}}/auth/finalize-m-signup
@@ -243,8 +244,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541",
-  "email": "jalasem@abdulsamii.com"
+  "phone": "8168861541"
 }
 
 ### mobile - reset pin
@@ -456,12 +456,12 @@ Authorization: Bearer {{token}}
   "driver": "paystack",
   "items": [
     {
-      "productId": "64c8148d5617bd06a5b5f58c",
+      "productId": "64b522bfc5cc776a57c2f12b",
       "quantity": 2
     }
   ],
   "recipientPhonePrefix": "234",
-  "recipientPhoneNumber": "8103498784",
+  "recipientPhoneNumber": "8168861541",
   "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
 }
 
@@ -472,4 +472,16 @@ GET {{api}}/tx/payment-webhook/paystack
 
 ### get purchases
 GET {{api}}/purchases?marketplace=ng
+Authorization: Bearer {{token}}
+
+### my sent PIFs
+GET {{api}}/sent-pifs
+Authorization: Bearer {{token}}
+
+### get my received PIFs
+GET {{api}}/received-pifs
+Authorization: Bearer {{token}}
+
+### unwrap PIF
+PATCH {{api}}/received-pifs/64cabb481886e1c8b409e044/unwrap
 Authorization: Bearer {{token}}

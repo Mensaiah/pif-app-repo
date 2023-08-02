@@ -46,8 +46,9 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,
     });
+    if (!existingUserAccess) return handleResponse(res, 'Invalid request', 401);
 
-    if (existingUserAccess.isBlocked)
+    if (existingUserAccess?.isBlocked)
       return handleResponse(res, 'Invalid request', 401);
 
     const newOtpCode = await new OtpCodeModel({
