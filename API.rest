@@ -3,7 +3,7 @@
 @api = {{server}}/v1/en
 
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MTA3MDY2MiwiZXhwIjoxNjkxMjQzNDYyLCJpc3MiOiJQSUYtZGV2In0.Y7d5p0JZbQhbV8Sz378t8f03TSm88E350E-LX7MvfYw
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTAwODM5OSwiZXhwIjoxNjkxMTgxMTk5LCJpc3MiOiJQSUYtZGV2In0.TqsddeR-nc2koIsq6K-ZhB3T5QglWJHzbCiwva1QKJ0
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTA3NDkyMCwiZXhwIjoxNjkxMjQ3NzIwLCJpc3MiOiJQSUYtZGV2In0.NgMpW4wmvIvtBxg2wgHGoXcxbKFjEzdH_SowpkQU30Y
 
 GET {{server}}
 
@@ -416,18 +416,18 @@ Authorization: Bearer {{token}}
 
 {
   "name": {
-    "en": "flower",
-    "fr": "fleurz",
-    "da": "blomst"
+    "en": "Book of fashion",
+    "fr": "Livre de mode",
+    "da": "Bog om mode"
   },
   "description": {
-    "en": "Sweet flower, nice scent and beatiful. Appreciate nature through it's beauty",
-    "fr": "Fleur douce, bon parfum et beau. Appréciez la nature à travers sa beauté",
-    "da": "Sød blomst, dejlig duft og smuk. Værdsæt naturen gennem dens skønhed"
+    "en": "A book that teaches you how to dress well",
+    "fr": "Un livre qui vous apprend à bien vous habiller",
+    "da": "En bog, der lærer dig at klæde dig godt"
   },
-  "partnerId": "64c7d903597cad7ddb5482fc",
+  "partnerId": "64ba4c0b747b9058134a4020",
   "categories": ["64c7d903597cad7ddb548079", "64c7d903597cad7ddb54807c"],
-  "marketplace": "ng",
+  "marketplace": "dk",
   "price": 3000,
   "productType": "regular-product",
   "quantity": 100,
@@ -487,10 +487,14 @@ PATCH {{api}}/received-pifs/64cabb481886e1c8b409e044/unwrap
 Authorization: Bearer {{token}}
 
 ###
-GET {{api}}/categories/marketplaces/ng
+GET {{api}}/categories/marketplaces/dk
 
 ### 
-GET {{api}}/partners/marketplaces/ng/categories/64b66f6d3ff189c2c9a33795
+GET {{api}}/partners/marketplaces/dk/categories/64c7d903597cad7ddb548079
 
 ###
 GET {{api}}/products/marketplace/ng/category/64b66f6d3ff189c2c9a33795/partner/64b1101d3e5b42da83eb9425
+
+### change marketplace
+PUT {{api}}/users/my-marketplace/dk
+Authorization: Bearer {{token}}

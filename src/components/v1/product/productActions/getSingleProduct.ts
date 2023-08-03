@@ -26,6 +26,7 @@ const getSingleProduct = async (req: IRequest, res: Response) => {
       ? ProductModel.findOne(query, selectedFields)
       : ProductModel.findOne(query)
           .populate('categories', 'name')
+          .populate('Partner', 'name')
           .populate('internalCategory', 'name'));
 
     if (!product) return handleResponse(res, 'Product does not exist', 404);
