@@ -13,7 +13,11 @@ import { linkUserToStripe } from '../../user/user.utils';
 import { UserAccessModel } from '../auth.models';
 import { mobileLoginSchema } from '../auth.policy';
 import { UserAccessAttributes, UserSessionAttributes } from '../auth.types';
-import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
+import {
+  calculateLoginWaitingTime,
+  createNewSession,
+  generateToken,
+} from '../auth.utils';
 
 const doMobileLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof mobileLoginSchema>;
@@ -143,21 +147,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     } else {
       // new session if none is found
 
-      currentSession = {
-        used: 1,
-        deviceHash: req.fingerprint.hash,
-        sessionId: uuid(),
-        lastEventTime: currentDate,
-        maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
-        maxInactivity: ms(appConfig.authConfigs.maxInactivity),
-        device: {
-          info: req.fingerprint.components.userAgent,
-          geoip: {
-            lat: req.fingerprint.components?.geo?.ll[0],
-            long: req.fingerprint.components?.geo?.ll[1],
-          },
-        },
-      };
+      currentSession = createNewSession(req);
 
       userAccess.sessions.push(currentSession);
     }

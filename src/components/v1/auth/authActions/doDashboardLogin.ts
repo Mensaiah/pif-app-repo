@@ -11,7 +11,11 @@ import { UserModel } from '../../user/user.model';
 import { UserAccessModel } from '../auth.models';
 import { dashLoginSchema } from '../auth.policy';
 import { UserSessionAttributes } from '../auth.types';
-import { calculateLoginWaitingTime, generateToken } from '../auth.utils';
+import {
+  calculateLoginWaitingTime,
+  createNewSession,
+  generateToken,
+} from '../auth.utils';
 
 const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;
@@ -101,21 +105,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     } else {
       // new session if none is found
 
-      currentSession = {
-        used: 1,
-        deviceHash: req.fingerprint.hash,
-        sessionId: uuid(),
-        lastEventTime: new Date(),
-        maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
-        maxInactivity: ms(appConfig.authConfigs.maxInactivity),
-        device: {
-          info: req.fingerprint.components.userAgent,
-          geoip: {
-            lat: null,
-            long: null,
-          },
-        },
-      };
+      currentSession = createNewSession(req);
 
       userAccess.sessions.push(currentSession);
     }

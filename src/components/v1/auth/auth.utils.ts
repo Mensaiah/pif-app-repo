@@ -1,19 +1,20 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
+import ms from 'ms';
 
 import appConfig from '../../../config';
-import platformConstants from '../../../config/platformConstants';
 import { sendMail } from '../../../services/emailServices/mailgun.service';
 import { sendSms } from '../../../services/infobip.service';
 import { IRequest, IToken } from '../../../types/global';
-import { capitalize } from '../../../utils/helpers';
+import { capitalize, uuid } from '../../../utils/helpers';
 import { hasAccessToMarketplaces } from '../../../utils/queryHelpers/helpers';
 import PlatformModel from '../platform/platform.model';
 import { PlatformAttributes } from '../platform/platform.types';
 import { UserAttributes } from '../user/user.types';
 
 import { OtpCodeModel } from './auth.models';
+import { UserSessionAttributes } from './auth.types';
 
 export const verifyCaptcha = async (token: string) => {
   try {
@@ -260,3 +261,23 @@ export const isPlatformAdminWithMarketplaceAccess = (
 
   return hasAccessToMarketplaces(req, marketplace);
 };
+
+export const createNewSession = (req: IRequest): UserSessionAttributes => ({
+  used: 1,
+  deviceHash: req.fingerprint.hash,
+  sessionId: uuid(),
+  lastEventTime: new Date(),
+  maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
+  maxInactivity: ms(appConfig.authConfigs.maxInactivity),
+  device: {
+    info: req.fingerprint.components.userAgent,
+    geoip: {
+      lat: req.fingerprint.components.geo?.ll
+        ? req.fingerprint.components.geo.ll[0]
+        : null,
+      long: req.fingerprint.components.geo?.ll
+        ? req.fingerprint.components.geo.ll[1]
+        : null,
+    },
+  },
+});

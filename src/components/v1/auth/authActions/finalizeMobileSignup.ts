@@ -1,8 +1,6 @@
 import { Response } from 'express';
-import ms from 'ms';
 import { z } from 'zod';
 
-import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
@@ -10,7 +8,7 @@ import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { finalizeMobileSignupSchema } from '../auth.policy';
 import { UserSessionAttributes } from '../auth.types';
-import { generateToken } from '../auth.utils';
+import { createNewSession, generateToken } from '../auth.utils';
 
 const finalizeSignup = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof finalizeMobileSignupSchema>;
@@ -90,21 +88,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       permissions: [],
     });
 
-    const newSession: UserSessionAttributes = {
-      used: 1,
-      deviceHash: req.fingerprint.hash,
-      sessionId: uuid(),
-      lastEventTime: new Date(),
-      maxLivespan: ms(appConfig.authConfigs.sessionLivespan),
-      maxInactivity: ms(appConfig.authConfigs.maxInactivity),
-      device: {
-        info: req.fingerprint.components.userAgent,
-        geoip: {
-          lat: null,
-          long: null,
-        },
-      },
-    };
+    const newSession: UserSessionAttributes = createNewSession(req);
     userAccess.sessions.push(newSession);
     await userAccess.save();
 

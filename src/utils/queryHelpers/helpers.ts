@@ -1,6 +1,6 @@
 import { IRequest } from '../../types/global';
 
-export const hasAccessToAllMarketplaces = (
+export const hasAccessToMarketplaces = (
   req: IRequest,
   marketplaces: string | string[]
 ): boolean => {
