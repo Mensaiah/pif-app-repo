@@ -12,6 +12,11 @@ import {
   getUserQuery,
   handleReqSearch,
 } from '../../../utils/queryHelpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../utils/queryHelpers/helpers';
+import { useWord } from '../../../utils/wordSheet';
 
 import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
@@ -69,4 +74,37 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 };
 
 // TODO: ensure the user is allowed to view that purchase
-// export const getPurchase = async (req: IRequest, res: Response) => {};
+export const getPurchase = async (req: IRequest, res: Response) => {
+  const { purchaseId } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
+  try {
+    const purchase = await PurchaseModel.findById(purchaseId);
+
+    if (!purchase) return handleResponse(res, 'Purchase not found', 404);
+
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, purchase.marketplace)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, purchase.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    return handleResponse(res, { data: purchase });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+  }
+};

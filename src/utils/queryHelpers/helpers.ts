@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongoose';
+
 import { IRequest } from '../../types/global';
 
 export const hasAccessToMarketplaces = (
@@ -24,5 +26,18 @@ export const handlePartnerAdminUser = (req: IRequest): boolean => {
       return true;
     }
   }
+  return false;
+};
+
+export const hasAccessToPartner = (
+  req: IRequest,
+  partnerId: ObjectId
+): boolean => {
+  const { userType, user } = req;
+  if (req.isUserTopLevelAdmin) return true;
+
+  if (userType === 'partner-admin')
+    return user.Partner.toString() === partnerId.toString();
+
   return false;
 };

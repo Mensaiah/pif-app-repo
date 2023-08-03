@@ -1,14 +1,29 @@
 import { Router } from 'express';
 
 import {
+  hasAnyPermissionMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
-import { getPurchases } from './purchase.action';
+import { getPurchase, getPurchases } from './purchase.action';
 
 const router = Router();
 
-router.get('/', validateTokenMiddleware, requireAuthMiddleware, getPurchases);
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  hasAnyPermissionMiddleware(['transactions.view']),
+  getPurchases
+);
+
+router.get(
+  '/:purchaseId',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  hasAnyPermissionMiddleware(['transactions.view']),
+  getPurchase
+);
 
 export default router;

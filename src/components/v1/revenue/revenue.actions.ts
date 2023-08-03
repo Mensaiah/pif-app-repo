@@ -4,7 +4,17 @@ import { FilterQuery } from 'mongoose';
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
 import { handleResponse } from '../../../utils/helpers';
-import { handleReqSearch } from '../../../utils/queryHelpers';
+import {
+  getMarketplaceQuery,
+  getPartnerQuery,
+  getProductQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../utils/queryHelpers/helpers';
+import { useWord } from '../../../utils/wordSheet';
 
 import RevenueModel from './revenue.model';
 import { RevenueAttributes } from './revenue.types';
@@ -20,12 +30,17 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
     }
   );
   const paginate = handlePaginate(req);
-  const query: FilterQuery<RevenueAttributes & Document> = {};
 
-  if (marketplace && marketplace.length === 2) query.marketplace = marketplace;
-  if (partner_id) query.Partner = partner_id;
-  if (product_id) query.Product = product_id;
-  if (currency) query.currency = currency.toLocaleLowerCase();
+  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  const partnerQuery = await getPartnerQuery(req, partner_id);
+  const productQuery = await getProductQuery(req, product_id);
+
+  const query: FilterQuery<RevenueAttributes & Document> = {
+    ...marketplaceQuery,
+    ...partnerQuery,
+    ...productQuery,
+    ...(currency && { currency: currency.toLocaleLowerCase() }),
+  };
 
   try {
     const revenueList = await RevenueModel.find(
@@ -50,5 +65,41 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
       500,
       err
     );
+  }
+};
+
+export const getSingleRevenue = async (req: IRequest, res: Response) => {
+  const { revenueId } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
+
+  try {
+    const revenue = await RevenueModel.findById(revenueId);
+
+    if (!revenue) return handleResponse(res, 'Revenue not found', 404);
+
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, revenue.marketplace)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, revenue.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    return handleResponse(res, { data: revenue });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

@@ -13,6 +13,11 @@
   ],
   "plugins": ["import", "prettier"],
   "rules": {
+    // "max-len": ["error", { "code": 120 }],
+    // "max-lines": [
+    //   "error",
+    //   { "max": 250, "skipBlankLines": true, "skipComments": true }
+    // ],
     "import/order": [
       "error",
       {

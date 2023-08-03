@@ -4,7 +4,18 @@ import { FilterQuery } from 'mongoose';
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
 import { handleResponse } from '../../../utils/helpers';
-import { handleReqSearch } from '../../../utils/queryHelpers';
+import {
+  getCurrencyQuery,
+  getMarketplaceQuery,
+  getPartnerQuery,
+  getProductQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../utils/queryHelpers/helpers';
+import { useWord } from '../../../utils/wordSheet';
 
 import SettlementModel from './settlement.model';
 import { SettlementAttributes } from './settlement.types';
@@ -18,15 +29,24 @@ export const getSettlements = async (req: IRequest, res: Response) => {
       currency: 'string',
       status: 'string',
     });
-  const paginate = handlePaginate(req);
-  const query: FilterQuery<SettlementAttributes & Document> = {};
 
-  if (marketplace && marketplace.length === 2) query.marketplace = marketplace;
-  if (partner_id) query.Partner = partner_id;
-  if (product_id) query.Product = product_id;
-  if (currency) query.currency = currency.toLocaleLowerCase();
-  if (status && (status === 'settled' || status === 'pending'))
-    query.isSettled = status === 'settled';
+  const paginate = handlePaginate(req);
+
+  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+  const partnerQuery = await getPartnerQuery(req, partner_id);
+  const productQuery = await getProductQuery(req, product_id);
+  const currencyQuery = await getCurrencyQuery(req, currency);
+
+  const query: FilterQuery<SettlementAttributes & Document> = {
+    ...marketplaceQuery,
+    ...partnerQuery,
+    ...productQuery,
+    ...currencyQuery,
+    ...(status &&
+      (status === 'settled' || status === 'pending') && {
+        isSettled: status === 'settled',
+      }),
+  };
 
   try {
     const settlements = await SettlementModel.find(
@@ -51,5 +71,41 @@ export const getSettlements = async (req: IRequest, res: Response) => {
       500,
       err
     );
+  }
+};
+
+export const getSettlement = async (req: IRequest, res: Response) => {
+  const { settlementId } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
+
+  try {
+    const settlement = await SettlementModel.findById(settlementId);
+
+    if (!settlement) return handleResponse(res, 'Settlement not found', 404);
+
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, settlement.marketplace)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, settlement.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    return handleResponse(res, { data: settlement });
+  } catch (err) {
+    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

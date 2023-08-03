@@ -164,7 +164,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541",
+  "phone": "8103498784",
   "marketplace": "ng"
 }
 
@@ -174,10 +174,10 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541",
-  "code": "46100",
-  "email": "jalasem@abdulsamii.com",
-  "purpose": "confirm-account"
+  "phone": "9093827376",
+  "code": "90981",
+  "purpose": "confirm-account",
+  "email": "jimohafeez738@gmail.com"
 }
 
 ### mobile resend otp
@@ -186,8 +186,8 @@ Content-Type: application/json
 
 {
  "phonePrefix": "234",
-  "phone": "8103498784",
-  "purpose": "signup"
+  "phone": "9093827376",
+  "purpose": "confirm-account"
 }
 
 
@@ -196,12 +196,12 @@ POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Lekan Ajala",
+ "name": "Jimoh Aweda",
  "dob": "1990-02-20",
- "pifId":"semite",
+ "pifId":"Aweda",
  "zipCode":"12345",
- "email": "jalasem@abdulsamii.com",
- "referenceCode": "2864cab58aa1e0a12c98f9dcd221635"
+ "email": "jimohafeez738@gmail.com",
+ "referenceCode": "3664ca19d7796a7f6389b618f490202"
 }
 ### mobile finalize signup (if user signup with phone and Google or has ever received a gift before joinning the platform)
 POST {{api}}/auth/finalize-m-signup
@@ -445,6 +445,7 @@ Authorization: Bearer {{token}}
   "redemptionValidityValue": "2"
 }
 
+
 ### Get products by marketplace, category and partner (no need for auth)
 GET {{api}}/products/marketplace/dk/category/64a9a75a02ed5ef9311de15a/partner/64b019d002ed5ef93120530c
 
@@ -483,6 +484,21 @@ GET {{api}}/tx/payment-webhook/paystack
 GET {{api}}/purchases?product_id=64b522bfc5cc776a57c2f12b
 Authorization: Bearer {{token}}
 
+### get purchases
+GET {{api}}/purchases/64ca1ce5796a7f6389b619a6
+Authorization: Bearer {{token}}
+
+
+### get revenue
+GET {{api}}/revenue/64ca1ce5796a7f6389b619b1
+Authorization: Bearer {{token}}
+
+
+
+### get settlements
+GET {{api}}/settlements?currency=NGN
+Authorization: Bearer {{token}}
+
 ### my sent PIFs
 GET {{api}}/sent-pifs
 Authorization: Bearer {{token}}
@@ -504,6 +520,3 @@ GET {{api}}/partners/marketplaces/dk/categories/64c7d903597cad7ddb548079
 ###
 GET {{api}}/products/marketplace/ng/category/64b66f6d3ff189c2c9a33795/partner/64b1101d3e5b42da83eb9425
 
-### change marketplace
-PUT {{api}}/users/my-marketplace/dk
-Authorization: Bearer {{token}}

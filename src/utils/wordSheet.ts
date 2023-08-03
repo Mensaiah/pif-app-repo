@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import platformConstants from '../config/platformConstants';
 import { LanguageCode } from '../types/global';
 

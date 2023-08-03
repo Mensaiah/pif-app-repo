@@ -60,6 +60,7 @@ export const getProductQuery = async <T extends Document>(
       product_id,
       product
     );
+
     const productQueryForPartner = await determineProductQueryForPartner(
       req,
       product_id,

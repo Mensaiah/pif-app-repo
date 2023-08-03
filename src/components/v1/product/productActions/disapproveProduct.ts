@@ -56,5 +56,4 @@ const disapproveProduct = async (req: IRequest, res: Response) => {
     );
   }
 };
-
 export default disapproveProduct;

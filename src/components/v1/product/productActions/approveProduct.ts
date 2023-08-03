@@ -50,5 +50,4 @@ const approveProduct = async (req: IRequest, res: Response) => {
     );
   }
 };
-
 export default approveProduct;
