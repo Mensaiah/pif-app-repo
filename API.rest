@@ -488,3 +488,9 @@ Authorization: Bearer {{token}}
 
 ###
 GET {{api}}/categories/marketplaces/ng
+
+### 
+GET {{api}}/partners/marketplaces/ng/categories/64b66f6d3ff189c2c9a33795
+
+###
+GET {{api}}/products/marketplace/ng/category/64b66f6d3ff189c2c9a33795/partner/64b1101d3e5b42da83eb9425
