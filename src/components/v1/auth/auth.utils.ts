@@ -8,6 +8,7 @@ import { sendMail } from '../../../services/emailServices/mailgun.service';
 import { sendSms } from '../../../services/infobip.service';
 import { IRequest, IToken } from '../../../types/global';
 import { capitalize } from '../../../utils/helpers';
+import { hasAccessToMarketplaces } from '../../../utils/queryHelpers/helpers';
 import PlatformModel from '../platform/platform.model';
 import { PlatformAttributes } from '../platform/platform.types';
 import { UserAttributes } from '../user/user.types';
@@ -253,20 +254,9 @@ export const isPlatformAdminWithMarketplaceAccess = (
   req: IRequest,
   marketplace: string | string[]
 ): boolean => {
-  const { userType, role, userAccess } = req;
-
-  // Check if the user's role is included in the topAdminRoles
-  if (
-    userType === 'platform-admin' &&
-    platformConstants.topAdminRoles.includes(role as any)
-  ) {
+  if (req.isUserTopLevelAdmin) {
     return true;
   }
 
-  // Check if the user has access to the marketplace(s)
-  if (Array.isArray(marketplace)) {
-    return marketplace.every((m) => userAccess.marketplaces?.includes(m));
-  } else {
-    return userAccess.marketplaces?.includes(marketplace) ?? false;
-  }
+  return hasAccessToMarketplaces(req, marketplace);
 };

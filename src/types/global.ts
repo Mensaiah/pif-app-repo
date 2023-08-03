@@ -75,6 +75,7 @@ export interface IRequest extends Request {
   marketplaces?: string[];
   currentMarketplace?: string;
   sendEmptyData?: boolean;
+  isUserTopLevelAdmin?: boolean;
 }
 
 export interface IToken {

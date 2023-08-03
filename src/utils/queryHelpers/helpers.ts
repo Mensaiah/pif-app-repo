@@ -1,11 +1,17 @@
 import { IRequest } from '../../types/global';
 
-export const hasAccessToMarketplaces = (
+export const hasAccessToAllMarketplaces = (
   req: IRequest,
-  marketplaces: string[]
+  marketplaces: string | string[]
 ): boolean => {
   const { userAccess } = req;
-  return marketplaces.some((id) => userAccess.marketplaces.includes(id));
+
+  // Convert marketplaces to an array if it isn't already
+  const marketplacesArray = Array.isArray(marketplaces)
+    ? marketplaces
+    : [marketplaces];
+
+  return marketplacesArray.every((id) => userAccess.marketplaces.includes(id));
 };
 
 export const handlePartnerAdminUser = (req: IRequest): boolean => {

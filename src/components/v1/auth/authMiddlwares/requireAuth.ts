@@ -1,6 +1,7 @@
 import { Response, NextFunction } from 'express';
 
 import { FingerprintResult } from '../../../../appMiddlewares/fingerprint.middleware';
+import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
@@ -111,6 +112,9 @@ const requireAuth = async (
     req.user = user;
     req.role = role;
     req.permissions = userAccess.permissions;
+    req.isUserTopLevelAdmin =
+      req.userType === 'platform-admin' &&
+      platformConstants.topAdminRoles.includes(role as any);
 
     if ('currentMarketplace' in user)
       req.currentMarketplace = user.currentMarketplace;

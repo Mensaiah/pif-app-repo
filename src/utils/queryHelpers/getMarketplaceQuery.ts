@@ -1,18 +1,15 @@
 import { FilterQuery } from 'mongoose';
 
-import platformConstants from '../../config/platformConstants';
 import { IRequest } from '../../types/global';
 
 export const getMarketplaceQuery = <T extends Document>(
   req: IRequest,
   marketplace: string
 ): FilterQuery<T & Document> => {
-  const { userType, role, userAccess } = req;
+  const { userType, userAccess } = req;
   const query: FilterQuery<
     T & Document & { marketplace?: string | { $in: string[] } }
   > = {};
-
-  const isTopLevelAdmin = platformConstants.topAdminRoles.includes(role as any);
 
   if (marketplace && marketplace !== 'all' && marketplace.length !== 2) {
     req.sendEmptyData = true;
@@ -22,7 +19,7 @@ export const getMarketplaceQuery = <T extends Document>(
 
   if (!marketplace || marketplace === 'all') {
     if (userType === 'platform-admin') {
-      if (isTopLevelAdmin) {
+      if (req.isUserTopLevelAdmin) {
         return query;
       } else {
         query.marketplace = { $in: userAccess.marketplaces };
@@ -45,7 +42,7 @@ export const getMarketplaceQuery = <T extends Document>(
 
   // Handle platform-admin case
   if (userType === 'platform-admin') {
-    if (isTopLevelAdmin) {
+    if (req.isUserTopLevelAdmin) {
       query.marketplace = marketplace;
     } else {
       if (userAccess.marketplaces?.includes(marketplace)) {
