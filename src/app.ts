@@ -79,6 +79,34 @@ const initializeMiddlewares = () => {
     .use(express.json({ limit: '50kb' }))
     .use(express.urlencoded({ limit: '50kb', extended: false }))
     .use(helmet())
+    .use(
+      helmet.contentSecurityPolicy({
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: [
+            "'self'",
+            "'unsafe-inline'",
+            'https://fonts.googleapis.com',
+          ],
+          imgSrc: [
+            "'self'",
+            'https://pif-space.nyc3.cdn.digitaloceanspaces.com',
+          ],
+          connectSrc: ["'self'"],
+          fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+          objectSrc: [
+            "'none'",
+            'https://pif-space.nyc3.cdn.digitaloceanspaces.com',
+          ],
+          mediaSrc: [
+            "'self'",
+            'https://pif-space.nyc3.cdn.digitaloceanspaces.com',
+          ],
+          frameSrc: ["'none'"],
+        },
+      })
+    )
     .use(fingerprintMiddleware) // TODO: fix lat & long
     .use(swaggerApp)
     .use((req, res, next) => {
