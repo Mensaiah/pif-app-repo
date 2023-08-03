@@ -3,7 +3,7 @@ import { FilterQuery, Document } from 'mongoose';
 import { PartnerModel } from '../../components/v1/partner/partner.model';
 import { IRequest } from '../../types/global';
 
-import { handleObjectIdQuery } from './helpers';
+import { hasAccessToMarketplaces } from './helpers';
 
 export const getPartnerQuery = async <T extends Document>(
   req: IRequest,
@@ -27,7 +27,7 @@ export const getPartnerQuery = async <T extends Document>(
       return query;
     }
 
-    if (!handleObjectIdQuery(req, partner.marketplaces)) {
+    if (!hasAccessToMarketplaces(req, partner.marketplaces)) {
       req.sendEmptyData = true;
     }
 

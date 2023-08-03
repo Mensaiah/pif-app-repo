@@ -1,11 +1,11 @@
 import { IRequest } from '../../types/global';
 
-export const handleObjectIdQuery = (
+export const hasAccessToMarketplaces = (
   req: IRequest,
-  objectIds: string[]
+  marketplaces: string[]
 ): boolean => {
   const { userAccess } = req;
-  return objectIds.some((id) => userAccess.marketplaces.includes(id));
+  return marketplaces.some((id) => userAccess.marketplaces.includes(id));
 };
 
 export const handlePartnerAdminUser = (req: IRequest): boolean => {
