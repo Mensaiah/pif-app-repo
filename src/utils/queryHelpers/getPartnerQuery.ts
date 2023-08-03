@@ -9,11 +9,11 @@ export const getPartnerQuery = async <T extends Document>(
   req: IRequest,
   partner_id: string
 ): Promise<FilterQuery<T & Document>> => {
-  const query: FilterQuery<T & Document & { partner_id?: string }> = {};
+  const query: FilterQuery<T & Document & { Partner?: string }> = {};
   const { userType, user } = req;
 
   if (userType === 'partner-admin') {
-    query.partner_id = user.Partner;
+    query.Partner = user.Partner;
     return query;
   }
 
@@ -31,7 +31,7 @@ export const getPartnerQuery = async <T extends Document>(
       req.sendEmptyData = true;
     }
 
-    query.partner_id = partner_id;
+    query.Partner = partner_id;
 
     return query;
   } catch (err) {

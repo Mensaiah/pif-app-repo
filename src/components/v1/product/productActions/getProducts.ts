@@ -3,7 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import {
   handleReqSearch,
   getMarketplaceQuery,
@@ -63,6 +63,7 @@ const getProducts = async (req: IRequest, res: Response) => {
     ...(free_gift && { productType: 'free-gift' }),
     ...(regular_product && { productType: 'regular-product' }),
   };
+  consoleLog('query: ' + query);
 
   try {
     const selectedFields = '-isApproved -categories -internalCategory';

@@ -40,7 +40,7 @@ export const getProductQuery = async <T extends Document>(
   req: IRequest,
   product_id: string
 ): Promise<FilterQuery<T & Document>> => {
-  const query: FilterQuery<T & Document & { product_id?: string }> = {};
+  const query: FilterQuery<T & Document & { Product?: string }> = {};
 
   if (!product_id) return query;
 
@@ -67,7 +67,7 @@ export const getProductQuery = async <T extends Document>(
     );
 
     if (productQueryForAdmin || productQueryForPartner) {
-      query.product_id = productQueryForAdmin || productQueryForPartner;
+      query.Product = productQueryForAdmin || productQueryForPartner;
     }
 
     return query;
