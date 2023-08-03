@@ -33,7 +33,10 @@ export const getSettlements = async (req: IRequest, res: Response) => {
       query,
       null,
       paginate.queryOptions
-    ).lean();
+    )
+      .populate('Product', 'name')
+      .populate('Partner', 'name')
+      .lean();
 
     const count = await SettlementModel.countDocuments(query);
 

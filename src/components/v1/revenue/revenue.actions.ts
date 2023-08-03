@@ -3,8 +3,8 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
-import { handleReqSearch } from '../../../utils/queryHelpers';
 import { handleResponse } from '../../../utils/helpers';
+import { handleReqSearch } from '../../../utils/queryHelpers';
 
 import RevenueModel from './revenue.model';
 import { RevenueAttributes } from './revenue.types';
@@ -32,7 +32,10 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
       query,
       null,
       paginate.queryOptions
-    ).lean();
+    )
+      .populate('Product', 'name')
+      .populate('Partner', 'name')
+      .lean();
 
     const count = await RevenueModel.countDocuments(query);
 
