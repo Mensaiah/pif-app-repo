@@ -2,12 +2,7 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import {
-  _omit,
-  _pick,
-  consoleLog,
-  handleResponse,
-} from '../../../../utils/helpers';
+import { _omit, _pick, handleResponse } from '../../../../utils/helpers';
 import { PartnerPosUserModel, UserModel } from '../user.model';
 import { updateProfileSchema } from '../user.policy';
 

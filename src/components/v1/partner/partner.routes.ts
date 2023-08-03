@@ -9,6 +9,11 @@ import {
 import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
+  addPartnerSchema,
+  partnerInviteSchema,
+  updatePartnerSchema,
+} from './partner.policy';
+import {
   addPartner,
   addPartnerAdmins,
   createPartnerInvite,
@@ -19,12 +24,7 @@ import {
   getSinglePartner,
   removePartnerAdmins,
   updatePartner,
-} from './partner.actions';
-import {
-  addPartnerSchema,
-  partnerInviteSchema,
-  updatePartnerSchema,
-} from './partner.policy';
+} from './partnerActions';
 
 const router = Router();
 

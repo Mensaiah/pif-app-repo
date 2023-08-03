@@ -4,7 +4,6 @@ import axios from 'axios';
 import qs from 'qs';
 
 import appConfig from '../../config';
-import { consoleLog } from '../../utils/helpers';
 
 const authToken = Buffer.from(
   `api:${appConfig.mailgunConfigs.apiKey}`,
@@ -36,7 +35,7 @@ export async function sendMail({ to, subject, content }: SendMailArgs) {
       }
     );
   } catch (error) {
-    consoleLog(error);
+    throw error;
   }
 }
 

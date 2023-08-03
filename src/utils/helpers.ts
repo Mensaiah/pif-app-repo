@@ -4,22 +4,17 @@
 import fs from 'fs';
 import path from 'path';
 
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Types } from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 
 import appConfig from '../config';
-import platformConstants from '../config/platformConstants';
 import {
-  IRequest,
-  IPaginationData,
   LanguageValuePair,
   langSearchType,
   langSearchQueryType,
 } from '../types/global';
 
-// import normalizeLang from './normalizeLang';
-import { handleReqSearch } from './queryHelpers';
 import { isArray, isObject } from './validators';
 
 export const consoleLog = (

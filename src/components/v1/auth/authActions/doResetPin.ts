@@ -2,7 +2,7 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
@@ -13,7 +13,6 @@ const doResetPin = async (req: IRequest, res: Response) => {
 
   const { otpCode, pin, phone, phonePrefix, email }: resetPinDataType =
     req.body;
-  consoleLog({ otpCode, pin, phone, phonePrefix, email });
 
   try {
     const existingOTP = await OtpCodeModel.findOne({
@@ -22,7 +21,6 @@ const doResetPin = async (req: IRequest, res: Response) => {
       phone,
       ...(email && { email }),
     }).sort({ createdAt: -1 });
-    consoleLog({ existingOTP });
 
     if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);
 
@@ -31,6 +29,7 @@ const doResetPin = async (req: IRequest, res: Response) => {
       'contact.phone': phone,
       userType: 'customer',
     });
+
     if ((users.length > 1 || !users[0].isConfirmed) && !email) {
       return handleResponse(res, 'Please provide email', 401);
     }

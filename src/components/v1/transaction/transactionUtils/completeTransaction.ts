@@ -4,7 +4,6 @@ import ms from 'ms';
 
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
-import { consoleLog } from '../../../../utils/helpers';
 import { isDate } from '../../../../utils/validators';
 import { sendOtpToSenderIfNotConfirmed } from '../../auth/auth.utils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
@@ -118,19 +117,6 @@ const completeTransaction = async (
         if (!expiresBy || !isDate(expiresBy)) {
           expiresBy = new Date(Date.now() + ms('2 weeks'));
         }
-        consoleLog(
-          JSON.stringify(
-            {
-              expiresBy,
-              redemptionValidityType: product.redemptionValidityType,
-              redemptionValidityValue: product.redemptionValidityValue,
-              redemptionValidityPeriodType:
-                product.redemptionValidityPeriodType,
-            },
-            null,
-            2
-          ) + ' :::info:: expiresBy'
-        );
 
         const priceStart = currency(supplier.settlingDetails.startProportion)
           .divide(100)
@@ -261,7 +247,6 @@ const completeTransaction = async (
       message: 'Order processed successfully',
     };
   } catch (error) {
-    consoleLog(error.message, 'error');
     // return { message: 'error occured while completing order' };
     throw error;
   }

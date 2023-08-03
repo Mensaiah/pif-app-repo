@@ -1,7 +1,6 @@
 import currency from 'currency.js';
 import { Document } from 'mongoose';
 
-import { consoleLog } from '../../../../utils/helpers';
 import { PurchaseAttributes } from '../../purchase/purchase.types';
 import RevenueModel from '../../revenue/revenue.model';
 import SettlementModel from '../../settlement/settlement.model';
@@ -110,11 +109,6 @@ const sortTxCashFlows = async (
       })
     );
   } catch (error) {
-    consoleLog({
-      consoleType: 'error',
-      message: `Error creating start settlement for transaction ${tx._id}`,
-      error,
-    });
     throw new Error(error);
   }
 };

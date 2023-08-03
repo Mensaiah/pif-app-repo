@@ -3,8 +3,8 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
-import { handleReqSearch } from '../../../utils/queryHelpers';
 import { handleResponse } from '../../../utils/helpers';
+import { handleReqSearch } from '../../../utils/queryHelpers';
 
 import SettlementModel from './settlement.model';
 import { SettlementAttributes } from './settlement.types';

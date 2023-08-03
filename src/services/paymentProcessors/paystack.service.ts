@@ -12,7 +12,6 @@ import {
   InitiatePaymentReturnType,
   ListBankDataProps,
   ResolveAcctNoProps,
-  VerifyPaymentResponseProps,
   VerifyPaymentReturnType,
 } from './paymentprocessors.types';
 
@@ -191,8 +190,6 @@ const PaystackService = (() => {
 
       switch (event) {
         case 'charge.success':
-          consoleLog('charge.success', 'info');
-          consoleLog(JSON.stringify(data, null, 2), 'info');
           await completeTransactionFromPayment(
             'paystack',
             data.reference,

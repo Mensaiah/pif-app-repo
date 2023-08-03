@@ -1,5 +1,3 @@
-import { consoleLog } from '../utils/helpers';
-
 const data = `
 admin	category.view	View categories
 admin	category.add	Add categories
@@ -188,18 +186,7 @@ const allPermissions = permissions.reduce((acc, curr) => {
 
   return acc;
 }, []);
-consoleLog(JSON.stringify(allPermissions, null, 2));
 
-// consoleLog(
-//   JSON.stringify(
-//     [...new Set(permissions.map(({ permission }) => permission))],
-//     null,
-//     2
-//   )
-// );
-
-// consoleLog(JSON.stringify(permissions, null, 2));
-// extract roles into an array, then put their permissions into an array as well like so: { role: 'admin', permissions: ['category.view', 'category.add', ...] }
 const roles = permissions.reduce((acc, curr) => {
   const { role, permission } = curr;
   const roleIndex = acc.findIndex((r) => r.role === role);
@@ -213,5 +200,3 @@ const roles = permissions.reduce((acc, curr) => {
   }
   return acc;
 }, []);
-
-// consoleLog(JSON.stringify(roles, null, 2));

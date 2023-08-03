@@ -3,7 +3,6 @@ import { Document } from 'mongoose';
 import StripeService from '../../../services/paymentProcessors/stripe.service';
 import { IRequest } from '../../../types/global';
 import { consoleLog } from '../../../utils/helpers';
-import PlatformModel from '../platform/platform.model';
 import { isStripeSupportedInMarketplace } from '../platform/platform.utils';
 
 import { UserAttributes } from './user.types';

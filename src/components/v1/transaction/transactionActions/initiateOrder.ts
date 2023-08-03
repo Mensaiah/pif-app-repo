@@ -8,7 +8,7 @@ import {
   verifyPayment,
 } from '../../../../services/paymentProcessors';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { canDiscountCodeBeApplied } from '../../discountCode/discountCode.utils';
 import { PartnerModel } from '../../partner/partner.model';
 import { getMarketplaceCurrency } from '../../platform/platform.utils';
@@ -238,7 +238,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       refId: paymentRecord._id,
       marketplace: paymentRecord.marketplace,
     }).catch((err) => {
-      consoleLog(JSON.stringify({ initiatePaymentError: err }, null, 2));
       throw err;
     });
 
@@ -257,7 +256,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
     }
 
     await paymentRecord.save().catch((err) => {
-      consoleLog(JSON.stringify({ paymentRecordSaveError: err }, null, 2));
       throw err;
     });
 
@@ -274,7 +272,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       200
     );
   } catch (err) {
-    consoleLog(JSON.stringify({ initiateOrderError: err }, null, 2), 'error');
     handleResponse(res, 'Error handling request at this time', 500, err);
   }
 };
