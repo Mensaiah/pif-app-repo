@@ -2,8 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTA3NDkyMCwiZXhwIjoxNjkxMjQ3NzIwLCJpc3MiOiJQSUYtZGV2In0.NgMpW4wmvIvtBxg2wgHGoXcxbKFjEzdH_SowpkQU30Y
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTEwNjExOCwiZXhwIjoxNjkxMjc4OTE4LCJpc3MiOiJQSUYtZGV2In0.6ttV8yLel6Xp1kGBrxiFLC1YuWP0J2YkrpZstTsA6Zo
 
 GET {{server}}
 
@@ -270,7 +270,7 @@ Authorization: Bearer {{token}}
 }
 
 ### change marketplace
-PUT {{api}}/users/my-marketplace/dk
+PUT {{api}}/users/my-marketplace/gb
 Authorization: Bearer {{token}}
 
 ###
@@ -462,11 +462,11 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "idempotencyKey": "65337570-da43-417a-9820-be30a0fd07a8",
-  "driver": "paystack",
+  "idempotencyKey": "f26917b4-002c-493c-8065-1b0416b01530",
+  "driver": "stripes",
   "items": [
     {
-      "productId": "64b522bfc5cc776a57c2f12b",
+      "productId": "64cbd422cfb9600935ac5a3f",
       "quantity": 2
     }
   ],
@@ -512,7 +512,7 @@ PATCH {{api}}/received-pifs/64cabb481886e1c8b409e044/unwrap
 Authorization: Bearer {{token}}
 
 ###
-GET {{api}}/categories/marketplaces/dk
+GET {{api}}/categories/marketplaces/gb
 
 ### 
 GET {{api}}/partners/marketplaces/dk/categories/64c7d903597cad7ddb548079

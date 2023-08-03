@@ -126,6 +126,7 @@ router.patch(
   disapproveProduct
 );
 
+router.get('/:productId/public', getSingleProduct);
 router.get(
   '/:productId',
   validateTokenMiddleware,
