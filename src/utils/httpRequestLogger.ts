@@ -2,7 +2,6 @@ import { NextFunction, Request, Response } from 'express';
 
 import appConfig from '../config';
 
-import { consoleLog } from './helpers';
 import { isArray } from './validators';
 
 const httpRequestLogger = (req: Request, res: Response, next: NextFunction) => {
@@ -37,8 +36,6 @@ Request Headers: ${JSON.stringify(req.headers)}
 Request Query Params: ${JSON.stringify(req.query)}
 Request Body: ${JSON.stringify(req.body)}`;
     }
-
-    consoleLog(logMessage.trim());
   });
 
   next();

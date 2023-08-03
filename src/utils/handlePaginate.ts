@@ -1,7 +1,6 @@
 import platformConstants from '../config/platformConstants';
 import { IRequest } from '../types/global';
 
-import { consoleLog } from './helpers';
 import { handleReqSearch } from './queryHelpers';
 
 const { paginationConfig } = platformConstants;
@@ -49,8 +48,6 @@ export const handlePaginate = (req: IRequest): PaginationResult => {
 
   if (!paginationConfig.allowedPerPageValues.includes(perPage))
     perPage = paginationConfig.perPage as PerPageType;
-
-  consoleLog({ page, per_page });
 
   const paginationData: PaginationData = {
     currentPage: page,

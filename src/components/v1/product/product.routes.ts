@@ -10,6 +10,13 @@ import {
 import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
+  addProductSchema,
+  addProductSplitPriceSchema,
+  addRedeemCodeSchema,
+  updateProductSchema,
+  updateProductSplitPriceSchema,
+} from './product.policy';
+import {
   addProduct,
   generateRedeemCodes,
   addProductSplitPrice,
@@ -26,14 +33,7 @@ import {
   setProductInactive,
   updateProduct,
   updateProductSplitPrice,
-} from './product.actions';
-import {
-  addProductSchema,
-  addProductSplitPriceSchema,
-  addRedeemCodeSchema,
-  updateProductSchema,
-  updateProductSplitPriceSchema,
-} from './product.policy';
+} from './productActions';
 
 const router = Router();
 

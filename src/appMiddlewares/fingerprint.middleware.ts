@@ -4,7 +4,6 @@ import { NextFunction, Response } from 'express';
 import geoip from 'geoip-lite';
 
 import { IRequest } from '../types/global';
-import { consoleLog } from '../utils/helpers';
 
 export interface GeoInfo {
   range: [number, number];
@@ -43,7 +42,7 @@ const fingerprintMiddleware = (
     '';
 
   const geo: Partial<GeoInfo> = geoip.lookup(ipAddress) || {};
-  consoleLog({ geo }); // TODO: fix
+  // TODO: fix geo in lat and long
 
   const components = [
     userAgent,

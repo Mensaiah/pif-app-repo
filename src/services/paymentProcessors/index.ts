@@ -4,7 +4,6 @@ import { Types } from 'mongoose';
 import PlatformModel from '../../components/v1/platform/platform.model';
 import { PaymentDriverType } from '../../components/v1/platform/platform.types';
 import { UserAttributes } from '../../components/v1/user/user.types';
-import { consoleLog } from '../../utils/helpers';
 
 import {
   InitiatePaymentReturnType,
@@ -90,19 +89,6 @@ export const verifyPayment = async (
   driver: PaymentDriverType,
   reference: string
 ): VerifyPaymentReturnType => {
-  consoleLog(
-    'Verifying payment' +
-      JSON.stringify(
-        {
-          driver,
-          reference,
-          refType: typeof reference,
-          driverType: typeof driver,
-        },
-        null,
-        2
-      )
-  );
   switch (driver) {
     case 'paystack':
       return await PaystackService.verifyPayment(reference);

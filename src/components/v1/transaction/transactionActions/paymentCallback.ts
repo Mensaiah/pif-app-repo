@@ -5,7 +5,6 @@ import platformConstants from '../../../../config/platformConstants';
 import { verifyPayment } from '../../../../services/paymentProcessors';
 import paymentFailedTemplate from '../../../../templates/paymentFailed';
 import paymentSuccessTemplate from '../../../../templates/paymentSuccess';
-import { consoleLog } from '../../../../utils/helpers';
 import { PaymentDriverType } from '../../platform/platform.types';
 import { UserModel } from '../../user/user.model';
 import { UserAttributes } from '../../user/user.types';
@@ -62,7 +61,6 @@ const paymentCallbackHandler = async (req: Request, res: Response) => {
       paymentStatus
     );
   } catch (error) {
-    consoleLog(error, 'error');
     res.send(paymentFailedTemplate);
   }
 };

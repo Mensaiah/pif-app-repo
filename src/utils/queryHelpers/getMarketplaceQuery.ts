@@ -2,7 +2,6 @@ import { FilterQuery } from 'mongoose';
 
 import platformConstants from '../../config/platformConstants';
 import { IRequest } from '../../types/global';
-import { consoleLog } from '../helpers';
 
 export const getMarketplaceQuery = <T extends Document>(
   req: IRequest,

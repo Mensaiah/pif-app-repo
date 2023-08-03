@@ -6,7 +6,6 @@ import { IRequest } from '../../../types/global';
 import {
   addSupportedLang,
   checkLang,
-  consoleLog,
   handleLangSearch,
   handleResponse,
 } from '../../../utils/helpers';
@@ -37,6 +36,7 @@ export const getCategories = async (req: IRequest, res: Response) => {
   const { marketplace } = handleReqSearch(req, { marketplace: 'string' });
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+
   const query: FilterQuery<CategoryAttributes & Document> = {
     ...(userType !== 'platform-admin' && {
       isEnabled: true,

@@ -2,7 +2,7 @@ import { Response, NextFunction } from 'express';
 
 import { FingerprintResult } from '../../../../appMiddlewares/fingerprint.middleware';
 import { IRequest } from '../../../../types/global';
-import { handleResponse, consoleLog } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { PartnerPosUserModel, UserModel } from '../../user/user.model';
 import { UserAccessModel } from '../auth.models';
@@ -16,11 +16,6 @@ const requireAuth = async (
     return handleResponse(res, useWord('authIsRequired', req.lang), 401);
 
   const { sessionId, ref, authKey, userType, role } = req.decoded;
-
-  // TODO: fix and remove
-  consoleLog(
-    JSON.stringify({ sessionId, ref, authKey, userType, role }, null, 2)
-  );
 
   const currentUserIsUser = [
     'platform-admin',

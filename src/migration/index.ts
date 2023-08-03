@@ -4,7 +4,6 @@ import { closeMongoDb, connectMongoDb } from '../config/persistence/database';
 import { createSqlConnection } from '../config/persistence/mysqlClient';
 import { consoleLog } from '../utils/helpers';
 
-import { doAppUserAccountsMigrations } from './migrateAppUserAccounts';
 import { doCategoryMigrations } from './migrateCategories';
 import { doCityMigrations } from './migrateCities';
 import { doPartnersMigrations } from './migratePartners';
