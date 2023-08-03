@@ -131,10 +131,12 @@ const addProduct = async (req: IRequest, res: Response) => {
         newProduct.textForReceiver
       );
 
-    if (canBeSent && canBeSentPeriodType && canBeSentPeriodValue) {
+    if (canBeSent) {
       newProduct.canBeSent = canBeSent;
-      newProduct.canBeSentPeriodType = canBeSentPeriodType;
-      newProduct.canBeSentPeriodValue = canBeSentPeriodValue;
+      if (canBeSentPeriodType && canBeSentPeriodValue) {
+        newProduct.canBeSentPeriodType = canBeSentPeriodType;
+        newProduct.canBeSentPeriodValue = canBeSentPeriodValue;
+      }
     }
 
     if (redemptionValidityType === 'date' && redemptionValidityValue) {

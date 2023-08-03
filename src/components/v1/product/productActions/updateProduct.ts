@@ -130,10 +130,12 @@ const updateProduct = async (req: IRequest, res: Response) => {
 
     existingProduct.isBonusProductOnly = isBonusProductOnly;
 
-    if (canBeSent && canBeSentPeriodType && canBeSentPeriodValue) {
+    if (canBeSent) {
       existingProduct.canBeSent = canBeSent;
-      existingProduct.canBeSentPeriodType = canBeSentPeriodType;
-      existingProduct.canBeSentPeriodValue = canBeSentPeriodValue;
+      if (canBeSentPeriodType && canBeSentPeriodValue) {
+        existingProduct.canBeSentPeriodType = canBeSentPeriodType;
+        existingProduct.canBeSentPeriodValue = canBeSentPeriodValue;
+      }
     }
 
     if (redemptionValidityType === 'date' && redemptionValidityValue) {

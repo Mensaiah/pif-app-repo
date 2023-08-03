@@ -3,6 +3,7 @@ import { Response } from 'express';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
+import DiscountCodeModel from '../../discountCode/discountCode.model';
 import ProductModel from '../product.model';
 
 const getSingleProduct = async (req: IRequest, res: Response) => {
@@ -30,6 +31,10 @@ const getSingleProduct = async (req: IRequest, res: Response) => {
           .populate('internalCategory', 'name'));
 
     if (!product) return handleResponse(res, 'Product does not exist', 404);
+
+    const splitPrices = await DiscountCodeModel.find({ Product: productId });
+
+    product.splitPrices = splitPrices;
 
     return handleResponse(res, { data: product });
   } catch (err) {

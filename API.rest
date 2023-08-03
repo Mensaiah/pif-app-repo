@@ -2,7 +2,7 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MTA3MDY2MiwiZXhwIjoxNjkxMjQzNDYyLCJpc3MiOiJQSUYtZGV2In0.Y7d5p0JZbQhbV8Sz378t8f03TSm88E350E-LX7MvfYw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
 # @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTA3NDkyMCwiZXhwIjoxNjkxMjQ3NzIwLCJpc3MiOiJQSUYtZGV2In0.NgMpW4wmvIvtBxg2wgHGoXcxbKFjEzdH_SowpkQU30Y
 
 GET {{server}}
@@ -15,8 +15,8 @@ POST {{api}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "piftech@pif-app.com",
-  "password": "Password_1"
+  "email": "joe@clowmail.com",
+  "password": "Joe_1"
 }
 
 # "email": "piftech@pif-app.com",
@@ -406,8 +406,17 @@ Authorization: Bearer {{token}}
 }
 
 ### GET products
-GET {{api}}/products
+GET {{api}}/products/64ca1c27796a7f6389b61942
 Authorization: Bearer {{token}}
+
+### add product split prices
+PATCH {{api}}/products/64ca1c27796a7f6389b61942
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "canBeSent":"immediately"
+}
 
 ### Add products
 POST {{api}}/products
