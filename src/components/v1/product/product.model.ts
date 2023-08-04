@@ -1,5 +1,6 @@
 import { Schema, Types, model } from 'mongoose';
 
+import platformConstants from '../../../config/platformConstants';
 import { languageValuePairSchema } from '../../../utils/db-helpers';
 
 import { ProductAttributes } from './product.types';
@@ -121,5 +122,30 @@ const productSchema = new Schema<ProductAttributes>({
 });
 
 const ProductModel = model<ProductAttributes>('Product', productSchema);
+
+const changeStream = ProductModel.watch();
+
+changeStream.on('change', async (change) => {
+  // Filter only updates
+  if (change.operationType === 'update') {
+    // Fetch the updated document
+    const product = await ProductModel.findById(change.documentKey._id);
+
+    if (product) {
+      // Check if quantityAlert condition is met
+      if (
+        product.quantity !== platformConstants.unlimited &&
+        product.quantity <= product.quantityAlert
+      ) {
+        product.isLowStock = true;
+      } else {
+        product.isLowStock = false;
+      }
+
+      // save the document with updated isLowStock
+      await product.save();
+    }
+  }
+});
 
 export default ProductModel;
