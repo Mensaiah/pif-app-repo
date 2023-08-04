@@ -8,6 +8,7 @@ import {
 import {
   getReceivedPifs,
   getSentPifs,
+  redeemPif,
   unwrapGift,
 } from './purchase/userPifActions';
 
@@ -19,6 +20,14 @@ router.patch(
   requireAuthMiddleware,
   mustBeCustomerMiddleware,
   unwrapGift
+);
+
+router.patch(
+  '/received-pifs/:purchaseId/redeem',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  mustBeCustomerMiddleware,
+  redeemPif
 );
 
 router.get(

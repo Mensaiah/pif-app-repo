@@ -41,18 +41,14 @@ const completeTransaction = async (
     const receiver = await UserModel.findOne(
       {
         $or: [
-          { pifId: paymentRecord.recipientPifId },
           {
             'contact.phone': paymentRecord.recipientPhonePrefix,
             'contact.phonePrefix': paymentRecord.recipientPhoneNumber,
           },
+          { pifId: paymentRecord.recipientPifId },
         ],
       },
       'id'
-    );
-
-    consoleLog(
-      `here's the record for tx: ${JSON.stringify({ paymentRecord }, null, 2)}`
     );
 
     const transaction = await new TransactionModel({
