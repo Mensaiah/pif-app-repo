@@ -16,8 +16,15 @@ export const getReceivedPifs = async (req: IRequest, res: Response) => {
 
   try {
     const query: FilterQuery<PurchaseAttributes & Document> = {
-      recipientPhonePrefix: user.contact.phonePrefix,
-      recipientPhoneNumber: user.contact.phone,
+      $or: [
+        {
+          recipientPhonePrefix: user.contact.phonePrefix,
+          recipientPhoneNumber: user.contact.phone,
+        },
+        {
+          recipientPifId: 'pifId' in user ? user.pifId : '',
+        },
+      ],
       ...(purchaseId && { _id: purchaseId }),
     };
 

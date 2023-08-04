@@ -22,9 +22,10 @@ export const redeemPif = async (req: IRequest, res: Response) => {
     const purchase = await PurchaseModel.findById(purchase_id);
 
     if (
-      !purchase.Receiver !== req.user._id &&
+      purchase.Receiver !== req.user._id &&
       user.contact.phone !== purchase.recipientPhoneNumber &&
-      user.contact.phonePrefix !== purchase.recipientPhonePrefix
+      user.contact.phonePrefix !== purchase.recipientPhonePrefix &&
+      purchase.recipientPifId !== ('pifId' in user ? user.pifId : '')
     ) {
       return handleResponse(
         res,

@@ -61,8 +61,8 @@ export interface PurchaseAttributes {
   pifHistory: Array<{
     from: string; // pifId
     to: string; // pifId or full phone number
-    recipientPhonePrefix: string;
-    recipientPhoneNumber: string;
+    recipientPhonePrefix?: string;
+    recipientPhoneNumber?: string;
     message: string;
   }>;
 }

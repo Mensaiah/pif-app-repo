@@ -18,6 +18,7 @@ import settlementRoutesV1 from './settlement/settlement.routes';
 import txRoutesV1 from './transaction/transaction.routes';
 import uploadRoutesV1 from './upload/upload.routes';
 import userRoutesV1 from './user/user.routes';
+import walletRoutesV1 from './wallet/wallet.routes';
 
 const router = Router();
 
@@ -35,6 +36,8 @@ router.use('/tx', txRoutesV1);
 router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
 router.use('/revenue', revenueRoutesV1);
+router.use('/wallets', walletRoutesV1);
+
 router.use('/', generalRoutesV1);
 
 router.get('/', (req: IRequest, res) => {
