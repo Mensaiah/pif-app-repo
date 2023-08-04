@@ -53,7 +53,9 @@ export const redeemPif = async (req: IRequest, res: Response) => {
 
     return handleResponse(res, {
       message: 'PIF redeemed successfully',
-      data: purchase.code || '',
+      data: {
+        redeemCode: purchase.code || '',
+      },
     });
   } catch (err) {
     handleResponse(res, 'An error occurred while redeeming PIF', 500, err);
