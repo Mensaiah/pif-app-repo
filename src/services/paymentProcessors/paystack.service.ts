@@ -78,6 +78,7 @@ const PaystackService = (() => {
           txFee: responseData.fees / 100,
           netAmount: responseData.amount / 100 - responseData.fees / 100,
           receiptUrl: responseData.receipt_url,
+          chargeCurrency: responseData.currency,
         };
       } catch (error) {
         return {

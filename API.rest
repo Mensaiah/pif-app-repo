@@ -3,7 +3,7 @@
 @api = {{server}}/v1/en
 
 # @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTEwNjExOCwiZXhwIjoxNjkxMjc4OTE4LCJpc3MiOiJQSUYtZGV2In0.6ttV8yLel6Xp1kGBrxiFLC1YuWP0J2YkrpZstTsA6Zo
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTExNzkwMCwiZXhwIjoxNjkxMjkwNzAwLCJpc3MiOiJQSUYtZGV2In0.42Iyhaa5qmI9-AXRn5n3snjOuSECcW2MQAccguycWAk
 
 GET {{server}}
 
@@ -270,7 +270,7 @@ Authorization: Bearer {{token}}
 }
 
 ### change marketplace
-PUT {{api}}/users/my-marketplace/gb
+PUT {{api}}/users/my-marketplace/ng
 Authorization: Bearer {{token}}
 
 ###
@@ -462,21 +462,21 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "idempotencyKey": "b399564e-c0b2-43a8-9330-79b31018a12c",
-  "driver": "stripe",
+  "idempotencyKey": "2f5ba5bd-931e-4229-b747-c34676b7ca87",
+  "driver": "paystack",
   "items": [
     {
-      "productId": "64cbd422cfb9600935ac5a3f",
+      "productId": "64be5c11d4deea51b30df9eb",
       "quantity": 1
     }
   ],
   "recipientPhonePrefix": "234",
-  "recipientPhoneNumber": "8168861541",
+  "recipientPhoneNumber": "8035353672",
   "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
 }
 
 ### get transaction
-GET {{api}}/tx/payment-callback/stripe?reference=pi_3NbCpYKdtPrufmFP1W9Pv7g0_secret_6ZFg97wMdZkqni4ve3tlPbFFu
+GET {{api}}/tx/payment-callback/stripe?reference=pi_3NbDggKdtPrufmFP0L5TWMSB_secret_EtaaQDv3oH1slsqFLk0eMjI98
 ### payment webhook
 GET {{api}}/tx/payment-webhook/paystack
 

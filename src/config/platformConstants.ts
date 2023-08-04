@@ -13,6 +13,12 @@ const platformConstants = {
     'confirm-account',
   ] as const,
   topAdminRoles: ['super-admin', 'admin'] as const,
+  defaultSettlementConfig: {
+    startProportion: 50,
+    finishProportion: 40,
+    fixedFee: 0,
+    pifProportion: 10,
+  },
 };
 
 export default platformConstants;

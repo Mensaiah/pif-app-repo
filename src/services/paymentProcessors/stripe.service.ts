@@ -1,3 +1,4 @@
+import Currency from 'currency.js';
 import Stripe from 'stripe';
 
 import appConfig from '../../config';
@@ -117,11 +118,11 @@ const SripeService = (() => {
         }
 
         const charge = charges.data[0];
-
         const balanceTransactionId = charge.balance_transaction;
         const receiptUrl = charge.receipt_url;
         const paid = charge.paid;
         const status = charge.status;
+        const chargeCurrency = charge.currency;
 
         if (typeof balanceTransactionId !== 'string') {
           return {
@@ -134,6 +135,17 @@ const SripeService = (() => {
           balanceTransactionId
         );
 
+        const exchangeRate = balanceTransaction.exchange_rate;
+        const grossAmount = Currency(balanceTransaction.amount / 100).divide(
+          exchangeRate
+        ).value;
+        const txFee = Currency(balanceTransaction.fee / 100).divide(
+          exchangeRate
+        ).value;
+        const netAmount = Currency(balanceTransaction.net / 100).divide(
+          exchangeRate
+        ).value;
+
         consoleLog(
           JSON.stringify(
             {
@@ -142,9 +154,9 @@ const SripeService = (() => {
               data: {
                 success: status === 'succeeded' && paid,
                 receiptUrl,
-                grossAmount: balanceTransaction.amount / 100,
-                txFee: balanceTransaction.fee / 100,
-                netAmount: balanceTransaction.net / 100,
+                grossAmount,
+                txFee,
+                netAmount,
               },
             },
             null,
@@ -155,12 +167,12 @@ const SripeService = (() => {
         return {
           success: status === 'succeeded' && paid,
           receiptUrl,
-          grossAmount: balanceTransaction.amount / 100,
-          txFee: balanceTransaction.fee / 100,
-          netAmount: balanceTransaction.net / 100,
+          grossAmount,
+          txFee,
+          netAmount,
+          chargeCurrency,
         };
       } catch (err) {
-        throw err;
         return {
           success: false,
           errorMessage: err.message || 'error fetching stripe data',

@@ -167,4 +167,5 @@ export type VerifyPaymentReturnType = Promise<{
   txFee?: number;
   netAmount?: number;
   receiptUrl?: string;
+  chargeCurrency?: string;
 }>;

@@ -4,6 +4,7 @@ import ms from 'ms';
 
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
+import { consoleLog } from '../../../../utils/helpers';
 import { isDate } from '../../../../utils/validators';
 import { sendOtpToSenderIfNotConfirmed } from '../../auth/auth.utils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
@@ -48,6 +49,10 @@ const completeTransaction = async (
         ],
       },
       'id'
+    );
+
+    consoleLog(
+      `here's the record for tx: ${JSON.stringify({ paymentRecord }, null, 2)}`
     );
 
     const transaction = await new TransactionModel({
@@ -117,14 +122,24 @@ const completeTransaction = async (
         if (!expiresBy || !isDate(expiresBy)) {
           expiresBy = new Date(Date.now() + ms('2 weeks'));
         }
+        const { defaultSettlementConfig } = platformConstants;
 
-        const priceStart = currency(supplier.settlingDetails.startProportion)
+        const priceStart = currency(
+          supplier.settlingDetails.startProportion ||
+            defaultSettlementConfig.startProportion
+        )
           .divide(100)
           .multiply(netAmount).value;
-        const priceFinish = currency(supplier.settlingDetails.finishProportion)
+        const priceFinish = currency(
+          supplier.settlingDetails.finishProportion ||
+            defaultSettlementConfig.finishProportion
+        )
           .divide(100)
           .multiply(netAmount).value;
-        const pifIncome = currency(supplier.settlingDetails.pifProportion)
+        const pifIncome = currency(
+          supplier.settlingDetails.pifProportion ||
+            defaultSettlementConfig.pifProportion
+        )
           .divide(100)
           .multiply(netAmount).value;
 
