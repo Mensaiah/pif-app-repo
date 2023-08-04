@@ -2,9 +2,16 @@ import { z } from 'zod';
 
 import platformConstants from '../../../config/platformConstants';
 
+const validateDriver = (val: any) => {
+  const availableOptions = Object.values(platformConstants.paymentProcessors);
+  return availableOptions.includes(val);
+};
+
 export const initiateOrderSchema = z.object({
   idempotencyKey: z.string().uuid(),
-  driver: z.enum(platformConstants.paymentProcessors),
+  driver: z.string().refine(validateDriver, {
+    message: 'Invalid payment option',
+  }),
   items: z
     .array(
       z.object({

@@ -50,5 +50,6 @@ export interface PaymentRecordAttributes {
   }>;
   status: 'pending' | 'successful' | 'failed';
   driverRefernce: string;
+  paymentLinkOrId: string;
   isOrderProcessed: boolean;
 }

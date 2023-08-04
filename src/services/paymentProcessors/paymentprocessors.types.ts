@@ -157,6 +157,7 @@ export type InitiatePaymentReturnType = Promise<{
   paymentLink?: string;
   errorMessage?: string;
   paymentId?: string;
+  driverReference?: string;
 }>;
 
 export type VerifyPaymentReturnType = Promise<{

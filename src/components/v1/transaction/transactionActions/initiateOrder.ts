@@ -8,9 +8,10 @@ import {
   verifyPayment,
 } from '../../../../services/paymentProcessors';
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { canDiscountCodeBeApplied } from '../../discountCode/discountCode.utils';
 import { PartnerModel } from '../../partner/partner.model';
+import { PaymentDriverType } from '../../platform/platform.types';
 import { getMarketplaceCurrency } from '../../platform/platform.utils';
 import ProductModel from '../../product/product.model';
 import { UserAttributes } from '../../user/user.types';
@@ -51,6 +52,7 @@ const initiateOrder = async (req: IRequest, res: Response) => {
     let paymentRecord = existingPaymentRecord;
 
     if (paymentRecord) {
+      consoleLog(JSON.stringify({ paymentRecord }, null, 2));
       // validate the payment, if successful, update the payment record
       if (
         paymentRecord.status === 'successful' &&
@@ -68,10 +70,24 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         );
       }
 
+      consoleLog(
+        'before verify payment' +
+          JSON.stringify(
+            {
+              driver: paymentRecord.driver,
+              driverRefernce: paymentRecord.driverRefernce,
+            },
+            null,
+            2
+          )
+      );
       // check payment from driver service to see if it was successful, if it is, update the payment record and return success
       const paymentStatus = await verifyPayment(
         paymentRecord.driver,
         paymentRecord.driverRefernce
+      );
+      consoleLog(
+        'after verify payment: ' + JSON.stringify({ paymentStatus }, null, 2)
       );
 
       if (paymentStatus.success) {
@@ -108,7 +124,7 @@ const initiateOrder = async (req: IRequest, res: Response) => {
             data: {
               status: paymentRecord.status,
               paymentLink: paymentRecord.history[0].data ?? null,
-              paymentId: paymentRecord.driverRefernce ?? null,
+              paymentId: paymentRecord.history[0].data ?? null,
             },
           },
           200
@@ -217,41 +233,43 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       });
     }
 
-    paymentRecord.driver = driver;
+    paymentRecord.driver = driver as PaymentDriverType;
 
     // generate link or id for payment based on the driver
-    const { errorMessage, paymentId, paymentLink } = await initiatePayment({
-      driver,
-      amount: paymentRecord.amount,
-      items: paymentRecord.items.map((item) => ({
-        reference: item.Product.toString(),
-        name: item.productName,
-        quantity: item.quantity,
-        unit: 'pcs',
-        uniPrice: item.unitPrice,
-        grossTotal: item.amount,
-        netTotal: item.amount,
-      })),
-      currency: paymentRecord.currency,
-      idempotencyKey,
-      user: req.user as UserAttributes & Document,
-      refId: paymentRecord._id,
-      marketplace: paymentRecord.marketplace,
-    }).catch((err) => {
-      throw err;
-    });
+    const { errorMessage, paymentId, paymentLink, driverReference } =
+      await initiatePayment({
+        driver: paymentRecord.driver,
+        amount: paymentRecord.amount,
+        items: paymentRecord.items.map((item) => ({
+          reference: item.Product.toString(),
+          name: item.productName,
+          quantity: item.quantity,
+          unit: 'pcs',
+          uniPrice: item.unitPrice,
+          grossTotal: item.amount,
+          netTotal: item.amount,
+        })),
+        currency: paymentRecord.currency,
+        idempotencyKey,
+        user: req.user as UserAttributes & Document,
+        refId: paymentRecord._id,
+        marketplace: paymentRecord.marketplace,
+      }).catch((err) => {
+        throw err;
+      });
 
     if (errorMessage) {
       return handleResponse(res, errorMessage, 400);
     }
 
     if (paymentLink || paymentId) {
-      paymentRecord.driverRefernce = paymentId;
+      paymentRecord.paymentLinkOrId = paymentId;
+      paymentRecord.driverRefernce = driverReference;
       paymentRecord.history.push({
         event: `${driver}-payment-initiated`,
         data: paymentLink || paymentId,
         happenedAt: new Date(),
-        comment: 'Payment initiated by customer',
+        comment: `Reference: ${driverReference}`,
       });
     }
 

@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 
 import appConfig from '../../config';
+import { consoleLog } from '../../utils/helpers';
 
 import {
   InitiatePaymentReturnType,
@@ -71,37 +72,41 @@ const SripeService = (() => {
       try {
         const paymentIntent = await stripe.paymentIntents.create({
           amount,
-          currency,
-          customer,
-          description,
-          confirm: true,
-          off_session: true,
-          setup_future_usage: 'off_session',
+          currency: currency.toLowerCase(),
           automatic_payment_methods: {
             enabled: true,
           },
-          metadata: {
-            recordId,
-          },
+          customer,
           payment_method_options: {
             card: {
               setup_future_usage: 'off_session',
             },
           },
+          metadata: {
+            recordId,
+          },
+          description,
+          // confirm: true,
+          // off_session: true,
+          // setup_future_usage: 'off_session',
         });
 
-        return { paymentId: paymentIntent.client_secret };
+        return {
+          paymentId: paymentIntent.client_secret,
+          driverReference: paymentIntent.id,
+        };
       } catch (err) {
         throw err;
       }
     };
 
     static verifyPayment = async (
-      paymentId: string
+      reference: string
     ): VerifyPaymentReturnType => {
+      consoleLog('verifying stripe payment');
       try {
         const charges = await stripe.charges.list({
-          payment_intent: paymentId,
+          payment_intent: reference,
         });
 
         if (!charges.data.length) {
@@ -129,6 +134,24 @@ const SripeService = (() => {
           balanceTransactionId
         );
 
+        consoleLog(
+          JSON.stringify(
+            {
+              charge,
+              balanceTransaction,
+              data: {
+                success: status === 'succeeded' && paid,
+                receiptUrl,
+                grossAmount: balanceTransaction.amount / 100,
+                txFee: balanceTransaction.fee / 100,
+                netAmount: balanceTransaction.net / 100,
+              },
+            },
+            null,
+            2
+          )
+        );
+
         return {
           success: status === 'succeeded' && paid,
           receiptUrl,
@@ -137,6 +160,7 @@ const SripeService = (() => {
           netAmount: balanceTransaction.net / 100,
         };
       } catch (err) {
+        throw err;
         return {
           success: false,
           errorMessage: err.message || 'error fetching stripe data',

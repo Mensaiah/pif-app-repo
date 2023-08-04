@@ -46,6 +46,7 @@ const PaystackService = (() => {
           return {
             paymentLink: data.authorization_url,
             paymentId: data.reference,
+            driverReference: data.reference,
           };
         } else {
           return { errorMessage: data.message };

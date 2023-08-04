@@ -18,7 +18,7 @@ const getSingleProduct = async (req: IRequest, res: Response) => {
       ? { _id: productId, deletedAt: { $exists: false } }
       : { _id: productId };
     const selectedFields = isGuestOrCustomer
-      ? 'name caption description disclaimer textForReceiver tags price marketplace photo photos slicePrice isRated18'
+      ? 'name caption description disclaimer tags price marketplace photo photos isRated18'
       : '';
     if (isGuestOrCustomer) query.isActive = true;
     if (userType !== 'platform-admin') query.isApproved = true;
@@ -34,7 +34,7 @@ const getSingleProduct = async (req: IRequest, res: Response) => {
 
     const splitPrices = await DiscountCodeModel.find({ Product: productId });
 
-    product.splitPrices = splitPrices;
+    if (!isGuestOrCustomer) product.splitPrices = splitPrices;
 
     return handleResponse(res, { data: product });
   } catch (err) {

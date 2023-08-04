@@ -462,12 +462,12 @@ Content-Type: application/json
 Authorization: Bearer {{token}}
 
 {
-  "idempotencyKey": "f26917b4-002c-493c-8065-1b0416b01530",
-  "driver": "stripes",
+  "idempotencyKey": "b399564e-c0b2-43a8-9330-79b31018a12c",
+  "driver": "stripe",
   "items": [
     {
       "productId": "64cbd422cfb9600935ac5a3f",
-      "quantity": 2
+      "quantity": 1
     }
   ],
   "recipientPhonePrefix": "234",
@@ -476,7 +476,7 @@ Authorization: Bearer {{token}}
 }
 
 ### get transaction
-GET {{api}}/tx/payment-callback/paystack?reference=64c6dce71a58bb72c09a0b49
+GET {{api}}/tx/payment-callback/stripe?reference=pi_3NbCpYKdtPrufmFP1W9Pv7g0_secret_6ZFg97wMdZkqni4ve3tlPbFFu
 ### payment webhook
 GET {{api}}/tx/payment-webhook/paystack
 
@@ -488,12 +488,10 @@ Authorization: Bearer {{token}}
 GET {{api}}/purchases/64ca1ce5796a7f6389b619a6
 Authorization: Bearer {{token}}
 
-
+# pi_3NbCMeKdtPrufmFP1fEzL9kS_secret_iUD3cQQ3KFcSWzYcYiK8P8qdi
 ### get revenue
 GET {{api}}/revenue/64ca1ce5796a7f6389b619b1
 Authorization: Bearer {{token}}
-
-
 
 ### get settlements
 GET {{api}}/settlements?currency=NGN

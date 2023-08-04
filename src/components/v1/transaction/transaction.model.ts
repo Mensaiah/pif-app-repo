@@ -1,4 +1,4 @@
-import { Document, Schema, Types, model } from 'mongoose';
+import { Document, Schema, model } from 'mongoose';
 
 const { ObjectId } = Schema.Types;
 
@@ -77,6 +77,7 @@ const paymentRecordSchema = new Schema<PaymentRecordAttributes>({
     default: 'pending',
   },
   driverRefernce: String,
+  paymentLinkOrId: String,
   isOrderProcessed: Boolean,
 });
 

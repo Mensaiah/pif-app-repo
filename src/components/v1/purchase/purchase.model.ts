@@ -94,7 +94,7 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>({
   ],
 });
 
-purchaseSchema.index({ old_id: 1 }, { unique: true });
+purchaseSchema.index({ old_id: 1 }, { unique: true, sparse: true });
 purchaseSchema.index({
   marketplace: 1,
   Parner: 1,
