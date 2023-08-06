@@ -19,6 +19,8 @@ const platformConstants = {
     fixedFee: 0,
     pifProportion: 10,
   },
+  walletTypes: ['system', 'partner'] as const,
+  walletStatuses: ['active', 'suspended', 'closed'] as const,
 };
 
 export default platformConstants;

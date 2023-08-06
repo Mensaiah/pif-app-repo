@@ -1,9 +1,9 @@
-# @server = https://pif-api.herokuapp.com
-@server = http://localhost:3000
+@server = https://pif-api.herokuapp.com
+# @server = http://localhost:3000
 @api = {{server}}/v1/en
 
 # @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTExNzkwMCwiZXhwIjoxNjkxMjkwNzAwLCJpc3MiOiJQSUYtZGV2In0.42Iyhaa5qmI9-AXRn5n3snjOuSECcW2MQAccguycWAk
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTMyMDMwOCwiZXhwIjoxNjkxNDkzMTA4LCJpc3MiOiJQSUYtZGV2In0.h97_Im-g3IcmUfuuGbLtx9Up7MdXfurrJsNqeMwf_A0
 
 GET {{server}}
 
@@ -461,18 +461,33 @@ POST {{api}}/tx/initiate
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
+# {
+#   "idempotencyKey": "0cca28a2-2219-4b03-8607-98e971484046",
+#   "driver": "paystack",
+#   "items": [
+#     {
+#       "productId": "64be5c11d4deea51b30df9eb",
+#       "quantity": 1
+#     }
+#   ],
+#   "recipientPhonePrefix": "234",
+#   "recipientPhoneNumber": "8035353672",
+#   "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
+# }
 {
-  "idempotencyKey": "2f5ba5bd-931e-4229-b747-c34676b7ca87",
-  "driver": "paystack",
+  "idempotencyKey": "6b141cad-24e1-4f15-b992-7eec8c9e4c48",
   "items": [
     {
-      "productId": "64be5c11d4deea51b30df9eb",
+      "productId": "64b55770c5cc776a57c32f76",
       "quantity": 1
     }
   ],
+  "recipientPifId": "wm543",
   "recipientPhonePrefix": "234",
-  "recipientPhoneNumber": "8035353672",
-  "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
+  "recipientPhoneNumber": "7065490069",
+  "message": "Just a message",
+  "toBeDeliveredAt": "2023-08-14T13:13:04.247Z",
+  "driver": "paystack"
 }
 
 ### get transaction

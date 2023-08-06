@@ -17,6 +17,11 @@ export const getPartnerQuery = async <T extends Document>(
     return query;
   }
 
+  if (userType !== 'platform-admin') {
+    req.sendEmptyData = true;
+    return query;
+  }
+
   if (!partner_id) return query;
 
   try {
@@ -38,3 +43,7 @@ export const getPartnerQuery = async <T extends Document>(
     return query;
   }
 };
+
+/**
+ * Will automatically set Partner query if user is a partner admin
+ */

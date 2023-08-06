@@ -1,30 +1,72 @@
 import { Response } from 'express';
 import { FilterQuery } from 'mongoose';
 
+import platformConstants from '../../../config/platformConstants';
 import { IRequest } from '../../../types/global';
 import { handleResponse } from '../../../utils/helpers';
+import {
+  getMarketplaceQuery,
+  getPartnerQuery,
+  handleReqSearch,
+} from '../../../utils/queryHelpers';
 import PlatformModel from '../platform/platform.model';
 
 import WalletModel from './wallet.model';
 import { WalletAttributes } from './wallet.type';
 
+type WalletType = (typeof platformConstants.walletTypes)[number];
+type WalletStatusType = (typeof platformConstants.walletStatuses)[number];
+
 export const getWallets = async (req: IRequest, res: Response) => {
   try {
-    const { user, userAccess, role, userType } = req;
+    const { user, userAccess, userType } = req;
+    const { marketplace, partner_id, wallet_type, status } = handleReqSearch(
+      req,
+      {
+        marketplace: 'string',
+        partner_id: 'string',
+        wallet_type: 'string',
+        status: 'string',
+      }
+    );
 
-    const query: FilterQuery<WalletAttributes & Document> = {};
+    const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+    const partnerQuery = await getPartnerQuery(req, partner_id);
+    if (req.sendEmptyData) return handleResponse(res, { data: [] });
 
-    if (userType === 'platform-admin') {
-      query.walletType = 'system';
+    if (
+      status &&
+      !platformConstants.walletStatuses.includes(status as WalletStatusType)
+    ) {
+      return handleResponse(res, {
+        data: [],
+      });
+    }
 
-      if (!['super-admin', 'admin'].includes(role)) {
-        query.marketplaces = { $in: userAccess.marketplaces };
+    if (wallet_type) {
+      if (!platformConstants.walletTypes.includes(wallet_type as WalletType)) {
+        return handleResponse(res, {
+          data: [],
+        });
+      } else if (wallet_type === 'system') {
+        if (userType !== 'platform-admin') {
+          return handleResponse(res, {
+            data: [],
+          });
+        }
       }
     }
-    if (userType === 'partner-admin') {
-      query.walletType = 'partner';
-      query.partner = user.Partner;
+
+    if (userType !== 'platform-admin' && wallet_type === 'system') {
+      return handleResponse(res, { data: [] });
     }
+
+    const query: FilterQuery<WalletAttributes & Document> = {
+      ...marketplaceQuery,
+      ...partnerQuery,
+      ...(wallet_type && { walletType: wallet_type }),
+      ...(status && { status }),
+    };
 
     let wallets = await WalletModel.find(query);
 

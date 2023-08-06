@@ -11,6 +11,7 @@ const getAllPartnerAdmins = async (req: IRequest, res: Response) => {
   const { user, userType } = req;
 
   try {
+    // TODO: fix this
     const isSupportedUser =
       userType === 'partner-admin'
         ? user.Partner.toString() === partnerId

@@ -11,7 +11,7 @@ import { getWallets } from './wallet.actions';
 const router = Router();
 
 router.get(
-  '/wallets',
+  '/',
   validateTokenMiddleware,
   requireAuthMiddleware,
   cannotBeCustomerMiddleware,

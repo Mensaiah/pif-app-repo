@@ -67,3 +67,16 @@ export const getMarketplaceQuery = <T extends Document>(
 
   return query;
 };
+
+/**
+ * What if a user doesn't supply marketplace?
+If marketplace is not supplied or if its value is 'all', the function checks for the userType and constructs the query based on that:
+
+1. platform-admin:
+ - If the user is a top-level admin (req.isUserTopLevelAdmin is true), no specific filter is applied, so the function would return all records.
+ - If not a top-level admin, it returns only records where the marketplace field matches one of the marketplaces in userAccess.marketplaces.
+2. partner-admin:
+ - If userAccess.marketplaces has at least one marketplace, the function returns records where the marketplace field matches one of those in userAccess.marketplaces.
+ - If not, the req.sendEmptyData flag is set to true, meaning you probably want to send back an empty data set.
+3. customer: Directly sets the req.sendEmptyData flag to true.
+*/
