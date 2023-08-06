@@ -29,10 +29,8 @@ const PaystackService = (() => {
       currency: string,
       reference: string
     ): InitiatePaymentReturnType {
-      if (!email) return { errorMessage: 'Email is required' };
-      if (!amount) return { errorMessage: 'Amount is required' };
-      if (!currency) return { errorMessage: 'Currency is required' };
-      if (!reference) return { errorMessage: 'Reference is required' };
+      if (!email)
+        return { errorMessage: 'user has no Email and it is required' };
 
       try {
         const response = await axios.post(
