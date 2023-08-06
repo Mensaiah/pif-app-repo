@@ -55,11 +55,21 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
     street,
     country,
     social,
+    email,
   }: dataType = req.body;
-  const currentUser = req.user;
+
+  const { user: currentUser, userType } = req;
+
+  if (email && currentUser.email !== email) {
+    return handleResponse(
+      res,
+      'You cannot change your email address with this method',
+      403
+    );
+  }
 
   if (pifId) {
-    if (!('userType' in currentUser) || currentUser.userType !== 'customer') {
+    if (req.userType !== 'customer') {
       return handleResponse(
         res,
         'You cannot set PIF ID if you are not a customer',
@@ -67,7 +77,7 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
       );
     }
 
-    if (currentUser.pifId && currentUser.pifId !== pifId) {
+    if ('pifId' in currentUser && currentUser.pifId.length) {
       return handleResponse(
         res,
         'You cannot change your PIF ID once it is set',
@@ -76,7 +86,7 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
     }
   }
 
-  if (!('userType' in currentUser)) {
+  if (userType !== 'customer') {
     if (
       social?.length ||
       city ||
@@ -114,6 +124,7 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
               relationship,
               hasChildren,
               interests,
+              email,
               'contact.phonePrefix': phonePrefix,
               'contact.phone': phone,
               'contact.city': city,

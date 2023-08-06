@@ -83,6 +83,7 @@ export const updateProfileSchema = z.object({
     })
     .optional(),
   occupation: z.string().optional(),
+  email: z.string().email().optional(),
   relationship: z
     .enum(['married', 'single', 'divorced', 'prefer-not-to-say'])
     .optional(),
