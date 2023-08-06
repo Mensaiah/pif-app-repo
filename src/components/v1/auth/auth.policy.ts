@@ -116,8 +116,3 @@ export const changePinSchema = z.object({
   oldPin: z.string(),
   newPin: z.string(),
 });
-
-export const resendMobileOtpSchema = z.object({
-  purpose: z.enum(platformConstants.otpPurpose),
-  email: z.string().email(),
-});

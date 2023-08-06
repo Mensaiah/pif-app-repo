@@ -47,6 +47,7 @@ export interface UserSessionAttributes {
 }
 
 export interface OtpAttributes {
+  User: ObjectId;
   code: string;
   purpose: (typeof platformConstants.otpPurpose)[number];
   expiresAt: Date;

@@ -4,6 +4,7 @@ import { Document } from 'mongoose';
 import ms from 'ms';
 
 import appConfig from '../../../config';
+import platformConstants from '../../../config/platformConstants';
 import { sendMail } from '../../../services/emailServices/mailgun.service';
 import { sendSms } from '../../../services/infobip.service';
 import { IRequest, IToken } from '../../../types/global';
@@ -166,14 +167,17 @@ export const sendForgotPasswordCodeMail = ({
         <strong style="font-size: 1.5rem;">${code}</strong>
       </div>
       <p>This code is only valid for 15 minutes.</p>
-      <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>
+      <p>If you did not request this, please ignore this email and your password will remain unchanged. If you find this strange, please report to PIF support.</p>
       <p>Best,</p>
       <p>PIF Team</p>
     </div>
   `,
   });
 
-export const isDateLessThanXMinutesAgo = (date: Date, min = 1): boolean => {
+export const isDateLessThanXMinutesAgo = (
+  date: Date,
+  min = platformConstants.otpResendWaitingMinutes
+): boolean => {
   const minutesAgo = new Date(Date.now() - min * 60 * 1000);
   return date > minutesAgo;
 };
@@ -235,6 +239,7 @@ export const sendOtpToSenderIfNotConfirmed = async (
     user.shouldEnforceConfirmation = true;
 
     const otp = await new OtpCodeModel({
+      User: user._id,
       code: generateRandomCode(),
       email: user.email,
       phone: user.contact.phone,

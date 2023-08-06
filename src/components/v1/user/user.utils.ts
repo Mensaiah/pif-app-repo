@@ -42,3 +42,17 @@ export const linkUserToStripe = async (user: UserAttributes & Document) => {
     consoleLog('Error linking Customer to Stripe: ' + err, 'error');
   }
 };
+
+export const softDeleteUser = (user: UserAttributes & Document) => {
+  user.name = 'deleted_user';
+  user.deletedAt = new Date();
+  user.avatar = '';
+  user.email = '';
+  user.contact.phone = '';
+  user.contact.phonePrefix = '';
+  user.contact.zip = '';
+  user.contact.street = '';
+  user.socials = [];
+
+  return user.save();
+};

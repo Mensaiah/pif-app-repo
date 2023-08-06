@@ -29,13 +29,15 @@ const doResetPassword = async (req: IRequest, res: Response) => {
 
     if (!existingUser) return handleResponse(res, 'User does not exist', 401);
 
+    if (existingUser._id.toString() !== existingOTP.User.toString())
+      return handleResponse(res, 'OTP code is invalid', 401);
+
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,
     });
 
     if (!existingUserAccess) return handleResponse(res, 'invalid request', 401);
 
-    // existingUserAccess.password = password;
     existingUserAccess.updatePassword(password);
 
     await existingUserAccess.save();

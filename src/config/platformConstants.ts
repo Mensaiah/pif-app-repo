@@ -21,6 +21,7 @@ const platformConstants = {
   },
   walletTypes: ['system', 'partner'] as const,
   walletStatuses: ['active', 'suspended', 'closed'] as const,
+  otpResendWaitingMinutes: 3,
 };
 
 export default platformConstants;

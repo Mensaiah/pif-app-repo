@@ -152,6 +152,10 @@ export const UserAccessModel = model<UserAccessAttributes>(
 
 // OTP
 const OtpCodeSchema = new Schema<OtpAttributes>({
+  User: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
   code: String,
   purpose: {
     type: String,

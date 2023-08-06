@@ -28,25 +28,26 @@ const doResetPin = async (req: IRequest, res: Response) => {
       'contact.phonePrefix': phonePrefix,
       'contact.phone': phone,
       userType: 'customer',
+      ...(email && { email }),
     });
 
-    if ((users.length > 1 || !users[0].isConfirmed) && !email) {
+    if (users.length > 1 && !email) {
       return handleResponse(res, 'Please provide email', 401);
     }
-
-    if (!existingOTP) return handleResponse(res, 'OTP code is invalid', 401);
 
     if (existingOTP.expiresAt < new Date())
       return handleResponse(res, 'OTP has expired', 401);
 
-    const existingUser = await UserModel.findOne({
-      'contact.phonePrefix': existingOTP.phonePrefix,
-      'contact.phone': existingOTP.phone,
-      userType: 'customer',
-      ...(email && { email }),
+    const otpUser = await UserModel.findOne({
+      _id: existingOTP.User,
     });
+    const existingUser = users[0];
 
-    if (!existingUser) return handleResponse(res, 'User does not exist', 401);
+    if (!otpUser) return handleResponse(res, 'User does not exist', 401);
+
+    if (existingUser._id.toString() !== existingOTP.User.toString()) {
+      return handleResponse(res, 'OTP code is invalid', 401);
+    }
 
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,

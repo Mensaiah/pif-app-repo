@@ -39,6 +39,7 @@ const doForgotPassword = async (req: IRequest, res: Response) => {
       );
 
     const newOtpCode = await new OtpCodeModel({
+      User: existingUser._id,
       code: generateRandomCode(),
       purpose: 'password-reset',
       email,

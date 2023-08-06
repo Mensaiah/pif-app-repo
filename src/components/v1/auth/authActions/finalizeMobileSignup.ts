@@ -42,6 +42,24 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
         401
       );
 
+    const existingCustomerWithEmail = await UserModel.findOne({
+      userType: 'customer',
+      email,
+    });
+    if (
+      existingCustomerWithEmail &&
+      existingCustomerWithEmail._id !== existingUser?._id
+    ) {
+      return handleResponse(res, 'Email already exists', 409);
+    }
+
+    const pifIdExists = await UserModel.countDocuments({
+      pifId,
+    });
+    if (pifIdExists > 0) {
+      return handleResponse(res, 'PIF ID already exists', 409);
+    }
+
     if (existingUser.shouldEnforceConfirmation && !existingUser.isConfirmed)
       return handleResponse(res, 'You need to verify your OTP first', 401);
 
@@ -55,8 +73,7 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
       const otpExists = await OtpCodeModel.findOne({
         code: otpCode,
         purpose: 'signup',
-        phone,
-        phonePrefix,
+        User: existingUser._id,
       });
 
       if (!otpExists) return handleResponse(res, 'OTP code is invalid', 401);
@@ -119,6 +136,8 @@ const finalizeSignup = async (req: IRequest, res: Response) => {
           currentMarketplace: existingUser.currentMarketplace,
           phonePrefix: existingUser.contact.phonePrefix,
           phone: existingUser.contact.phone,
+          shouldEnforceConfirmation: existingUser.shouldEnforceConfirmation,
+          isConfirmed: existingUser.isConfirmed,
         },
       },
     });

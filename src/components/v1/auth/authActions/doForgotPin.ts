@@ -20,38 +20,33 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
       'contact.phonePrefix': phonePrefix,
       'contact.phone': phone,
       userType: 'customer',
+      ...(email && { email }),
     });
-
-    if ((existingUsers.length > 1 || !existingUsers[0].isConfirmed) && !email) {
-      return handleResponse(res, 'Please, provide your email', 401);
-    }
 
     if (!existingUsers.length)
       return handleResponse(res, 'Account does not exist', 401);
 
-    const existingUser = await UserModel.findOne({
-      'contact.phonePrefix': phonePrefix,
-      'contact.phone': phone,
-      userType: 'customer',
-      ...(email && { email }),
-    });
+    if (existingUsers.length > 1 && !email) {
+      return handleResponse(res, 'Please, provide your email', 401);
+    }
 
-    if (!existingUser)
-      return handleResponse(
-        res,
-        'One or all details supplied are incorrect',
-        401
-      );
+    const existingUser = existingUsers[0];
 
     const existingUserAccess = await UserAccessModel.findOne({
       User: existingUser._id,
     });
-    if (!existingUserAccess) return handleResponse(res, 'Invalid request', 401);
+    if (!existingUserAccess)
+      return handleResponse(
+        res,
+        'OTP could not be generated at this time. Please try again later',
+        401
+      );
 
     if (existingUserAccess?.isBlocked)
-      return handleResponse(res, 'Invalid request', 401);
+      return handleResponse(res, 'Account blocked, contact support', 401);
 
     const newOtpCode = await new OtpCodeModel({
+      User: existingUser._id,
       code: generateRandomCode(),
       purpose: 'pin-reset',
       phone,

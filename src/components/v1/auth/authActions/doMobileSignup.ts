@@ -47,7 +47,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       },
       currentMarketplace: marketplace,
       userType: 'customer',
-      shouldEnforceConfirmation: haveReceivedPifBefore,
+      shouldEnforceConfirmation: !!haveReceivedPifBefore,
     }).save();
 
     if (!newUser.shouldEnforceConfirmation) {
@@ -66,6 +66,7 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
     }
 
     const newOtpCode = await new OtpCodeModel({
+      User: newUser._id,
       code: generateRandomCode(),
       purpose: 'signup',
       expiresAt: new Date(Date.now() + ms('15 mins')),

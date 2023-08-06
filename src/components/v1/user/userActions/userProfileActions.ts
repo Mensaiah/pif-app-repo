@@ -60,12 +60,25 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
 
   const { user: currentUser, userType } = req;
 
-  if (email && currentUser.email !== email) {
-    return handleResponse(
-      res,
-      'You cannot change your email address with this method',
-      403
-    );
+  if (email) {
+    if (currentUser.email !== email) {
+      return handleResponse(
+        res,
+        'You cannot change your email address with this method',
+        403
+      );
+    }
+    const existingCustomerWithEmail = await UserModel.findOne({
+      userType: 'customer',
+      email,
+    });
+
+    if (
+      existingCustomerWithEmail &&
+      existingCustomerWithEmail._id !== currentUser._id
+    ) {
+      return handleResponse(res, 'Another user already use this email', 409);
+    }
   }
 
   if (pifId) {

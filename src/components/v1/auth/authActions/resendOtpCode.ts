@@ -1,9 +1,11 @@
 import { Response } from 'express';
 import { z } from 'zod';
 
+import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
+import { sendOtpEmail } from '../../notification/notification.util';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { resendOTPSchema } from '../auth.policy';
@@ -20,42 +22,31 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
   const { phone, phonePrefix, purpose, email }: verifyDataType = req.body;
 
   try {
-    const existingUser = await UserModel.findOne(
-      phonePrefix && phone
-        ? {
-            userType: 'customer',
-            'contact.phone': phone,
-            'contact.phonePrefix': phonePrefix,
-          }
-        : {
-            email,
-            userType: { $ne: 'customer' },
-          }
-    );
+    const existingUser = await UserModel.findOne({
+      ...(phonePrefix &&
+        phone && {
+          'contact.phone': phone,
+          'contact.phonePrefix': phonePrefix,
+          userType: 'customer',
+        }),
+      ...(!phonePrefix && !phone && { userType: { $ne: 'customer' } }),
+      ...(email && { email }),
+    });
 
     if (!existingUser) return handleResponse(res, 'Invalid request', 401);
 
-    const otpExists = await OtpCodeModel.findOne(
-      phonePrefix && phone
-        ? {
-            purpose,
-            phone,
-            phonePrefix,
-            isDeleted: { $ne: true },
-          }
-        : {
-            email,
-            purpose,
-            isDeleted: { $ne: true },
-          }
-    );
+    const otpExists = await OtpCodeModel.findOne({
+      User: existingUser._id,
+      purpose,
+      $or: [{ isDeleted: { $exists: false } }, { isDeleted: false }],
+    });
 
     if (!otpExists) return handleResponse(res, 'Invalid request', 401);
 
     if (isDateLessThanXMinutesAgo(otpExists.lastSent))
       return handleResponse(
         res,
-        'Please wait for at least 1 minute before you try again',
+        `Please wait for at least ${platformConstants.otpResendWaitingMinutes} minute before you try again`,
         401
       );
 
@@ -82,7 +73,11 @@ const resendOtpcode = async (req: IRequest, res: Response) => {
       return handleResponse(res, 'Please recheck your mail for OTP code');
     }
 
-    await sendOTP(phonePrefix + phone, otpExists.code);
+    if (existingUser.isConfirmed) {
+      await sendOTP(phonePrefix + phone, otpExists.code);
+    } else {
+      await sendOtpEmail(email, otpExists.code);
+    }
 
     return handleResponse(res, 'OTP code has been sent');
   } catch (err) {
