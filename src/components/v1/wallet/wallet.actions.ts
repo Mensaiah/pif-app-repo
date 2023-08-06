@@ -3,7 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import platformConstants from '../../../config/platformConstants';
 import { IRequest } from '../../../types/global';
-import { handleResponse } from '../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../utils/helpers';
 import {
   getMarketplaceQuery,
   getPartnerQuery,
@@ -32,6 +32,13 @@ export const getWallets = async (req: IRequest, res: Response) => {
 
     const marketplaceQuery = getMarketplaceQuery(req, marketplace);
     const partnerQuery = await getPartnerQuery(req, partner_id);
+    consoleLog(
+      JSON.stringify(
+        { partnerQuery, marketplaceQuery, empty: req.sendEmptyData },
+        null,
+        2
+      )
+    );
     if (req.sendEmptyData) return handleResponse(res, { data: [] });
 
     if (
@@ -67,6 +74,7 @@ export const getWallets = async (req: IRequest, res: Response) => {
       ...(wallet_type && { walletType: wallet_type }),
       ...(status && { status }),
     };
+    consoleLog(JSON.stringify(query, null, 2));
 
     let wallets = await WalletModel.find(query);
 

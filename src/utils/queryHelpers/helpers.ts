@@ -8,6 +8,8 @@ export const hasAccessToMarketplaces = (
 ): boolean => {
   const { userAccess } = req;
 
+  if (req.isUserTopLevelAdmin) return true;
+
   // Convert marketplaces to an array if it isn't already
   const marketplacesArray = Array.isArray(marketplaces)
     ? marketplaces
