@@ -33,6 +33,7 @@ import {
   doChangePassword,
   doChangePin,
 } from './authActions';
+import { getGoogleLoginUrl } from './authActions/getGoogleLoginUrl';
 import {
   requireAuthMiddleware,
   validateTokenMiddleware,
@@ -91,6 +92,8 @@ router.post(
   requireAuthMiddleware,
   doChangePassword
 );
+
+router.get('/google-login', getGoogleLoginUrl);
 
 router.get('/logout', validateTokenMiddleware, requireAuthMiddleware, doLogout);
 

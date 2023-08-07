@@ -9,7 +9,7 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendPartnerAdminInviteMail } from '../../auth/auth.utils';
+import { sendPartnerAdminInviteMail } from '../../notification/notificationUtils';
 import { PartnerPosAttributes } from '../../partnerPos/partnerPos.types';
 import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
 import { UserModel, UserInviteModel } from '../../user/user.model';
@@ -63,7 +63,7 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
     if (isLocalPartnerInvite) {
       pos = await PartnerPosModel.findById(posId);
 
-      if (!pos) return handleResponse(res, 'Invalid posId', 400)
+      if (!pos) return handleResponse(res, 'Invalid posId', 400);
     }
 
     const existingPartnerAdmin = await UserModel.findOne({

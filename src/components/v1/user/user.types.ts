@@ -5,6 +5,7 @@ import { LanguageCode } from '../../../types/global';
 export type UserType = 'customer' | 'platform-admin' | 'partner-admin';
 
 interface Contact {
+  fullPhoneNumber?: string;
   phonePrefix?: string;
   phone?: string;
   city?: string;

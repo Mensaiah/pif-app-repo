@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendPartnerAdminInviteMail } from '../../auth/auth.utils';
+import { sendPartnerAdminInviteMail } from '../../notification/notificationUtils';
 import { UserModel, UserInviteModel } from '../../user/user.model';
 import { createInviteLink } from '../../user/user.utils';
 import { PartnerModel } from '../partner.model';

@@ -3,19 +3,17 @@ import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 import ms from 'ms';
 
-import appConfig from '../../../config';
-import platformConstants from '../../../config/platformConstants';
-import { sendMail } from '../../../services/emailServices/mailgun.service';
-import { sendSms } from '../../../services/infobip.service';
-import { IRequest, IToken } from '../../../types/global';
-import { capitalize, uuid } from '../../../utils/helpers';
-import { hasAccessToMarketplaces } from '../../../utils/queryHelpers/helpers';
-import PlatformModel from '../platform/platform.model';
-import { PlatformAttributes } from '../platform/platform.types';
-import { UserAttributes } from '../user/user.types';
-
-import { OtpCodeModel } from './auth.models';
-import { UserSessionAttributes } from './auth.types';
+import appConfig from '../../../../config';
+import platformConstants from '../../../../config/platformConstants';
+import { sendSms } from '../../../../services/infobip.service';
+import { IRequest, IToken } from '../../../../types/global';
+import { uuid } from '../../../../utils/helpers';
+import { hasAccessToMarketplaces } from '../../../../utils/queryHelpers/helpers';
+import PlatformModel from '../../platform/platform.model';
+import { PlatformAttributes } from '../../platform/platform.types';
+import { UserAttributes } from '../../user/user.types';
+import { OtpCodeModel } from '../auth.models';
+import { UserSessionAttributes } from '../auth.types';
 
 export const verifyCaptcha = async (token: string) => {
   try {
@@ -87,91 +85,6 @@ export const sendOTP = (to: string, code: string) =>
   sendSms({
     to,
     text: `Your one time PIF OTP (Verification) code is ${code} Don't share with anyone please.`,
-  });
-
-export const sendPlatformInviteMail = ({
-  to,
-  url,
-}: {
-  to: string;
-  url: string;
-}) =>
-  sendMail({
-    to,
-    subject: 'PIF Invitation',
-    content: `Hello,
-    <br>
-    <br>
-You've been invited to join the PIF Platform as an admin. Click the link below to join <br>
-${url} <br><br>
-<small>This link expires in 24 hrs</small>
-<br><br>
-If you think this is a mistake, please ignore this email.
-<br>
-<br>
-<br>
-Regards,
-<br>
-Pif Team.
-  `,
-  });
-
-export const sendPartnerAdminInviteMail = ({
-  to,
-  url,
-  adminName,
-  partnerName,
-}: {
-  to: string;
-  url: string;
-  adminName: string;
-  partnerName: string;
-}) =>
-  sendMail({
-    to,
-    subject: 'PIF Invitation',
-    content: `Hi ${capitalize(adminName)},
-    <br>
-    <br>
-You've been invited as an admin of ${capitalize(
-      partnerName
-    )} on PIF Platform. Please click on this link below to accept the invitation. <br>
-${url} <br><br>
-<small>This link expires in 24 hrs</small>
-<br><br>
-If you think this is a mistake, please ignore this email.
-<br>
-<br>
-<br>
-Regards,
-<br>
-Pif Team.
-  `,
-  });
-
-export const sendForgotPasswordCodeMail = ({
-  to,
-  code,
-}: {
-  to: string;
-  code: string;
-}) =>
-  sendMail({
-    to,
-    subject: 'Reset your PIF password',
-    content: `<div style="max-width: 600px; margin: 0 auto;">
-      <h2 style="color: #444;">Hello,</h2>
-      <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
-      <p>Please use the following verification code to proceed:</p>
-      <div style="background: #eee; padding: 10px; text-align: center;">
-        <strong style="font-size: 1.5rem;">${code}</strong>
-      </div>
-      <p>This code is only valid for 15 minutes.</p>
-      <p>If you did not request this, please ignore this email and your password will remain unchanged. If you find this strange, please report to PIF support.</p>
-      <p>Best,</p>
-      <p>PIF Team</p>
-    </div>
-  `,
   });
 
 export const isDateLessThanXMinutesAgo = (

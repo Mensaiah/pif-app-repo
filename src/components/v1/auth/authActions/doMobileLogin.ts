@@ -17,7 +17,7 @@ import {
   calculateLoginWaitingTime,
   createNewSession,
   generateToken,
-} from '../auth.utils';
+} from '../authUtils';
 
 const doMobileLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof mobileLoginSchema>;

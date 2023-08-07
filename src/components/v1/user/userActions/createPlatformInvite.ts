@@ -6,7 +6,7 @@ import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendPlatformInviteMail } from '../../auth/auth.utils';
+import { sendPlatformInviteMail } from '../../notification/notificationUtils';
 import PlatformModel from '../../platform/platform.model';
 import { filterMarketplaces } from '../../platform/platform.utils';
 import { UserInviteModel, UserModel } from '../user.model';

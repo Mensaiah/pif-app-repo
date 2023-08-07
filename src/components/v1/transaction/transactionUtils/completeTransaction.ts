@@ -9,9 +9,9 @@ import { OtpCodeModel } from '../../auth/auth.models';
 import {
   generateRandomCode,
   sendOtpToSenderIfNotConfirmed,
-} from '../../auth/auth.utils';
+} from '../../auth/authUtils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
-import { sendPartnerOrderNotification } from '../../notification/notification.util';
+import { sendPartnerOrderNotification } from '../../notification/notificationUtils';
 import { PartnerModel } from '../../partner/partner.model';
 import ProductModel from '../../product/product.model';
 import PurchaseModel from '../../purchase/purchase.model';

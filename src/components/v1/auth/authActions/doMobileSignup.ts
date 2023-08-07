@@ -10,7 +10,7 @@ import PurchaseModel from '../../purchase/purchase.model';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { mobileSignupSchema } from '../auth.policy';
-import { generateRandomCode, sendOTP, verifyCaptcha } from '../auth.utils';
+import { generateRandomCode, sendOTP, verifyCaptcha } from '../authUtils';
 
 import '../../../../services/infobip.service';
 

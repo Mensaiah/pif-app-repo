@@ -36,6 +36,7 @@
     "firebase": "^9.21.0",
     "firebase-admin": "^11.7.0",
     "geoip-lite": "^1.4.7",
+    "googleapis": "^123.0.0",
     "helmet": "^6.1.5",
     "jsdom": "^22.1.0",
     "jsonwebtoken": "^9.0.0",

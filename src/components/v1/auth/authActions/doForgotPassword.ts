@@ -4,10 +4,11 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
+import { sendForgotPasswordCodeMail } from '../../notification/notificationUtils';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { forgotPasswordSchema } from '../auth.policy';
-import { generateRandomCode, sendForgotPasswordCodeMail } from '../auth.utils';
+import { generateRandomCode } from '../authUtils';
 
 const doForgotPassword = async (req: IRequest, res: Response) => {
   type forgetPasswordDataType = z.infer<typeof forgotPasswordSchema>;

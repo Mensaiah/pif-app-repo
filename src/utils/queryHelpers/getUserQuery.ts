@@ -1,6 +1,6 @@
 import { Document, FilterQuery } from 'mongoose';
 
-import { isPlatformAdminWithMarketplaceAccess } from '../../components/v1/auth/auth.utils';
+import { isPlatformAdminWithMarketplaceAccess } from '../../components/v1/auth/authUtils';
 import { UserModel } from '../../components/v1/user/user.model';
 import { IRequest } from '../../types/global';
 

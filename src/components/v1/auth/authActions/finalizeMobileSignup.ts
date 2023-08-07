@@ -8,7 +8,7 @@ import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { finalizeMobileSignupSchema } from '../auth.policy';
 import { UserSessionAttributes } from '../auth.types';
-import { createNewSession, generateToken } from '../auth.utils';
+import { createNewSession, generateToken } from '../authUtils';
 
 const finalizeSignup = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof finalizeMobileSignupSchema>;

@@ -15,7 +15,7 @@ import {
   calculateLoginWaitingTime,
   createNewSession,
   generateToken,
-} from '../auth.utils';
+} from '../authUtils';
 
 const doDashboardLogin = async (req: IRequest, res: Response) => {
   type LoginDatatype = z.infer<typeof dashLoginSchema>;

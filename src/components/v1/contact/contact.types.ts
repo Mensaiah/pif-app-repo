@@ -1,13 +1,13 @@
 import { Document, ObjectId } from 'mongoose';
 
 export interface ContactAttributes extends Document {
+  old_id?: number;
+  isLegacyData?: boolean;
   User: ObjectId;
-  username?: string;
   pifId?: string;
   name: string;
   phoneNumber: string;
   phoneNumberDisplay: string;
-  createdAt: Date;
-  updatedAt: Date;
+  hasApp: boolean;
   deletedAt?: Date;
 }

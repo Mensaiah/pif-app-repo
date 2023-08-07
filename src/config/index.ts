@@ -90,6 +90,9 @@ const appConfig = {
   netsTestSecretKey: env.NETS_TEST_SECRET_KEY || '',
   netsLiveSecretKey: env.NETS_LIVE_SECRET_KEY || '',
   sentryDSN: env.SENTRY_DSN || '',
+  googleClientId: env.GOOGLE_CLIENT_ID || '',
+  googleClientSecret: env.GOOGLE_CLIENT_SECRET || '',
+  googleRedirectUrl: env.GOOGLE_REDIRECT_URL || '',
 };
 
 export default appConfig;

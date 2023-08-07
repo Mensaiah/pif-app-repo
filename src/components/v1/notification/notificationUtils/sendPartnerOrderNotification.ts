@@ -1,4 +1,4 @@
-import { sendMail } from '../../../services/emailServices';
+import { sendMail } from '../../../../services/emailServices';
 
 /**
  * Notification for Supplier after a successful order is made (email)
@@ -55,18 +55,6 @@ export const sendPartnerOrderNotification = async ({
       Regards,<br>
       The PIF Team
       `,
-    });
-  } catch (err) {
-    throw err;
-  }
-};
-
-export const sendOtpEmail = async (email: string, otpCode: string) => {
-  try {
-    await sendMail({
-      to: email,
-      subject: 'PIF - OTP Code',
-      content: `Your OTP code is ${otpCode} and will expire in 10 minutes. Please, do not share this code with anyone.`,
     });
   } catch (err) {
     throw err;

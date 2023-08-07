@@ -5,10 +5,8 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import {
-  getUserRolesAndPermissions,
-  sendPartnerAdminInviteMail,
-} from '../../auth/auth.utils';
+import { getUserRolesAndPermissions } from '../../auth/authUtils';
+import { sendPartnerAdminInviteMail } from '../../notification/notificationUtils';
 import PlatformModel from '../../platform/platform.model';
 import { filterMarketplaces } from '../../platform/platform.utils';
 import { UserModel, UserInviteModel } from '../../user/user.model';

@@ -4,11 +4,11 @@ import { z } from 'zod';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendOtpEmail } from '../../notification/notification.util';
+import { sendOtpEmail } from '../../notification/notificationUtils';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel, UserAccessModel } from '../auth.models';
 import { forgotPinSchema } from '../auth.policy';
-import { generateRandomCode, sendOTP } from '../auth.utils';
+import { generateRandomCode, sendOTP } from '../authUtils';
 
 export const doForgotPin = async (req: IRequest, res: Response) => {
   type forgotPinDataType = z.infer<typeof forgotPinSchema>;

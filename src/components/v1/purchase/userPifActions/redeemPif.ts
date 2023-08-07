@@ -8,7 +8,7 @@ import {
   generateRandomCode,
   sendOTP,
   sendOtpToSenderIfNotConfirmed,
-} from '../../auth/auth.utils';
+} from '../../auth/authUtils';
 import sortFinalSettlement from '../../transaction/transactionUtils/sortFinalSettlement';
 import { UserModel } from '../../user/user.model';
 import { UserAttributes } from '../../user/user.types';

@@ -5,7 +5,10 @@ import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { sendOtpEmail } from '../../notification/notification.util';
+import {
+  sendForgotPasswordCodeMail,
+  sendOtpEmail,
+} from '../../notification/notificationUtils';
 import { UserModel } from '../../user/user.model';
 import { OtpCodeModel } from '../auth.models';
 import { resendOTPSchema } from '../auth.policy';
@@ -13,8 +16,7 @@ import {
   isDateLessThanXMinutesAgo,
   generateRandomCode,
   sendOTP,
-  sendForgotPasswordCodeMail,
-} from '../auth.utils';
+} from '../authUtils';
 
 const resendOtpcode = async (req: IRequest, res: Response) => {
   type verifyDataType = z.infer<typeof resendOTPSchema>;

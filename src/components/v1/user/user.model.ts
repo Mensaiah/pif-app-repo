@@ -43,6 +43,7 @@ const userSchema = new Schema<UserAttributes>(
     hasChildren: Boolean,
     interests: [String],
     contact: {
+      fullPhoneNumber: String,
       phone: { type: String },
       phonePrefix: { type: String },
       city: String,
@@ -132,6 +133,22 @@ const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
 });
 
 export const UserModel = model<UserAttributes>('User', userSchema);
+const changeStream = UserModel.watch();
+
+changeStream.on('change', async (change) => {
+  if (change.operationType === 'update') {
+    const user = await UserModel.findById(change.documentKey._id);
+
+    if (user) {
+      const { phone, phonePrefix, fullPhoneNumber } = user.contact;
+      if (!fullPhoneNumber || `${phonePrefix}${phone}` !== fullPhoneNumber) {
+        user.contact.fullPhoneNumber = `${phonePrefix}${phone}`;
+
+        await user.save();
+      }
+    }
+  }
+});
 
 export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
   'PartnerPosUser',
