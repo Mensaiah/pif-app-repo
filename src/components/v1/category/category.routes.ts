@@ -9,6 +9,11 @@ import {
 import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
+  addCategorySchema,
+  addInternalCategorySchema,
+  updateCategorySchema,
+} from './category.policy';
+import {
   addCategory,
   addInternalCategory,
   disableUploadedCategoryIcon,
@@ -22,12 +27,7 @@ import {
   removeCategory,
   removeInternalCategory,
   removeUploadedCategoryIcon,
-} from './category.actions';
-import {
-  addCategorySchema,
-  addInternalCategorySchema,
-  updateCategorySchema,
-} from './category.policy';
+} from './categoryActions';
 
 const router = Router();
 

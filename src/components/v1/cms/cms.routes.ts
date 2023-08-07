@@ -8,6 +8,14 @@ import {
 import requireAuth from '../auth/authMiddlwares/requireAuth';
 
 import {
+  addFaqSchema,
+  addInfoSchema,
+  addLegalPolicySchema,
+  updateFaqSchema,
+  updateInfoSchema,
+  updateLegalPolicySchema,
+} from './cms.policy';
+import {
   addFaq,
   addInfo,
   addLegalPolicy,
@@ -17,15 +25,7 @@ import {
   updateFaq,
   updateInfo,
   updateLegalPolicy,
-} from './cms.actions';
-import {
-  addFaqSchema,
-  addInfoSchema,
-  addLegalPolicySchema,
-  updateFaqSchema,
-  updateInfoSchema,
-  updateLegalPolicySchema,
-} from './cms.policy';
+} from './cmsActions';
 
 const router = Router();
 

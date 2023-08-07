@@ -4,14 +4,19 @@ import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
 import { handleResponse, addSupportedLang } from '../../../../utils/helpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { PartnerModel } from '../../partner/partner.model';
 import ProductModel from '../product.model';
 import { updateProductSchema } from '../product.policy';
-import { checkProductAccess } from '../product.utils';
 
 const updateProduct = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
 
   type dataType = z.infer<typeof updateProductSchema>;
 
@@ -54,10 +59,23 @@ const updateProduct = async (req: IRequest, res: Response) => {
 
     // TODO: if the person is a partner-admin, ensure that the product belongs to the partner
 
-    if (!checkProductAccess(req, existingProduct))
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, existingProduct.marketplace)
+    )
       return handleResponse(
         res,
-        'You are not authorized to edit this product.',
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, existingProduct.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
         403
       );
 

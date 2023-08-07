@@ -4,6 +4,10 @@ import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
 import { handleResponse, uuid } from '../../../../utils/helpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendPartnerAdminInviteMail } from '../../auth/auth.utils';
 import { PartnerPosAttributes } from '../../partnerPos/partnerPos.types';
@@ -12,12 +16,11 @@ import { UserModel, UserInviteModel } from '../../user/user.model';
 import { createInviteLink } from '../../user/user.utils';
 import { PartnerModel } from '../partner.model';
 import { partnerInviteSchema } from '../partner.policy';
-import { checkPartnerAccess } from '../partner.utils';
 
 const addPartnerAdmins = async (req: IRequest, res: Response) => {
   const { partnerId } = req.params;
 
-  const { user } = req;
+  const { isUserTopLevelAdmin, userType, user } = req;
 
   type partnerInviteType = z.infer<typeof partnerInviteSchema>;
 
@@ -34,15 +37,24 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
 
     const partner = await PartnerModel.findById(partnerId);
 
-    const isSupportedUser = checkPartnerAccess(req, partner);
+    if (!partner) return handleResponse(res, 'Partner not found', 404);
 
-    if (!isSupportedUser) {
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, partner.marketplaces)
+    )
       return handleResponse(
         res,
-        'You are not authorized to perform this action.',
+        "You don't have the permission to perform this operation.",
         403
       );
-    }
+
+    if (userType === 'partner-admin' && !hasAccessToPartner(req, partner._id))
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
 
     let pos: undefined | (PartnerPosAttributes & Document);
 
@@ -50,10 +62,12 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
 
     if (isLocalPartnerInvite) {
       pos = await PartnerPosModel.findById(posId);
+
+      if (!pos) return handleResponse(res, 'Invalid posId', 400)
     }
 
     const existingPartnerAdmin = await UserModel.findOne({
-      userType: { $ne: 'customer' },
+      userType: 'partner-admin',
       email: adminEmail,
     });
 

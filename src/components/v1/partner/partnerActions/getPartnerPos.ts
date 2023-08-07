@@ -7,13 +7,13 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { UserModel } from '../../user/user.model';
+import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
 import { PartnerModel } from '../partner.model';
 
-const removePartnerAdmins = async (req: IRequest, res: Response) => {
-  const { partnerId, adminId } = req.params;
-
+const getPartnerPos = async (req: IRequest, res: Response) => {
   const { isUserTopLevelAdmin, userType } = req;
+
+  const { partnerId } = req.params;
 
   try {
     const partner = await PartnerModel.findById(partnerId);
@@ -37,22 +37,12 @@ const removePartnerAdmins = async (req: IRequest, res: Response) => {
         403
       );
 
-    const partnerToBeDeleted = await UserModel.findOne({
-      _id: adminId,
-      Partner: partnerId,
-    });
+    const allPartnerPos = await PartnerPosModel.find({ Partner: partnerId });
 
-    partnerToBeDeleted.name = 'deleted_user';
-    partnerToBeDeleted.email = null;
-    partnerToBeDeleted.avatar = null;
-    partnerToBeDeleted.deletedAt = new Date();
-
-    await partnerToBeDeleted.save();
-
-    return handleResponse(res, 'Partner deleted successfully', 204);
+    return handleResponse(res, { data: allPartnerPos });
   } catch (err) {
-    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+    handleResponse(res, useWord('internalServerError', req.lang), 500);
   }
 };
 
-export default removePartnerAdmins;
+export default getPartnerPos;

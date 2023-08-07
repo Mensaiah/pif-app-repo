@@ -4,18 +4,21 @@ import { z } from 'zod';
 import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import RedeemCodeModel from '../../redeemCode/redeemCode.model';
 import { RedeemCodeAttributes } from '../../redeemCode/redeemCode.type';
 import ProductModel from '../product.model';
 import { addRedeemCodeSchema } from '../product.policy';
-import {
-  checkProductAccess,
-  generateProductRedeemCode,
-} from '../product.utils';
+import { generateProductRedeemCode } from '../product.utils';
 
 const generateRedeemCodes = async (req: IRequest, res: Response) => {
   const { productId } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
 
   type dataType = z.infer<typeof addRedeemCodeSchema>;
 
@@ -26,10 +29,23 @@ const generateRedeemCodes = async (req: IRequest, res: Response) => {
 
     if (!existingProduct) return handleResponse(res, 'Product not found', 404);
 
-    if (!checkProductAccess(req, existingProduct))
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, existingProduct.marketplace)
+    )
       return handleResponse(
         res,
-        "You don't have the permission to perform this action.",
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, existingProduct.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
         403
       );
 

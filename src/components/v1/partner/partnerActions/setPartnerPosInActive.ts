@@ -7,13 +7,15 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { UserModel } from '../../user/user.model';
+import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
 import { PartnerModel } from '../partner.model';
 
-const removePartnerAdmins = async (req: IRequest, res: Response) => {
-  const { partnerId, adminId } = req.params;
+const setPartnerPosInactive = async (req: IRequest, res: Response) => {
+  const { partnerId, partnerPosId } = req.params;
 
   const { isUserTopLevelAdmin, userType } = req;
+
+  //who can activate and deactivate product
 
   try {
     const partner = await PartnerModel.findById(partnerId);
@@ -37,22 +39,32 @@ const removePartnerAdmins = async (req: IRequest, res: Response) => {
         403
       );
 
-    const partnerToBeDeleted = await UserModel.findOne({
-      _id: adminId,
-      Partner: partnerId,
+    const existingPartnerPos = await PartnerPosModel.findOne({
+      _id: partnerPosId,
+      Partner: partner._id,
     });
 
-    partnerToBeDeleted.name = 'deleted_user';
-    partnerToBeDeleted.email = null;
-    partnerToBeDeleted.avatar = null;
-    partnerToBeDeleted.deletedAt = new Date();
+    if (
+      !existingPartnerPos ||
+      existingPartnerPos.name === 'deleted_partner_pos'
+    )
+      return handleResponse(res, 'Partner pos does not exist', 404);
 
-    await partnerToBeDeleted.save();
+    existingPartnerPos.isActive = false;
 
-    return handleResponse(res, 'Partner deleted successfully', 204);
+    await existingPartnerPos.save();
+
+    return handleResponse(
+      res,
+      {
+        message: 'partner pos activated successfully',
+        data: existingPartnerPos,
+      },
+      201
+    );
   } catch (err) {
-    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+    handleResponse(res, useWord('internalServerError', req.lang), 500);
   }
 };
 
-export default removePartnerAdmins;
+export default setPartnerPosInactive;

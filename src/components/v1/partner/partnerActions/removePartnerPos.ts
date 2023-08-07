@@ -7,11 +7,11 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { UserModel } from '../../user/user.model';
+import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
 import { PartnerModel } from '../partner.model';
 
-const removePartnerAdmins = async (req: IRequest, res: Response) => {
-  const { partnerId, adminId } = req.params;
+const removePartnerPos = async (req: IRequest, res: Response) => {
+  const { partnerId, partnerPosId } = req.params;
 
   const { isUserTopLevelAdmin, userType } = req;
 
@@ -37,22 +37,28 @@ const removePartnerAdmins = async (req: IRequest, res: Response) => {
         403
       );
 
-    const partnerToBeDeleted = await UserModel.findOne({
-      _id: adminId,
-      Partner: partnerId,
-    });
+    const existingPartnerPos = await PartnerPosModel.findById(partnerPosId);
 
-    partnerToBeDeleted.name = 'deleted_user';
-    partnerToBeDeleted.email = null;
-    partnerToBeDeleted.avatar = null;
-    partnerToBeDeleted.deletedAt = new Date();
+    if (!existingPartnerPos)
+      return handleResponse(res, 'Partner pos does not exist', 404);
 
-    await partnerToBeDeleted.save();
+    existingPartnerPos.name = 'deleted_partner_pos';
+    existingPartnerPos.phonePrefix = null;
+    existingPartnerPos.phone = null;
 
-    return handleResponse(res, 'Partner deleted successfully', 204);
+    await existingPartnerPos.save();
+
+    return handleResponse(
+      res,
+      {
+        message: 'partner pos deleted successfully',
+        data: existingPartnerPos,
+      },
+      204
+    );
   } catch (err) {
-    handleResponse(res, useWord('internalServerError', req.lang), 500, err);
+    handleResponse(res, useWord('internalServerError', req.lang), 500);
   }
 };
 
-export default removePartnerAdmins;
+export default removePartnerPos;

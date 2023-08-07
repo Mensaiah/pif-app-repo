@@ -8,6 +8,10 @@ import {
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 import requireAuth from '../auth/authMiddlwares/requireAuth';
+import {
+  addPartnerPosSchema,
+  updatePartnerPosSchema,
+} from '../partnerPos/partnerPos.policy';
 
 import {
   addPartnerSchema,
@@ -25,6 +29,13 @@ import {
   getSinglePartner,
   removePartnerAdmins,
   updatePartner,
+  addPartnerPos,
+  getPartnerPos,
+  getSinglePartnerPos,
+  removePartnerPos,
+  setPartnerPosActive,
+  setPartnerPosInactive,
+  updatePartnerPos,
 } from './partnerActions';
 
 const router = Router();
@@ -32,6 +43,47 @@ const router = Router();
 router.get(
   '/marketplaces/:marketplace/categories/:categoryId',
   getPartnersByCategoryAndMarketplace
+);
+
+router.patch(
+  '/:partnerId/partner-pos/:partnerPosId/set-active',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.edit']),
+  setPartnerPosActive
+);
+
+router.patch(
+  '/:partnerId/partner-pos/:partnerPosId/set-inactive',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.edit']),
+  setPartnerPosInactive
+);
+
+router.get(
+  '/:partnerId/partner-pos/:partnerPosId',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.view']),
+  getSinglePartnerPos
+);
+
+router.patch(
+  '/:partnerId/partner-pos/:partnerPosId',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.edit']),
+  policyMiddleware(updatePartnerPosSchema),
+  updatePartnerPos
+);
+
+router.delete(
+  '/:partnerId/partner-pos/:partnerPosId',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.delete']),
+  removePartnerPos
 );
 
 router.delete(
@@ -47,6 +99,23 @@ router.get(
   validateTokenMiddleware,
   requireAuth,
   getAllPartnerAdmins
+);
+
+router.get(
+  '/:partnerId/partner-pos',
+  validateTokenMiddleware,
+  requireAuth,
+  hasAnyPermissionMiddleware(['pos.view']),
+  getPartnerPos
+);
+
+router.post(
+  '/:partnerId/partner-pos',
+  validateTokenMiddleware,
+  requireAuth,
+  policyMiddleware(addPartnerPosSchema),
+  hasAnyPermissionMiddleware(['pos.add']),
+  addPartnerPos
 );
 
 router.post(

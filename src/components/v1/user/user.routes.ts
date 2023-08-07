@@ -73,7 +73,7 @@ router.get(
   '/',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-users', 'view-users']),
+  hasAnyPermissionMiddleware(['user.view']),
   getUsers
 );
 router.get('/verify/:pifId', verifyPifId);
@@ -82,7 +82,7 @@ router.get(
   '/:userId',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-users', 'view-users']),
+  hasAnyPermissionMiddleware(['user.view']),
   getUser
 );
 
