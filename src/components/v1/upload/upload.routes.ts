@@ -4,7 +4,6 @@ import multer from 'multer';
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
@@ -35,7 +34,7 @@ router.post(
   '/user-avatars/:userId',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-users']),
+  hasAnyPermissionMiddleware(['user.edit']),
   upload.single('avatar'),
   uploadUserAvatar()
 );
@@ -80,7 +79,6 @@ router.post(
   '/direct',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-uploads', 'upload-data']),
   policyMiddleware(uploadDirectSchema),
   uploadDirect
 );

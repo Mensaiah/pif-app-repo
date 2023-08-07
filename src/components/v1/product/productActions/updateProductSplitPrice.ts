@@ -3,14 +3,19 @@ import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
+import {
+  hasAccessToMarketplaces,
+  hasAccessToPartner,
+} from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
 import ProductModel from '../product.model';
 import { updateProductSplitPriceSchema } from '../product.policy';
-import { checkProductAccess } from '../product.utils';
 
 const updateProductSplitPrice = async (req: IRequest, res: Response) => {
   const { productId, code } = req.params;
+
+  const { isUserTopLevelAdmin, userType } = req;
 
   type dataType = z.infer<typeof updateProductSplitPriceSchema>;
 
@@ -31,10 +36,23 @@ const updateProductSplitPrice = async (req: IRequest, res: Response) => {
     if (!existingProduct)
       return handleResponse(res, 'Product does not exist', 404);
 
-    if (!checkProductAccess(req, existingProduct))
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, existingProduct.marketplace)
+    )
       return handleResponse(
         res,
-        'You are not authorized to edit the split price of this product.',
+        "You don't have the permission to perform this operation.",
+        403
+      );
+
+    if (
+      userType === 'partner-admin' &&
+      !hasAccessToPartner(req, existingProduct.Partner)
+    )
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
         403
       );
 

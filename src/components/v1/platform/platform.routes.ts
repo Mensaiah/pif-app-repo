@@ -29,7 +29,7 @@ router.post(
   '/marketplace',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-marketplaces', 'add-marketplace']),
+  hasAnyPermissionMiddleware(['marketplaces.add']),
   policyMiddleware(addMarketplaceSchema),
   addMarketplace
 );
@@ -37,7 +37,7 @@ router.patch(
   '/marketplace',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-marketplaces', 'update-marketplace']),
+  hasAnyPermissionMiddleware(['marketplaces.edit']),
   policyMiddleware(updateMarketplaceSchema),
   updateMarketplace
 );
@@ -45,7 +45,7 @@ router.post(
   '/social',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-socials', 'add-social']),
+  hasAnyPermissionMiddleware(['socials.add']),
   policyMiddleware(addPlatformSocialSchema),
   addPlatformSocial
 );
@@ -53,7 +53,7 @@ router.patch(
   '/social',
   validateTokenMiddleware,
   requireAuthMiddleware,
-  hasAnyPermissionMiddleware(['manage-socials', 'update-social']),
+  hasAnyPermissionMiddleware(['socials.edit']),
   policyMiddleware(updatePlatformSocialSchema),
   updatePlatformSocial
 );
