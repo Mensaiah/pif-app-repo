@@ -111,6 +111,7 @@ const requireAuth = async (
     req.userAccess = userAccess;
     req.user = user;
     req.role = role;
+    req.pifId = 'pifId' in user ? user.pifId : '';
     req.permissions = userAccess.permissions;
     req.isUserTopLevelAdmin =
       req.userType === 'platform-admin' &&

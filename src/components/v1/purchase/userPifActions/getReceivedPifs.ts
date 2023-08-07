@@ -12,7 +12,7 @@ export const getReceivedPifs = async (req: IRequest, res: Response) => {
   const paginate = handlePaginate(req);
   const { purchaseId } = req.params;
 
-  const { user } = req;
+  const { user, pifId } = req;
 
   try {
     const query: FilterQuery<PurchaseAttributes & Document> = {
@@ -22,7 +22,7 @@ export const getReceivedPifs = async (req: IRequest, res: Response) => {
           recipientPhoneNumber: user.contact.phone,
         },
         {
-          recipientPifId: 'pifId' in user ? user.pifId : '',
+          recipientPifId: pifId,
         },
       ],
       ...(purchaseId && { _id: purchaseId }),

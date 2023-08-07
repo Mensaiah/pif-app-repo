@@ -69,6 +69,7 @@ export interface IRequest extends Request {
   paginationData?: IPaginationData;
   decoded?: IToken;
   role?: string;
+  pifId?: string;
   userType?: UserType | 'pos-user';
   permissions?: string[];
   userAccess: Document & UserAccessAttributes;

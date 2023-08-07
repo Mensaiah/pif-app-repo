@@ -4,9 +4,12 @@ import ms from 'ms';
 
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
-import { consoleLog } from '../../../../utils/helpers';
 import { isDate } from '../../../../utils/validators';
-import { sendOtpToSenderIfNotConfirmed } from '../../auth/auth.utils';
+import { OtpCodeModel } from '../../auth/auth.models';
+import {
+  generateRandomCode,
+  sendOtpToSenderIfNotConfirmed,
+} from '../../auth/auth.utils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
 import { sendPartnerOrderNotification } from '../../notification/notification.util';
 import { PartnerModel } from '../../partner/partner.model';
@@ -38,8 +41,10 @@ const completeTransaction = async (
   paymentRecord.txFee = driverPaymentData.txFee;
 
   try {
-    const receiver = await UserModel.findOne(
+    let multipleReceivers = false;
+    const receivers = await UserModel.find(
       {
+        userType: 'customer',
         $or: [
           {
             'contact.phone': paymentRecord.recipientPhonePrefix,
@@ -50,6 +55,11 @@ const completeTransaction = async (
       },
       'id'
     );
+    const receiver = receivers[0];
+
+    if (receivers.length > 1) {
+      multipleReceivers = true;
+    }
 
     const transaction = await new TransactionModel({
       User: user._id,
@@ -143,7 +153,7 @@ const completeTransaction = async (
           Transaction: transaction._id,
           User: user._id,
           Product: product._id,
-          Receiver: receiver?._id,
+          Receiver: multipleReceivers ? undefined : receiver?._id,
           Partner: product.Partner,
           productName: product.name,
           productPhoto: product.photo,
@@ -216,6 +226,13 @@ const completeTransaction = async (
         await discountCodeData.save();
       })
     );
+
+    if (receiver && multipleReceivers) {
+      // notify all receivers of the transaction and enforce confirmation before claiming the PIF
+      await Promise.all(
+        receivers.map((receiver) => sendOtpToSenderIfNotConfirmed(receiver))
+      );
+    }
 
     // 5. receiver and partner of the transaction
     // TODO: send push notification to receiver if receiver is on the platform

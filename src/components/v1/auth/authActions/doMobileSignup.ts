@@ -4,7 +4,7 @@ import { z } from 'zod';
 
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import PurchaseModel from '../../purchase/purchase.model';
 import { UserModel } from '../../user/user.model';
@@ -39,6 +39,8 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       recipientPhonePrefix: phonePrefix,
       recipientPhoneNumber: phone,
     });
+
+    consoleLog({ haveReceivedPifBefore });
 
     const newUser = await new UserModel({
       contact: {

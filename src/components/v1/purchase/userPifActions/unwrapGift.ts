@@ -10,7 +10,7 @@ import { PurchaseAttributes } from '../purchase.types';
 export const unwrapGift = async (req: IRequest, res: Response) => {
   const { purchaseId } = req.params;
 
-  const { user } = req;
+  const { user, pifId } = req;
 
   try {
     const orConditions = [
@@ -20,8 +20,8 @@ export const unwrapGift = async (req: IRequest, res: Response) => {
       },
     ] as FilterQuery<PurchaseAttributes & Document>['$or'];
 
-    if ('pifId' in user) {
-      orConditions.push({ recipientPifId: user.pifId });
+    if (pifId) {
+      orConditions.push({ recipientPifId: pifId });
     }
 
     const query: FilterQuery<PurchaseAttributes & Document> = {

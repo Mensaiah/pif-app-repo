@@ -22,7 +22,7 @@ import completeTransactionn from '../transactionUtils/completeTransaction';
 const initiateOrder = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof initiateOrderSchema>;
 
-  const { userAccess, user, userType, currentMarketplace } = req;
+  const { userAccess, user, userType, currentMarketplace, pifId } = req;
 
   const {
     idempotencyKey,
@@ -223,7 +223,7 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         marketplace:
           'currentMarketplace' in user ? user.currentMarketplace : '',
         items: itemsData,
-        senderPifId: ('pifId' in user && user.pifId) || '',
+        senderPifId: pifId,
         recipientPifId,
         recipientPhonePrefix,
         recipientPhoneNumber,
