@@ -4,6 +4,7 @@ import multer from 'multer';
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
   cannotBeCustomerMiddleware,
+  hasAnyPermissionMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';

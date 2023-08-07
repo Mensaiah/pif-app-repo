@@ -7,6 +7,8 @@ import { consoleLog } from '../utils/helpers';
 import { doCategoryMigrations } from './migrateCategories';
 import { doCityMigrations } from './migrateCities';
 import { doPartnersMigrations } from './migratePartners';
+import { doUsersPifContactsMigrations } from './migratePifContacts';
+import { doPifPurchasesMigrations } from './migratePifPurchases';
 import { doPlatformAccountsMigrations } from './migratePlatformAccounts';
 
 const doMigration = async () => {
@@ -21,6 +23,9 @@ const doMigration = async () => {
     await doPartnersMigrations(sql);
     await doPlatformAccountsMigrations(sql);
     // await doAppUserAccountsMigrations(sql);
+    // await doPifPurchasesMigrations(sql);
+    // await doUsersPifContactsMigrations(sql);
+    // await doPifRequestsMigrations(sql);
   } catch (err) {
     consoleLog('some error occured' + err, 'error');
   } finally {
