@@ -7,6 +7,7 @@ import { useWord } from '../../utils/wordSheet';
 import authRoutesV1 from './auth/auth.routes';
 import categoryRoutesV1 from './category/category.routes';
 import cmsRoutesV1 from './cms/cms.routes';
+import contactRoutesV1 from './contact/contacts.routes';
 import driveRoutesV1 from './drive/drive.routes';
 import generalRoutesV1 from './general.routes';
 import partnersRoutesV1 from './partner/partner.routes';
@@ -37,6 +38,7 @@ router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
 router.use('/revenue', revenueRoutesV1);
 router.use('/wallets', walletRoutesV1);
+router.use('/contacts', contactRoutesV1);
 
 router.use('/', generalRoutesV1);
 
