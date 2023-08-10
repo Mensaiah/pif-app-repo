@@ -1,15 +1,11 @@
 import currency from 'currency.js';
-import { Document, ObjectId } from 'mongoose';
+import mongoose, { Document, ObjectId } from 'mongoose';
 import ms from 'ms';
 
 import platformConstants from '../../../../config/platformConstants';
 import { VerifyPaymentReturnType } from '../../../../services/paymentProcessors/paymentprocessors.types';
 import { isDate } from '../../../../utils/validators';
-import { OtpCodeModel } from '../../auth/auth.models';
-import {
-  generateRandomCode,
-  sendOtpToSenderIfNotConfirmed,
-} from '../../auth/authUtils';
+import { sendOtpToSenderIfNotConfirmed } from '../../auth/authUtils';
 import DiscountCodeModel from '../../discountCode/discountCode.model';
 import { sendPartnerOrderNotification } from '../../notification/notificationUtils';
 import { PartnerModel } from '../../partner/partner.model';
@@ -28,13 +24,16 @@ type DriverPaymentDataType = ResolvedReturnType<VerifyPaymentReturnType>;
 const completeTransaction = async (
   user: UserAttributes & Document,
   paymentRecord: PaymentRecordAttributes & Document,
-  driverPaymentData: DriverPaymentDataType
+  driverPaymentData: DriverPaymentDataType,
+  session: mongoose.ClientSession
 ) => {
-  if (paymentRecord.isOrderProcessed)
+  if (paymentRecord.isOrderProcessed) {
     return { message: 'Order already processed' };
+  }
 
-  if (!driverPaymentData.success)
+  if (!driverPaymentData.success) {
     return { message: driverPaymentData.errorMessage };
+  }
 
   // 1. update paymentRecord accordingly and create a transaction
   paymentRecord.status = 'successful';
@@ -54,7 +53,8 @@ const completeTransaction = async (
         ],
       },
       'id'
-    );
+    ).session(session);
+
     const receiver = receivers[0];
 
     if (receivers.length > 1) {
@@ -74,11 +74,21 @@ const completeTransaction = async (
 
     const purchases = await Promise.all(
       paymentRecord.items.map(async (item) => {
-        const product = await ProductModel.findById(item.Product);
-        if (!product) throw new Error('Product not found');
+        const product = await ProductModel.findById(item.Product).session(
+          session
+        );
 
-        const supplier = await PartnerModel.findById(product.Partner);
-        if (!supplier) throw new Error('Supplier not found');
+        if (!product) {
+          throw new Error('Product not found');
+        }
+
+        const supplier = await PartnerModel.findById(product.Partner).session(
+          session
+        );
+
+        if (!supplier) {
+          throw new Error('Supplier not found');
+        }
 
         // update product accordingly
         product.quantity -=
@@ -92,7 +102,7 @@ const completeTransaction = async (
           product.isLowStock = true;
         }
 
-        await product.save();
+        await product.save({ session });
 
         const txFee = currency(paymentRecord.txFee)
           .multiply(item.amount)
@@ -195,7 +205,7 @@ const completeTransaction = async (
           ],
         });
 
-        await purchase.save();
+        await purchase.save({ session });
 
         return purchase;
       })
@@ -206,9 +216,9 @@ const completeTransaction = async (
       (purchase) => purchase._id
     ) as unknown as ObjectId[];
 
-    await transaction.save();
+    await transaction.save({ session });
 
-    await sortTxCashFlows(purchases, transaction);
+    await sortTxCashFlows(purchases, transaction, session);
 
     // update discountCode(s) usage if applicable
     await Promise.all(
@@ -218,19 +228,21 @@ const completeTransaction = async (
         const discountCodeData = await DiscountCodeModel.findOne({
           code: item.discountCode,
           Product: item.Product,
-        });
+        }).session(session);
 
         if (!discountCodeData) return;
 
         discountCodeData.useCount += item.quantity;
-        await discountCodeData.save();
+        await discountCodeData.save({ session });
       })
     );
 
     if (receiver && multipleReceivers) {
       // notify all receivers of the transaction and enforce confirmation before claiming the PIF
       await Promise.all(
-        receivers.map((receiver) => sendOtpToSenderIfNotConfirmed(receiver))
+        receivers.map((receiver) =>
+          sendOtpToSenderIfNotConfirmed(receiver, session)
+        )
       );
     }
 
@@ -243,11 +255,11 @@ const completeTransaction = async (
           const partner = await PartnerModel.findById(
             purchase.Partner,
             'name phonePrefix phoneNumber email'
-          );
-          const receiver = await UserModel.findById(
-            purchase.Receiver,
-            'name'
-          ).lean();
+          ).session(session);
+
+          const receiver = await UserModel.findById(purchase.Receiver, 'name')
+            .lean()
+            .session(session);
 
           await sendPartnerOrderNotification({
             productName: purchase.productName.find((name) => name.lang === 'en')
@@ -267,9 +279,9 @@ const completeTransaction = async (
     );
 
     paymentRecord.isOrderProcessed = true;
-    await paymentRecord.save();
+    await paymentRecord.save({ session });
 
-    await sendOtpToSenderIfNotConfirmed(user);
+    await sendOtpToSenderIfNotConfirmed(user, session);
 
     return {
       message: 'Order processed successfully',

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -24,15 +24,22 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
 
   const { phone, phonePrefix, pin }: LoginDatatype = req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const existingUsers = await UserModel.find({
       userType: 'customer',
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
-    });
+    }).session(session);
 
-    if (existingUsers.length === 0)
+    if (existingUsers.length === 0) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Account does not exist', 401);
+    }
 
     let userAccess: undefined | (UserAccessAttributes & Document);
     let existingUser: undefined | (UserAttributes & Document);
@@ -42,17 +49,25 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
 
       const userAccesses = await UserAccessModel.find({
         User: { $in: userIds },
-      });
+      }).session(session);
 
-      if (userAccesses.length === 0)
+      if (userAccesses.length === 0) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(res, 'You need to sign up first', 401);
+      }
 
       userAccess = userAccesses.find(
         (access) => access.pin && access.comparePin(pin)
       );
 
-      if (!userAccess)
+      if (!userAccess) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(res, 'invalid login credentials', 401);
+      }
 
       existingUser = existingUsers.find(
         (user) => user._id.toString() === userAccess.User.toString()
@@ -60,10 +75,14 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     } else {
       userAccess = await UserAccessModel.findOne({
         User: existingUsers[0]._id,
-      });
+      }).session(session);
 
-      if (!userAccess)
+      if (!userAccess) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(res, 'invalid login credentials', 401);
+      }
 
       existingUser = existingUsers[0];
     }
@@ -71,18 +90,27 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     // if (!existingUser.isConfirmed && !existingUser.isSignupComplete)
     //   return handleResponse(res, 'You need to confirm your OTP', 401);
 
-    if (!userAccess) return handleResponse(res, 'Invalid credentials', 401);
+    if (!userAccess) {
+      await session.abortTransaction();
+      session.endSession();
 
-    if (userAccess.isBlocked)
+      return handleResponse(res, 'Invalid credentials', 401);
+    }
+
+    if (userAccess.isBlocked) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'Your account has been disabled. If you think this was a mistake, please contact us',
         401
       );
+    }
 
     if (!userAccess.securityCode) {
       userAccess.securityCode = uuid();
-      await userAccess.save();
+      await userAccess.save({ session });
     }
 
     const { allowedAttempts, remainingTime } = calculateLoginWaitingTime(
@@ -97,6 +125,10 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       remainingTime > 0
     ) {
       const waitMinutes = Math.ceil(remainingTime / (60 * 1000));
+
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         `Too many failed login attempts. Please wait for ${waitMinutes} minutes and try again.`,
@@ -105,6 +137,9 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     }
 
     if (!userAccess.pin) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         "You didn't set your pin, please use forgot pin",
@@ -115,14 +150,18 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     if (!userAccess.comparePin(pin)) {
       userAccess.failedLoginAttempts += 1;
       userAccess.lastLoginAttempt = new Date(now);
-      await userAccess.save();
+
+      await userAccess.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
 
       return handleResponse(res, 'Incorrect pin', 401);
     } else {
       userAccess.failedLoginAttempts = 0;
       userAccess.lastLoginAttempt = null;
       userAccess.lastLoginAt = new Date(now);
-      await userAccess.save();
+      await userAccess.save({ session });
     }
 
     // find session index, if it exists, update it, if not create it
@@ -156,7 +195,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       userAccess.updatePin(pin);
     }
 
-    await userAccess.save();
+    await userAccess.save({ session });
 
     // check if currentMaketplace is supported by stripe and set customerId if it's not set
     await linkUserToStripe(existingUser);
@@ -177,6 +216,9 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
     //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
     // });
 
+    await session.commitTransaction();
+    session.endSession();
+
     return handleResponse(res, {
       message: 'Login successful, Welcome 🤗',
       data: {
@@ -194,6 +236,9 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
       },
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

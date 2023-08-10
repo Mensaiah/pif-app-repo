@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -20,22 +21,34 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
   const { code, email, name, password, phone, phonePrefix }: dataType =
     req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const existingInvite = await UserInviteModel.findOne({
       email,
       code,
-    });
+    }).session(session);
 
-    if (!existingInvite)
+    if (!existingInvite) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'Invalid operation. Please contact the admin.',
         401
       );
+    }
 
-    const platformData = await PlatformModel.findOne().sort({ createdAt: -1 });
+    const platformData = await PlatformModel.findOne()
+      .sort({ createdAt: -1 })
+      .session(session);
 
     if (!platformData) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         "operation failed. It's not you but us. Please try again later",
@@ -51,6 +64,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
 
     // TODO: remove
     if (!permissions) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'Invalid operation. Please contact the admin.',
@@ -60,9 +76,13 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
 
     const existingUser = await (existingInvite.role === 'pos-user'
       ? PartnerPosUserModel.findOne({ name, email })
-      : UserModel.findOne({ name, email }));
+      : UserModel.findOne({ name, email })
+    ).session(session);
 
-    if (existingUser)
+    if (existingUser) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         `This ${
@@ -70,6 +90,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
         } is accepted already`,
         409
       );
+    }
 
     const newUser =
       existingInvite.role === 'pos-user'
@@ -120,7 +141,7 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
               value: existingInvite.City,
             },
           },
-        });
+        }).session(session);
         if (city) {
           newUserAccess.citiesCovered = [city._id];
         }
@@ -145,12 +166,14 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
 
     newUserAccess.sessions.push(newSession);
 
-    await newUser.save();
-    await newUserAccess.save();
+    await newUser.save({ session });
+    await newUserAccess.save({ session });
 
     newUserAccess = await UserAccessModel.findOne({
       _id: newUserAccess._id,
-    }).populate('marketplaces', 'name');
+    })
+      .populate('marketplaces', 'name')
+      .session(session);
 
     const token = generateToken({
       authKey: newUserAccess.securityCode,
@@ -168,6 +191,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
     //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
     // });
 
+    await session.commitTransaction();
+    session.endSession();
+
     return handleResponse(res, {
       message: 'Operation successful, Welcome 🤗',
       data: {
@@ -183,6 +209,9 @@ const acceptPlatformInvite = async (req: IRequest, res: Response) => {
       },
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     return handleResponse(
       res,
       useWord('internalServerError', req.lang),

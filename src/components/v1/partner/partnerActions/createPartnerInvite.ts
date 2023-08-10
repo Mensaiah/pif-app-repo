@@ -28,8 +28,9 @@ const createPartnerInvite = async (req: IRequest, res: Response) => {
       email: adminEmail,
     });
 
-    if (existingPartner)
+    if (existingPartner) {
       return handleResponse(res, 'Partner already exists', 409);
+    }
 
     const partner = await PartnerModel.findById(partnerId);
 

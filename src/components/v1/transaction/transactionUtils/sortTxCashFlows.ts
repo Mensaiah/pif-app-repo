@@ -1,5 +1,5 @@
 import currency from 'currency.js';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import { PurchaseAttributes } from '../../purchase/purchase.types';
 import RevenueModel from '../../revenue/revenue.model';
@@ -9,7 +9,8 @@ import { TransactionAttributes } from '../transaction.types';
 
 const sortTxCashFlows = async (
   purchases: Array<PurchaseAttributes & Document>,
-  tx: TransactionAttributes & Document
+  tx: TransactionAttributes & Document,
+  session: mongoose.ClientSession
 ) => {
   try {
     await Promise.all(
@@ -24,7 +25,8 @@ const sortTxCashFlows = async (
           Partner: purchase.Partner,
           marketplace: purchase.marketplace,
           Transaction: tx._id,
-        }).save();
+        }).save({ session });
+
         const settlementEnd = await new SettlementModel({
           amount: purchase.priceFinish,
           currency: tx.currency,
@@ -35,7 +37,7 @@ const sortTxCashFlows = async (
           marketplace: purchase.marketplace,
           Transaction: tx._id,
           isSettled: false,
-        }).save();
+        }).save({ session });
 
         const pifIncome = await new RevenueModel({
           revenueFrom: 'pifProportion',
@@ -47,25 +49,26 @@ const sortTxCashFlows = async (
           User: purchase.User,
           Purchase: purchase._id,
           Transaction: tx._id,
-        }).save();
+        }).save({ session });
 
         purchase.SettlementStart = settlement._id;
         purchase.Revenue = pifIncome._id;
         purchase.SettlementFinish = settlementEnd._id;
-        await purchase.save();
+        await purchase.save({ session });
 
         // create wallet for partner if it doesn't exist
         let partnerWallet = await WalletModel.findOne({
           Partner: purchase.Partner,
           currency: tx.currency,
           marketplace: purchase.marketplace,
-        });
+        }).session(session);
+
         if (!partnerWallet) {
           partnerWallet = await new WalletModel({
             Partner: purchase.Partner,
             currency: tx.currency,
             marketplace: purchase.marketplace,
-          }).save();
+          }).save({ session });
         }
 
         partnerWallet.balance = currency(partnerWallet.balance).add(
@@ -85,14 +88,14 @@ const sortTxCashFlows = async (
           walletType: 'system',
           currency: tx.currency,
           marketplace: purchase.marketplace,
-        });
+        }).session(session);
 
         if (!platformWallet) {
           platformWallet = await new WalletModel({
             walletType: 'system',
             currency: tx.currency,
             marketplace: purchase.marketplace,
-          }).save();
+          }).save({ session });
         }
 
         platformWallet.balance = currency(platformWallet.balance).add(
@@ -105,7 +108,10 @@ const sortTxCashFlows = async (
           purchase.priceFinish
         ).value;
 
-        await Promise.all([partnerWallet.save(), platformWallet.save()]);
+        await Promise.all([
+          partnerWallet.save({ session }),
+          platformWallet.save({ session }),
+        ]);
       })
     );
   } catch (error) {

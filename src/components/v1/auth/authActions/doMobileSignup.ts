@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -20,27 +21,37 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
   const { phone, phonePrefix, marketplace, captchaToken }: signUpDatatype =
     req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const isCaptchaValid = await verifyCaptcha(captchaToken);
-    if (!isCaptchaValid && !appConfig.isDev)
+
+    if (!isCaptchaValid && !appConfig.isDev) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Invalid captcha', 400);
+    }
 
     const existingUser = await UserModel.findOne({
       userType: 'customer',
       'contact.phone': phone,
       'contact.phonePrefix': phonePrefix,
       isConfirmed: true,
-    });
+    }).session(session);
 
-    if (existingUser)
+    if (existingUser) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Account exists, please Login instead', 409);
+    }
 
     const haveReceivedPifBefore = await PurchaseModel.findOne({
       recipientPhonePrefix: phonePrefix,
       recipientPhoneNumber: phone,
-    });
-
-    consoleLog({ haveReceivedPifBefore });
+    }).session(session);
 
     const newUser = await new UserModel({
       contact: {
@@ -50,12 +61,15 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       currentMarketplace: marketplace,
       userType: 'customer',
       shouldEnforceConfirmation: !!haveReceivedPifBefore,
-    }).save();
+    }).save({ session });
 
     if (!newUser.shouldEnforceConfirmation) {
       const referenceCode = `${generateRandomCode(2)}${
         newUser._id
       }${generateRandomCode(5)}`;
+
+      await session.commitTransaction();
+      session.endSession();
 
       return handleResponse(
         res,
@@ -75,12 +89,18 @@ const doMobileSignup = async (req: IRequest, res: Response) => {
       phone,
       phonePrefix,
       lastSent: new Date(),
-    }).save();
+    }).save({ session });
 
     await sendOTP(phonePrefix + phone, newOtpCode.code);
 
+    await session.commitTransaction();
+    session.endSession();
+
     return handleResponse(res, 'Enter OTP to proceed', 201);
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     if (err.code === '11000')
       return handleResponse(res, 'Account exists, please Login instead', 409);
 

@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -22,23 +23,38 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
 
   const { email, password }: LoginDatatype = req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const existingUser = await UserModel.findOne({
       email: email,
       userType: { $ne: 'customer' },
-    });
+    }).session(session);
 
-    if (!existingUser)
+    if (!existingUser) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Invalid login credentials', 401);
+    }
 
     const userAccess = await UserAccessModel.findOne({
       User: existingUser._id,
       role: { $ne: 'customer' },
-    });
-    if (!userAccess)
+    }).session(session);
+
+    if (!userAccess) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Invalid login credentials', 401);
+    }
 
     if (userAccess.isBlocked) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'Your account has been disabled. If you think this was a mistake, please contact us',
@@ -48,7 +64,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
 
     if (!userAccess.securityCode) {
       userAccess.securityCode = uuid();
-      await userAccess.save();
+      await userAccess.save({ session });
     }
 
     const { allowedAttempts, remainingTime } = calculateLoginWaitingTime(
@@ -63,6 +79,9 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
       remainingTime > 0
     ) {
       const waitMinutes = Math.ceil(remainingTime / (60 * 1000));
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         `Too many failed login attempts. Please wait for ${waitMinutes} minutes and try again.`,
@@ -75,14 +94,18 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     if (!userAccess.comparePassword(password)) {
       userAccess.failedLoginAttempts += 1;
       userAccess.lastLoginAttempt = new Date(now);
-      await userAccess.save();
+
+      await userAccess.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
 
       return handleResponse(res, 'Invalid login credentials', 401);
     } else {
       userAccess.failedLoginAttempts = 0;
       userAccess.lastLoginAttempt = null;
       userAccess.lastLoginAt = new Date(now);
-      await userAccess.save();
+      await userAccess.save({ session });
     }
 
     // find session index, if it exists, update it, if not create it
@@ -113,7 +136,8 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     if (userAccess.isLegacyData && !userAccess.isLegacyAccountValidated) {
       userAccess.updatePassword(password);
     }
-    await userAccess.save();
+
+    await userAccess.save({ session });
 
     const token = generateToken({
       authKey: userAccess.securityCode,
@@ -131,6 +155,9 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
     //   maxAge: ms(appConfig.authConfigs.sessionLivespan),
     // });
 
+    await session.commitTransaction();
+    session.endSession();
+
     return handleResponse(res, {
       message: 'Login successful, Welcome 🤗',
       data: {
@@ -146,6 +173,9 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
       },
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

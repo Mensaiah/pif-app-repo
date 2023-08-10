@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import { consoleLog } from '../../../../utils/helpers';
 import { PaymentDriverType } from '../../platform/platform.types';
@@ -13,18 +13,27 @@ const completeTransactionFromPayment = async (
   reference: string,
   paymentStatus: any
 ) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const paymentRecord = await PaymentRecordModel.findOne({
       driver,
       reference: reference,
-    });
+    }).session(session);
 
     if (!paymentRecord) {
+      await session.abortTransaction();
+      session.endSession();
+
       consoleLog(`Payment record (${reference}) not found`);
       return;
     }
 
     if (paymentRecord.isOrderProcessed) {
+      await session.abortTransaction();
+      session.endSession();
+
       consoleLog(`Payment record (${reference}) already processed`);
       return;
     }
@@ -35,11 +44,14 @@ const completeTransactionFromPayment = async (
       happenedAt: new Date(),
     });
 
-    await paymentRecord.save();
+    await paymentRecord.save({ session });
 
-    const user = await UserModel.findById(paymentRecord.User);
+    const user = await UserModel.findById(paymentRecord.User).session(session);
 
-    if (!paymentRecord) {
+    if (!user) {
+      await session.abortTransaction();
+      session.endSession();
+
       consoleLog(`Error locating user for Payment record: (${reference})`);
       return;
     }
@@ -47,9 +59,16 @@ const completeTransactionFromPayment = async (
     await completeTransaction(
       user as UserAttributes & Document,
       paymentRecord,
-      paymentStatus
+      paymentStatus,
+      session
     );
+
+    await session.commitTransaction();
+    session.endSession();
   } catch (error) {
+    await session.abortTransaction();
+    session.endSession();
+
     throw { errorMessage: error.message || 'An error occurred' };
   }
 };

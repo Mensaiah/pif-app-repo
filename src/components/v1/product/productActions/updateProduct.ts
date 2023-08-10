@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { ObjectId } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
@@ -51,33 +51,49 @@ const updateProduct = async (req: IRequest, res: Response) => {
     redeemType,
   }: dataType = req.body;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    const existingProduct = await ProductModel.findById(productId);
+    const existingProduct = await ProductModel.findById(productId).session(
+      session
+    );
 
-    if (!existingProduct)
+    if (!existingProduct) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Product does not exist', 404);
-
+    }
     // TODO: if the person is a partner-admin, ensure that the product belongs to the partner
 
     if (
       !isUserTopLevelAdmin &&
       !hasAccessToMarketplaces(req, existingProduct.marketplace)
-    )
+    ) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         "You don't have the permission to perform this operation.",
         403
       );
+    }
 
     if (
       userType === 'partner-admin' &&
       !hasAccessToPartner(req, existingProduct.Partner)
-    )
+    ) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         "You don't have the permission to perform this operation.",
         403
       );
+    }
 
     const shouldUpdateCategories =
       categories &&
@@ -183,12 +199,12 @@ const updateProduct = async (req: IRequest, res: Response) => {
 
     if (redeemType) existingProduct.redeemType = redeemType;
 
-    await existingProduct.save();
+    await existingProduct.save({ session });
 
     if (shouldUpdateCategories) {
       const productSupplier = await PartnerModel.findById(
         existingProduct.Partner
-      );
+      ).session(session);
 
       if (productSupplier) {
         for (const category of existingProduct.categories) {
@@ -199,7 +215,7 @@ const updateProduct = async (req: IRequest, res: Response) => {
               categories: { $in: [category] },
               isApproved: true,
               isActive: true,
-            });
+            }).session(session);
 
           // If not, remove this category from the partner's categories
           if (approvedActiveProductsInCategory === 0) {
@@ -207,18 +223,24 @@ const updateProduct = async (req: IRequest, res: Response) => {
               productSupplier.productCategories.indexOf(category);
             if (categoryIndex > -1) {
               productSupplier.productCategories.splice(categoryIndex, 1);
-              await productSupplier.save();
+              await productSupplier.save({ session });
             }
           }
         }
       }
     }
 
+    await session.commitTransaction();
+    session.endSession();
+
     return handleResponse(res, {
       message: 'Product updated successfully',
       data: existingProduct,
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     return handleResponse(
       res,
       useWord('internalServerError', req.lang),

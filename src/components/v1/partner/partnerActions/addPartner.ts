@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -16,6 +17,7 @@ import { addPartnerSchema } from '../partner.policy';
 
 const addPartner = async (req: IRequest, res: Response) => {
   type addPartnerDataType = z.infer<typeof addPartnerSchema>;
+
   const {
     name,
     email,
@@ -52,38 +54,60 @@ const addPartner = async (req: IRequest, res: Response) => {
     adminEmail,
     adminName,
   }: addPartnerDataType = req.body;
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     const existingPartner = await PartnerModel.findOne({
       $or: [{ email }, { name }],
-    });
+    }).session(session);
 
-    if (existingPartner)
+    if (existingPartner) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Partner already exist.', 409);
+    }
 
-    if (marketplaces.includes('all') || headquarterCountry.includes('all'))
+    if (marketplaces.includes('all') || headquarterCountry.includes('all')) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'invalid data, please specify marketplace or headquarter country.',
         400
       );
+    }
 
-    const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
+    const platform = await PlatformModel.findOne()
+      .sort({ createdAt: -1 })
+      .session(session);
 
-    if (!platform)
+    if (!platform) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'Error handling request, please try again later',
         500
       );
+    }
 
     const sanitizedMarketplaces = filterMarketplaces(marketplaces, platform);
 
-    if (!sanitizedMarketplaces.length)
+    if (!sanitizedMarketplaces.length) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'None of the marketplace(s) supplied exists or is missing',
         404
       );
+    }
 
     const newPartner = new PartnerModel({
       name,
@@ -145,9 +169,12 @@ const addPartner = async (req: IRequest, res: Response) => {
       const existingAdminPartner = await UserModel.findOne({
         userType: { $ne: 'customer' },
         email: adminEmail,
-      });
+      }).session(session);
 
       if (existingAdminPartner) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(
           res,
           "The user you're trying to make admin for this new Partner already exists on the platform",
@@ -165,7 +192,7 @@ const addPartner = async (req: IRequest, res: Response) => {
         expiresAt: new Date(Date.now() + ms('1 day')),
         lastSent: new Date(),
         status: 'pending',
-      }).save();
+      }).save({ session });
 
       await sendPartnerAdminInviteMail({
         to: adminEmail,
@@ -177,7 +204,10 @@ const addPartner = async (req: IRequest, res: Response) => {
 
     // TODO: push notification
 
-    await newPartner.save();
+    await newPartner.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
 
     return handleResponse(res, {
       message:
@@ -187,6 +217,9 @@ const addPartner = async (req: IRequest, res: Response) => {
       data: newPartner,
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

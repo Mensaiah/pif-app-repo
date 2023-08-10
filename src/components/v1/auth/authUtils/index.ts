@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import { Document } from 'mongoose';
+import mongoose, { Document, mongo } from 'mongoose';
 import ms from 'ms';
 
 import appConfig from '../../../../config';
@@ -144,7 +144,8 @@ export const getPermissions = (
 };
 
 export const sendOtpToSenderIfNotConfirmed = async (
-  user: UserAttributes & Document
+  user: UserAttributes & Document,
+  session: mongoose.ClientSession
 ) => {
   try {
     if (user.isConfirmed) return;
@@ -159,11 +160,11 @@ export const sendOtpToSenderIfNotConfirmed = async (
       phonePrefix: user.contact.phonePrefix,
       purpose: 'confirm-account',
       lastSent: new Date(),
-    }).save();
+    }).save({ session });
 
     await sendOTP(user.contact.phonePrefix + user.contact.phone, otp.code);
 
-    await user.save();
+    await user.save({ session });
   } catch (err) {
     throw err;
   }

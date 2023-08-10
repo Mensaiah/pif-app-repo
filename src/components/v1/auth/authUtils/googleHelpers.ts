@@ -12,7 +12,6 @@ const googleConfig = {
   clientSecret: appConfig.googleClientSecret,
   redirect: appConfig.googleRedirectUrl,
 };
-consoleLog({ googleConfig });
 
 const defaultScope: string[] = [
   'https://www.googleapis.com/auth/plus.me',

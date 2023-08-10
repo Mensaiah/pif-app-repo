@@ -1,3 +1,5 @@
+import mongoose from 'mongoose';
+
 import appConfig from '..';
 import { UserAccessModel } from '../../components/v1/auth/auth.models';
 import PlatformModel from '../../components/v1/platform/platform.model';
@@ -10,19 +12,20 @@ import defaultUserTypesRolesAndPermissions from '../defaultRolesAndPermissions';
 const { seedData } = appConfig;
 
 export const seedNow = async () => {
-  // const session = await mongoose.startSession();
-  // session.startTransaction();
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
   try {
-    const platformDataExists = await PlatformModel.findOne();
-    // .session(session);
+    const platformDataExists = await PlatformModel.findOne().session(session);
+
     if (platformDataExists) {
-      // await session.abortTransaction();
-      // session.endSession();
+      await session.abortTransaction();
+      session.endSession();
       return;
     }
 
     consoleLog('Seeding started ⚙️');
+
     // TODO: create seed user
     await new PlatformModel<PlatformAttributes>({
       version: '1.1.0',
@@ -129,8 +132,8 @@ export const seedNow = async () => {
       ],
       defaultUserTypesAndRoles: defaultUserTypesRolesAndPermissions,
       socials: [],
-    }).save();
-    // .save({ session })
+    }).save({ session });
+
     const seeduser = new UserModel<UserAttributes>({
       name: seedData.name,
       email: seedData.email,
@@ -138,7 +141,9 @@ export const seedNow = async () => {
       contact: seedData.contact,
       isConfirmed: true,
     });
-    await seeduser.save();
+
+    await seeduser.save({ session });
+
     await new UserAccessModel({
       User: seeduser._id,
       password: seedData.password,
@@ -146,14 +151,16 @@ export const seedNow = async () => {
       permissions: ['supreme'],
       failedLoginAttempts: 0,
       sessions: [],
-    }).save();
+    }).save({ session });
 
-    // await session.commitTransaction();
-    // session.endSession();
+    await session.commitTransaction();
+    session.endSession();
+
     consoleLog('Seeding complete ✅');
   } catch (err) {
-    // await session.abortTransaction();
-    // session.endSession();
+    await session.abortTransaction();
+    session.endSession();
+
     consoleLog(
       'error fetching info from DB: ' + JSON.stringify(err, null, 2),
       'error'

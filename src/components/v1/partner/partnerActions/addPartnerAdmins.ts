@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import mongoose from 'mongoose';
 import ms from 'ms';
 import { z } from 'zod';
 
@@ -24,6 +25,9 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
 
   type partnerInviteType = z.infer<typeof partnerInviteSchema>;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   const {
     adminEmail,
     adminName,
@@ -35,26 +39,39 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
   try {
     // check if usertype is platform admin else if partner admin, check if it has access to the Partner
 
-    const partner = await PartnerModel.findById(partnerId);
+    const partner = await PartnerModel.findById(partnerId).session(session);
 
-    if (!partner) return handleResponse(res, 'Partner not found', 404);
+    if (!partner) {
+      await session.commitTransaction();
+      session.endSession();
+
+      return handleResponse(res, 'Partner not found', 404);
+    }
 
     if (
       !isUserTopLevelAdmin &&
       !hasAccessToMarketplaces(req, partner.marketplaces)
-    )
-      return handleResponse(
-        res,
-        "You don't have the permission to perform this operation.",
-        403
-      );
+    ) {
+      await session.abortTransaction();
+      session.endSession();
 
-    if (userType === 'partner-admin' && !hasAccessToPartner(req, partner._id))
       return handleResponse(
         res,
         "You don't have the permission to perform this operation.",
         403
       );
+    }
+
+    if (userType === 'partner-admin' && !hasAccessToPartner(req, partner._id)) {
+      await session.abortTransaction();
+      session.endSession();
+
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+    }
 
     let pos: undefined | (PartnerPosAttributes & Document);
 
@@ -63,21 +80,30 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
     if (isLocalPartnerInvite) {
       pos = await PartnerPosModel.findById(posId);
 
-      if (!pos) return handleResponse(res, 'Invalid posId', 400);
+      if (!pos) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return handleResponse(res, 'Invalid posId', 400);
+      }
     }
 
     const existingPartnerAdmin = await UserModel.findOne({
       userType: 'partner-admin',
       email: adminEmail,
-    });
+    }).session(session);
 
-    if (existingPartnerAdmin)
+    if (existingPartnerAdmin) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Partner already exist', 409);
+    }
 
     const existingInvite = await UserInviteModel.findOne({
       email: adminEmail,
       role,
-    });
+    }).session(session);
 
     if (existingInvite) {
       if (existingInvite.expiresAt < new Date()) {
@@ -91,7 +117,10 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
         partnerName: isLocalPartnerInvite ? pos.name : partner.name,
       });
 
-      await existingInvite.save();
+      await existingInvite.save({ session });
+
+      await session.commitTransaction();
+      session.endSession();
 
       return handleResponse(
         res,
@@ -124,10 +153,16 @@ const addPartnerAdmins = async (req: IRequest, res: Response) => {
       partnerName: isLocalPartnerInvite ? pos.name : partner.name,
     });
 
-    await newInvite.save();
+    await newInvite.save({ session });
+
+    await session.commitTransaction();
+    session.endSession();
 
     return handleResponse(res, 'Invitation sent ✉️');
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
 };

@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import { z } from 'zod';
 
 import platformConstants from '../../../../config/platformConstants';
@@ -36,28 +36,38 @@ const initiateOrder = async (req: IRequest, res: Response) => {
     toBeDeliveredAt,
   }: dataType = req.body;
 
-  if (userType !== 'customer')
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  if (userType !== 'customer') {
+    await session.abortTransaction();
+    session.endSession();
+
     return handleResponse(
       res,
       'You are not allowed to perform this operation',
       403
     );
+  }
 
   try {
     const existingPaymentRecord = await PaymentRecordModel.findOne({
       idempotencyKey,
-    });
+    }).session(session);
+
     const errorMessages: string[] = [];
 
     let paymentRecord = existingPaymentRecord;
 
     if (paymentRecord) {
-      consoleLog(JSON.stringify({ paymentRecord }, null, 2));
       // validate the payment, if successful, update the payment record
       if (
         paymentRecord.status === 'successful' &&
         paymentRecord.isOrderProcessed
       ) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(
           res,
           {
@@ -70,24 +80,10 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         );
       }
 
-      consoleLog(
-        'before verify payment' +
-          JSON.stringify(
-            {
-              driver: paymentRecord.driver,
-              driverRefernce: paymentRecord.driverRefernce,
-            },
-            null,
-            2
-          )
-      );
       // check payment from driver service to see if it was successful, if it is, update the payment record and return success
       const paymentStatus = await verifyPayment(
         paymentRecord.driver,
         paymentRecord.driverRefernce
-      );
-      consoleLog(
-        'after verify payment: ' + JSON.stringify({ paymentStatus }, null, 2)
       );
 
       if (paymentStatus.success) {
@@ -98,13 +94,17 @@ const initiateOrder = async (req: IRequest, res: Response) => {
           happenedAt: new Date(),
         });
 
-        await paymentRecord.save();
+        await paymentRecord.save({ session });
 
         await completeTransactionn(
           user as UserAttributes & Document,
           paymentRecord,
-          paymentStatus
+          paymentStatus,
+          session
         );
+
+        await session.commitTransaction();
+        session.endSession();
 
         return handleResponse(
           res,
@@ -117,6 +117,9 @@ const initiateOrder = async (req: IRequest, res: Response) => {
           200
         );
       } else {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(
           res,
           {
@@ -135,7 +138,10 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       let itemsData = await Promise.all(
         items.map(async (item) => {
           // fetch product info
-          const product = await ProductModel.findById(item.productId);
+          const product = await ProductModel.findById(item.productId).session(
+            session
+          );
+
           if (!product) return null;
           if (!product.isApproved) return null;
           if (!product.isActive) return null;
@@ -153,7 +159,8 @@ const initiateOrder = async (req: IRequest, res: Response) => {
           const Partner = await PartnerModel.findById(
             product.Partner,
             'isCharity'
-          );
+          ).session(session);
+
           if (!Partner) return null;
 
           if (product.marketplace !== currentMarketplace) {
@@ -178,6 +185,7 @@ const initiateOrder = async (req: IRequest, res: Response) => {
                 ? unitPrice - discountCode.value
                 : unitPrice - (unitPrice * discountCode?.value) / 100;
           }
+
           if (unitPrice < 0) unitPrice = 0;
 
           // calculate amount
@@ -200,6 +208,9 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       itemsData = itemsData.filter((item) => item !== null);
 
       if (itemsData.length === 0) {
+        await session.abortTransaction();
+        session.endSession();
+
         return handleResponse(
           res,
           {
@@ -254,11 +265,17 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         user: req.user as UserAttributes & Document,
         refId: paymentRecord._id,
         marketplace: paymentRecord.marketplace,
-      }).catch((err) => {
+      }).catch(async (err) => {
+        await session.abortTransaction();
+        session.endSession();
+
         throw err;
       });
 
     if (errorMessage) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, errorMessage, 400);
     }
 
@@ -273,9 +290,15 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       });
     }
 
-    await paymentRecord.save().catch((err) => {
+    await paymentRecord.save({ session }).catch(async (err) => {
+      await session.abortTransaction();
+      session.endSession();
+
       throw err;
     });
+
+    await session.commitTransaction();
+    session.endSession();
 
     return handleResponse(
       res,
@@ -290,6 +313,9 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       200
     );
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, 'Error handling request at this time', 500, err);
   }
 };

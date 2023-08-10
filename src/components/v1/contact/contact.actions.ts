@@ -40,6 +40,7 @@ export const syncContacts = async (req: IRequest, res: Response) => {
 
   try {
     const userContacts = await ContactModel.find({ User: user._id });
+
     const newContacts = sanitizedContacts.filter(
       (contact: SanitizedContactType) =>
         !userContacts.find(

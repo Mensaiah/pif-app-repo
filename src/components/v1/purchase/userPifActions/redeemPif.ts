@@ -1,16 +1,10 @@
 import { Response } from 'express';
-import { Document } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
-import { OtpCodeModel } from '../../auth/auth.models';
-import {
-  generateRandomCode,
-  sendOTP,
-  sendOtpToSenderIfNotConfirmed,
-} from '../../auth/authUtils';
+import { handleResponse } from '../../../../utils/helpers';
+import { sendOtpToSenderIfNotConfirmed } from '../../auth/authUtils';
 import sortFinalSettlement from '../../transaction/transactionUtils/sortFinalSettlement';
-import { UserModel } from '../../user/user.model';
 import { UserAttributes } from '../../user/user.types';
 import PurchaseModel from '../purchase.model';
 
@@ -18,9 +12,15 @@ export const redeemPif = async (req: IRequest, res: Response) => {
   const { purchaseId } = req.params;
   const { user, pifId } = req;
 
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
     if (!user.isConfirmed) {
-      sendOtpToSenderIfNotConfirmed(user as UserAttributes & Document);
+      sendOtpToSenderIfNotConfirmed(user as UserAttributes & Document, session);
+
+      await session.commitTransaction();
+      session.endSession();
 
       return handleResponse(res, {
         message: 'Please confirm your phone number',
@@ -31,6 +31,9 @@ export const redeemPif = async (req: IRequest, res: Response) => {
     const purchase = await PurchaseModel.findById(purchaseId);
 
     if (!purchase) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'Purchase not found', 404);
     }
 
@@ -40,6 +43,9 @@ export const redeemPif = async (req: IRequest, res: Response) => {
         user.contact.phonePrefix !== purchase.recipientPhonePrefix) &&
       purchase.recipientPifId !== pifId
     ) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(
         res,
         'You are not authorized to redeem this PIF',
@@ -48,6 +54,9 @@ export const redeemPif = async (req: IRequest, res: Response) => {
     }
 
     if (purchase.redeemedAt) {
+      await session.abortTransaction();
+      session.endSession();
+
       return handleResponse(res, 'PIF already redeemed', 400);
     }
 
@@ -56,9 +65,12 @@ export const redeemPif = async (req: IRequest, res: Response) => {
 
     purchase.redeemedAt = new Date();
 
-    await purchase.save();
+    await purchase.save({ session });
 
-    await sortFinalSettlement(purchase.SettlementFinish);
+    await sortFinalSettlement(purchase.SettlementFinish, session);
+
+    await session.commitTransaction();
+    session.endSession();
 
     return handleResponse(res, {
       message: 'PIF redeemed successfully',
@@ -67,6 +79,9 @@ export const redeemPif = async (req: IRequest, res: Response) => {
       },
     });
   } catch (err) {
+    await session.abortTransaction();
+    session.endSession();
+
     handleResponse(res, 'An error occurred while redeeming PIF', 500, err);
   }
 };
