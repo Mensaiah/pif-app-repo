@@ -40,6 +40,7 @@
     "helmet": "^6.1.5",
     "jsdom": "^22.1.0",
     "jsonwebtoken": "^9.0.0",
+    "libphonenumber-js": "^1.10.39",
     "mailgun.js": "^8.2.1",
     "mime": "^3.0.0",
     "mime-types": "^2.1.35",

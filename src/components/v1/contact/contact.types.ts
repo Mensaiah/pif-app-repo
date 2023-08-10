@@ -10,4 +10,5 @@ export interface ContactAttributes extends Document {
   phoneNumberDisplay: string;
   hasApp: boolean;
   deletedAt?: Date;
+  countryCode?: string;
 }

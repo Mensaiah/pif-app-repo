@@ -13,6 +13,7 @@ const contactSchema = new Schema<ContactAttributes>(
     phoneNumberDisplay: String,
     hasApp: Boolean,
     deletedAt: Date,
+    countryCode: String,
   },
   { timestamps: true }
 );
