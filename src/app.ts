@@ -76,8 +76,8 @@ const initializeMiddlewares = () => {
     .use(Sentry.Handlers.tracingHandler())
     .use(cors(corsOptions))
     .use(cookieParser())
-    .use(express.json({ limit: '50kb' }))
-    .use(express.urlencoded({ limit: '50kb', extended: false }))
+    .use(express.json({ limit: '950kb' }))
+    .use(express.urlencoded({ limit: '950kb', extended: false }))
     .use(helmet())
     .use(
       helmet.contentSecurityPolicy({
