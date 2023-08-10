@@ -108,20 +108,4 @@ const partnerSchema = new Schema<PartnerAttributes>(
   { timestamps: true }
 );
 
-// partnerSchema.pre<PartnerAttributes & Document>('save', async function (next) {
-//   try {
-//     const platform = await PlatformModel.findOneAndUpdate(
-//       {},
-//       {
-//         $inc: { 'numericIdTrackers.lastPartnerId': 1 },
-//       },
-//       { new: true }
-//     );
-//     this._id = platform.numericIdTrackers.lastPartnerId;
-//     return next();
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
-
 export const PartnerModel = model<PartnerAttributes>('Partner', partnerSchema);

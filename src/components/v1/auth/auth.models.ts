@@ -7,56 +7,59 @@ import platformConstants from '../../../config/platformConstants';
 
 import { OtpAttributes, UserAccessAttributes } from './auth.types';
 
-const userAccessSchema = new Schema<UserAccessAttributes & Document>({
-  old_id: Number,
-  isLegacyData: Boolean,
-  isLegacyAccountValidated: Boolean,
-  User: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-  },
-  PartnerPosUser: {
-    type: Schema.Types.ObjectId,
-    ref: 'PartnerPosUser',
-  },
-  pin: String,
-  password: String,
-  securityCode: String,
-  role: String,
-  permissions: [String],
-  marketplaces: [
-    {
-      type: String,
+const userAccessSchema = new Schema<UserAccessAttributes & Document>(
+  {
+    old_id: Number,
+    isLegacyData: Boolean,
+    isLegacyAccountValidated: Boolean,
+    User: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
-  ],
-  citiesCovered: [Schema.Types.ObjectId],
-  isBlocked: Boolean,
-  lastLoginAttempt: Date,
-  lastLoginAt: Date,
-  lastEventTime: Date,
-  failedLoginAttempts: { type: Number, required: true },
-  sessions: [
-    {
-      required: true,
-      type: {
-        used: { type: Number, required: true },
-        sessionId: { type: String, required: true },
-        deviceHash: { type: String, required: true },
-        lastEventTime: { type: Date, required: true },
-        maxLivespan: { type: Number, required: true },
-        maxInactivity: { type: Number, required: true },
-        isLoggedOut: Boolean,
-        device: {
-          info: String,
-          geoip: {
-            lat: String,
-            long: String,
+    PartnerPosUser: {
+      type: Schema.Types.ObjectId,
+      ref: 'PartnerPosUser',
+    },
+    pin: String,
+    password: String,
+    securityCode: String,
+    role: String,
+    permissions: [String],
+    marketplaces: [
+      {
+        type: String,
+      },
+    ],
+    citiesCovered: [Schema.Types.ObjectId],
+    isBlocked: Boolean,
+    lastLoginAttempt: Date,
+    lastLoginAt: Date,
+    lastEventTime: Date,
+    failedLoginAttempts: { type: Number, required: true },
+    sessions: [
+      {
+        required: true,
+        type: {
+          used: { type: Number, required: true },
+          sessionId: { type: String, required: true },
+          deviceHash: { type: String, required: true },
+          lastEventTime: { type: Date, required: true },
+          maxLivespan: { type: Number, required: true },
+          maxInactivity: { type: Number, required: true },
+          isLoggedOut: Boolean,
+          device: {
+            info: String,
+            geoip: {
+              lat: String,
+              long: String,
+            },
           },
         },
       },
-    },
-  ],
-});
+    ],
+  },
+  { timestamps: true }
+);
 
 // Hash password before saving to database
 userAccessSchema.pre<UserAccessAttributes & Document>(
@@ -151,28 +154,31 @@ export const UserAccessModel = model<UserAccessAttributes>(
 );
 
 // OTP
-const OtpCodeSchema = new Schema<OtpAttributes>({
-  User: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+const OtpCodeSchema = new Schema<OtpAttributes>(
+  {
+    User: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    code: String,
+    purpose: {
+      type: String,
+      enum: platformConstants.otpPurpose,
+    },
+    expiresAt: Date,
+    phone: String,
+    phonePrefix: String,
+    isConfirmed: Boolean,
+    lastSent: Date,
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+    },
+    isDeleted: Boolean,
   },
-  code: String,
-  purpose: {
-    type: String,
-    enum: platformConstants.otpPurpose,
-  },
-  expiresAt: Date,
-  phone: String,
-  phonePrefix: String,
-  isConfirmed: Boolean,
-  lastSent: Date,
-  email: {
-    type: String,
-    lowercase: true,
-    trim: true,
-  },
-  isDeleted: Boolean,
-});
+  { timestamps: true }
+);
 
 OtpCodeSchema.pre<OtpAttributes & Document>('save', function (next) {
   if (!this.isModified('code')) return next();

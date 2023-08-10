@@ -30,56 +30,59 @@ export const TransactionModel = model<TransactionAttributes>(
   transactionSchema
 );
 
-const paymentRecordSchema = new Schema<PaymentRecordAttributes>({
-  idempotencyKey: { type: String, required: true },
-  User: { type: ObjectId, ref: 'User' },
-  amount: { type: Number, required: true },
-  currency: { type: String, required: true },
-  driver: {
-    type: String,
-    required: true,
-    enum: platformConstants.paymentProcessors,
-  },
-  method: String,
-  marketplace: { type: String, required: true },
-  txFee: Number,
-  items: [
-    {
-      Partner: { type: ObjectId, ref: 'Partner' },
-      Product: { type: ObjectId, ref: 'Product' },
-      productName: [languageValuePairSchema],
-      productPhoto: String,
-      unitPrice: Number,
-      quantity: Number,
-      amount: Number,
-      discountCode: String,
-      isCharity: Boolean,
+const paymentRecordSchema = new Schema<PaymentRecordAttributes>(
+  {
+    idempotencyKey: { type: String, required: true },
+    User: { type: ObjectId, ref: 'User' },
+    amount: { type: Number, required: true },
+    currency: { type: String, required: true },
+    driver: {
+      type: String,
+      required: true,
+      enum: platformConstants.paymentProcessors,
     },
-  ],
-  senderPifId: String,
-  recipientPifId: String,
-  recipientPhonePrefix: String,
-  recipientPhoneNumber: String,
-  Contact: { type: ObjectId, ref: 'Contact' },
-  message: String,
-  toBeDeliveredAt: Date,
-  history: [
-    {
-      event: String,
-      data: String, // paystack payment link or stripe payment intent id
-      happenedAt: Date,
-      comment: String,
+    method: String,
+    marketplace: { type: String, required: true },
+    txFee: Number,
+    items: [
+      {
+        Partner: { type: ObjectId, ref: 'Partner' },
+        Product: { type: ObjectId, ref: 'Product' },
+        productName: [languageValuePairSchema],
+        productPhoto: String,
+        unitPrice: Number,
+        quantity: Number,
+        amount: Number,
+        discountCode: String,
+        isCharity: Boolean,
+      },
+    ],
+    senderPifId: String,
+    recipientPifId: String,
+    recipientPhonePrefix: String,
+    recipientPhoneNumber: String,
+    Contact: { type: ObjectId, ref: 'Contact' },
+    message: String,
+    toBeDeliveredAt: Date,
+    history: [
+      {
+        event: String,
+        data: String, // paystack payment link or stripe payment intent id
+        happenedAt: Date,
+        comment: String,
+      },
+    ],
+    status: {
+      type: String,
+      enum: ['pending', 'successful', 'failed'],
+      default: 'pending',
     },
-  ],
-  status: {
-    type: String,
-    enum: ['pending', 'successful', 'failed'],
-    default: 'pending',
+    driverRefernce: String,
+    paymentLinkOrId: String,
+    isOrderProcessed: Boolean,
   },
-  driverRefernce: String,
-  paymentLinkOrId: String,
-  isOrderProcessed: Boolean,
-});
+  { timestamps: true }
+);
 
 export const PaymentRecordModel = model<PaymentRecordAttributes>(
   'PaymentRecord',

@@ -105,32 +105,35 @@ const userSchema = new Schema<UserAttributes>(
   { timestamps: true }
 );
 
-const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>({
-  old_id: Number,
-  isLegacyData: Boolean,
-  Partner: { type: ObjectId, ref: 'Partner', required: true },
-  name: { type: String, required: true },
-  avatar: String,
-  isActive: Boolean,
-  email: {
-    type: String,
-    lowercase: true,
-    trim: true,
+const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>(
+  {
+    old_id: Number,
+    isLegacyData: Boolean,
+    Partner: { type: ObjectId, ref: 'Partner', required: true },
+    name: { type: String, required: true },
+    avatar: String,
+    isActive: Boolean,
+    email: {
+      type: String,
+      lowercase: true,
+      trim: true,
+    },
+    timezone: String,
+    dob: Date,
+    sex: {
+      type: String,
+      enum: ['male', 'female', 'others', 'prefer-not-to-say'],
+    },
+    contact: {
+      phone: String,
+      phonePrefix: String,
+    },
+    Pos: { type: ObjectId, ref: 'Pos', required: true },
+    isConfirmed: Boolean,
+    shouldEnforceConfirmation: Boolean,
   },
-  timezone: String,
-  dob: Date,
-  sex: {
-    type: String,
-    enum: ['male', 'female', 'others', 'prefer-not-to-say'],
-  },
-  contact: {
-    phone: String,
-    phonePrefix: String,
-  },
-  Pos: { type: ObjectId, ref: 'Pos', required: true },
-  isConfirmed: Boolean,
-  shouldEnforceConfirmation: Boolean,
-});
+  { timestamps: true }
+);
 
 export const UserModel = model<UserAttributes>('User', userSchema);
 const changeStream = UserModel.watch();
@@ -155,21 +158,24 @@ export const PartnerPosUserModel = model<PartnerPosUserAttributes>(
   partnerPosUserSchema
 );
 
-export const UserInviteSchema = new Schema<UserInviteAttributes>({
-  code: { type: String, required: true },
-  role: { type: String, required: true },
-  userType: { type: String, required: true },
-  email: { type: String, lowercase: true, trim: true, required: true },
-  invitedBy: { type: ObjectId, ref: 'User' },
-  Partner: { type: ObjectId, ref: 'Partner' },
-  PartnerPos: { type: ObjectId, ref: 'PartnerPos' },
-  marketplaces: [String],
-  City: { type: ObjectId, ref: 'City' },
-  Pos: { type: ObjectId, ref: 'Pos' },
-  expiresAt: Date,
-  lastSent: Date,
-  status: String,
-});
+export const UserInviteSchema = new Schema<UserInviteAttributes>(
+  {
+    code: { type: String, required: true },
+    role: { type: String, required: true },
+    userType: { type: String, required: true },
+    email: { type: String, lowercase: true, trim: true, required: true },
+    invitedBy: { type: ObjectId, ref: 'User' },
+    Partner: { type: ObjectId, ref: 'Partner' },
+    PartnerPos: { type: ObjectId, ref: 'PartnerPos' },
+    marketplaces: [String],
+    City: { type: ObjectId, ref: 'City' },
+    Pos: { type: ObjectId, ref: 'Pos' },
+    expiresAt: Date,
+    lastSent: Date,
+    status: String,
+  },
+  { timestamps: true }
+);
 
 export const UserInviteModel = model<UserInviteAttributes>(
   'UserInvite',
