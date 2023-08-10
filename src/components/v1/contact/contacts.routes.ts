@@ -6,7 +6,7 @@ import {
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
-import { syncContacts } from './contact.actions';
+import { getContacts, syncContacts } from './contact.actions';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ router.get(
   validateTokenMiddleware,
   requireAuthMiddleware,
   mustBeCustomerMiddleware,
-  syncContacts
+  getContacts
 );
 
 export default router;
