@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import express, { Router } from 'express';
 
 import { IRequest } from '../../types/global';
 import { handleResponse } from '../../utils/helpers';
@@ -24,6 +24,9 @@ import walletRoutesV1 from './wallet/wallet.routes';
 const router = Router();
 
 // Routes for different components
+router.use('/contacts', express.json({ limit: '4mb' }), contactRoutesV1);
+
+router.use(express.json({ limit: '50kb' }));
 router.use('/auth', authRoutesV1);
 router.use('/users', userRoutesV1);
 router.use('/platform', platformRoutesV1);
@@ -38,7 +41,6 @@ router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
 router.use('/revenue', revenueRoutesV1);
 router.use('/wallets', walletRoutesV1);
-router.use('/contacts', contactRoutesV1);
 
 router.use('/', generalRoutesV1);
 
