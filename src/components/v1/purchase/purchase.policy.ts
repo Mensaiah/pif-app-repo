@@ -17,8 +17,15 @@ export const passOnPifSchema = z
       }),
   })
   .refine(
-    ({ recipientPifId, recipientPhonePrefix, recipientPhoneNumber }) =>
-      recipientPifId || (recipientPhonePrefix && recipientPhoneNumber),
+    ({
+      recipientPifId,
+      recipientPhonePrefix,
+      recipientPhoneNumber,
+      contactId,
+    }) =>
+      recipientPifId ||
+      (recipientPhonePrefix && recipientPhoneNumber) ||
+      contactId,
     {
       message:
         'Either recipientPifId or recipientPhonePrefix and recipientPhoneNumber must be supplied',

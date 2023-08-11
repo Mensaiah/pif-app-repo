@@ -1,4 +1,5 @@
 import { Response } from 'express';
+import parseNumber, { CountryCode } from 'libphonenumber-js';
 import mongoose, { Document } from 'mongoose';
 import { z } from 'zod';
 
@@ -9,11 +10,14 @@ import {
 } from '../../../../services/paymentProcessors';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
+import ContactModel from '../../contact/contact.model';
+import { ContactAttributes } from '../../contact/contact.types';
 import { canDiscountCodeBeApplied } from '../../discountCode/discountCode.utils';
 import { PartnerModel } from '../../partner/partner.model';
 import { PaymentDriverType } from '../../platform/platform.types';
 import { getMarketplaceCurrency } from '../../platform/platform.utils';
 import ProductModel from '../../product/product.model';
+import { UserModel } from '../../user/user.model';
 import { UserAttributes } from '../../user/user.types';
 import { PaymentRecordModel } from '../transaction.model';
 import { initiateOrderSchema } from '../transaction.policy';
@@ -49,6 +53,9 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       403
     );
   }
+
+  let contact: undefined | (Document & ContactAttributes);
+  let receiver: undefined | (Document & UserAttributes);
 
   try {
     const existingPaymentRecord = await PaymentRecordModel.findOne({
@@ -134,6 +141,40 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         );
       }
     } else {
+      contact = contactId ? await ContactModel.findById(contactId) : null;
+
+      if (contact && contact.User.toString() !== user._id.toString()) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return handleResponse(
+          res,
+          "Supplied contact doesn't belong to you",
+          403
+        );
+      }
+
+      receiver = recipientPifId
+        ? await UserModel.findOne({ pifId: recipientPifId })
+        : null;
+      if (recipientPifId && !receiver) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return handleResponse(res, 'Recipient pif id is not valid', 400);
+      }
+
+      if (!contact && !receiver && !recipientPhoneNumber) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return handleResponse(
+          res,
+          'Please provide a valid contact or recipient phone number or recipient pif id',
+          400
+        );
+      }
+
       // fetch product prices and info in the items array
       let itemsData = await Promise.all(
         items.map(async (item) => {
@@ -226,6 +267,12 @@ const initiateOrder = async (req: IRequest, res: Response) => {
 
       const currency = await getMarketplaceCurrency(currentMarketplace);
 
+      const parsedContact = contact
+        ? parseNumber(contact.phoneNumber, contact.countryCode as CountryCode)
+        : null; // use parseNumber with country code
+      const contactPrefix = parsedContact?.countryCallingCode || null;
+      const contactNumber = parsedContact?.nationalNumber || null;
+
       paymentRecord = new PaymentRecordModel({
         idempotencyKey,
         User: userAccess.User,
@@ -235,9 +282,18 @@ const initiateOrder = async (req: IRequest, res: Response) => {
           'currentMarketplace' in user ? user.currentMarketplace : '',
         items: itemsData,
         senderPifId: pifId,
-        recipientPifId,
-        recipientPhonePrefix,
-        recipientPhoneNumber,
+        recipientPifId:
+          recipientPifId || contact?.pifId || receiver?.pifId || null,
+        recipientPhonePrefix:
+          recipientPhonePrefix ||
+          contactPrefix ||
+          receiver?.contact?.phonePrefix ||
+          null,
+        recipientPhoneNumber:
+          recipientPhoneNumber ||
+          contactNumber ||
+          receiver?.contact?.phone ||
+          null,
         Contact: contactId,
         message,
         toBeDeliveredAt,
@@ -304,6 +360,7 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       res,
       {
         message: 'Make your payment',
+        // eslint-disable-next-line max-lines
         data: {
           status: paymentRecord.status,
           paymentLink: paymentLink ?? null,
