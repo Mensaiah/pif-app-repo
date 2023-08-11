@@ -69,7 +69,7 @@ router.get(
   validateTokenMiddleware,
   requireAuth,
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['internal-category.view']),
+  // hasAnyPermissionMiddleware(['internal-category.view']),
   getInternalCategories
 );
 
@@ -132,7 +132,7 @@ router.get(
   validateTokenMiddleware,
   requireAuth,
   cannotBeCustomerMiddleware,
-  hasAnyPermissionMiddleware(['category.view']),
+  // hasAnyPermissionMiddleware(['category.view']),
   getCategories
 );
 
