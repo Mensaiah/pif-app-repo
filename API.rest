@@ -1,9 +1,9 @@
-@server = https://pif-api.herokuapp.com
-# @server = http://localhost:3000
+# @server = https://pif-api.herokuapp.com
+@server = http://localhost:3000
 @api = {{server}}/v1/en
 
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmNiZGM1MDctNDE1Yi00NmZkLWJjZjItYzlmYTA5MzBjMTQ5IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwYXJ0bmVyLWFkbWluIiwicm9sZSI6InBhcnRuZXItYWRtaW4iLCJzZXNzaW9uSWQiOiJiZGQ3NTNhNC01ZTExLTQyODEtYTBhZS1mMTVjM2VjZWJlMmUiLCJyZWYiOiI2NGNhMGEyNjYzMWNlZDgyOTE2NjEzNGIiLCJpYXQiOjE2OTEwOTczODksImV4cCI6MTY5MTI3MDE4OSwiaXNzIjoiUElGLWRldiJ9.D0DnAQoY9xb_0yxz-r4DKiaWJUUXxZT9xWmFFIUFjPQ
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTMyMDMwOCwiZXhwIjoxNjkxNDkzMTA4LCJpc3MiOiJQSUYtZGV2In0.h97_Im-g3IcmUfuuGbLtx9Up7MdXfurrJsNqeMwf_A0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MTc0NDQ3NSwiZXhwIjoxNjkxOTE3Mjc1LCJpc3MiOiJQSUYtc3RhZ2luZyJ9.Ot014PQfsqMSMzSR4xxeXrnRwCx3rBjf9AZNjUTdVcc
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTMyMDMwOCwiZXhwIjoxNjkxNDkzMTA4LCJpc3MiOiJQSUYtZGV2In0.h97_Im-g3IcmUfuuGbLtx9Up7MdXfurrJsNqeMwf_A0
 
 GET {{server}}
 
@@ -15,8 +15,8 @@ POST {{api}}/auth/login
 Content-Type: application/json
 
 {
-  "email": "joe@clowmail.com",
-  "password": "Joe_1"
+  "email": "piftech@pif-app.com",
+  "password": "Password_1"
 }
 
 # "email": "piftech@pif-app.com",
@@ -533,3 +533,6 @@ GET {{api}}/partners/marketplaces/dk/categories/64c7d903597cad7ddb548079
 ###
 GET {{api}}/products/marketplace/ng/category/64b66f6d3ff189c2c9a33795/partner/64b1101d3e5b42da83eb9425
 
+### get purchases
+GET {{api}}/purchases/64d1834e314d3fa95830a440
+Authorization: Bearer {{token}}
