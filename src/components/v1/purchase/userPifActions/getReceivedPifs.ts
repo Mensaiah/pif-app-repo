@@ -28,13 +28,17 @@ export const getReceivedPifs = async (req: IRequest, res: Response) => {
       ...(purchaseId && { _id: purchaseId }),
     };
 
-    const receivedPifs = await PurchaseModel.find(
-      query,
-      null,
-      paginate.queryOptions
-    )
-      .populate('Partner', 'name')
-      .lean();
+    const receivedPifs = purchaseId
+      ? await PurchaseModel.find(query, null, paginate.queryOptions)
+          .populate('Partner', 'name')
+          .populate('Receiver', 'name avatar')
+          .populate('Product', 'name photo')
+          .lean()
+      : await PurchaseModel.find(query, null, paginate.queryOptions)
+          .populate('Partner', 'name')
+          .populate('Receiver', 'name avatar')
+          .populate('Product', 'name description')
+          .lean();
 
     if (purchaseId && receivedPifs.length) {
       return handleResponse(res, { data: receivedPifs[0] });

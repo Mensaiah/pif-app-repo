@@ -114,6 +114,8 @@ export const passOnPif = async (req: IRequest, res: Response) => {
 
     if (toBeDeliveredAt) purchase.deliveryAt = toBeDeliveredAt;
 
+    // TODO: if user is on PIF, notify them by sending a push notification
+
     await purchase.save();
 
     return handleResponse(res, 'Passed on successfully', 200);
