@@ -96,6 +96,12 @@ export interface ListBankProps {
 }
 
 export interface ListBankDataProps {
+  status: string;
+  message: string;
+  data: BanksProps[];
+}
+
+interface BanksProps {
   name: string;
   slug: string;
   code: string;

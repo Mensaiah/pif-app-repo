@@ -51,3 +51,10 @@ export const initiateOrderSchema = z
         'Either recipientPifId or recipientPhonePrefix and recipientPhoneNumber must be supplied',
     }
   );
+
+export const listBanksSchema = z.object({
+  driver: z.string(),
+  marketplace: z.string().length(2, {
+    message: 'length should be 2.',
+  }),
+});
