@@ -536,3 +536,33 @@ GET {{api}}/products/marketplace/ng/category/64b66f6d3ff189c2c9a33795/partner/64
 ### get purchases
 GET {{api}}/purchases/64d1834e314d3fa95830a440
 Authorization: Bearer {{token}}
+
+### 
+GET {{api}}/bank-info/list-banks?driver=paystack&marketplace=ng
+Authorization: Bearer {{token}}
+###
+POST {{api}}/bank-info/resolve-account-number
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "driver": "paystack",
+  "marketplace": "ng",
+  "accountNumber": "0123342055",
+  "bankCode": "058"
+}
+
+###
+POST {{api}}/bank-info/add-account-number?partner_id=64b1101d3e5b42da83eb9425
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "driver": "paystack",
+  "marketplace": "ng",
+  "accountNumber": "0123342055",
+  "bankCode": "058"
+}
+###
+GET {{api}}/bank-info?partner_id=64b1101d3e5b42da83eb9425
+Authorization: Bearer {{token}}

@@ -3,7 +3,6 @@ import { Router } from 'express';
 import policyMiddleware from '../../appMiddlewares/policy.middleware';
 
 import {
-  cannotBeCustomerMiddleware,
   mustBeCustomerMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
@@ -16,8 +15,6 @@ import {
   unwrapGift,
 } from './purchase/userPifActions';
 import { passOnPif } from './purchase/userPifActions/passOnPif';
-import { listBanksSchema } from './transaction/transaction.policy';
-import listBanks from './transaction/transactionActions/listBanks';
 
 const router = Router();
 
@@ -76,15 +73,6 @@ router.get(
   requireAuthMiddleware,
   mustBeCustomerMiddleware,
   getReceivedPifs
-);
-
-router.get(
-  '/list-banks',
-  validateTokenMiddleware,
-  requireAuthMiddleware,
-  policyMiddleware(listBanksSchema, 'query'),
-  cannotBeCustomerMiddleware,
-  listBanks
 );
 
 export default router;

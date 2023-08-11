@@ -5,6 +5,7 @@ import { handleResponse } from '../../utils/helpers';
 import { useWord } from '../../utils/wordSheet';
 
 import authRoutesV1 from './auth/auth.routes';
+import bankInfoRoutesV1 from './bankInfo/bankInfo.routes';
 import categoryRoutesV1 from './category/category.routes';
 import cmsRoutesV1 from './cms/cms.routes';
 import contactRoutesV1 from './contact/contacts.routes';
@@ -41,6 +42,7 @@ router.use('/purchases', purchaseRoutesV1);
 router.use('/settlements', settlementRoutesV1);
 router.use('/revenue', revenueRoutesV1);
 router.use('/wallets', walletRoutesV1);
+router.use('/bank-info', bankInfoRoutesV1);
 
 router.use('/', generalRoutesV1);
 
