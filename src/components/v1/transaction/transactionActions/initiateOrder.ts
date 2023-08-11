@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import Currency from 'currency.js';
 import { Response } from 'express';
 import parseNumber, { CountryCode } from 'libphonenumber-js';
@@ -361,7 +362,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       res,
       {
         message: 'Make your payment',
-        // eslint-disable-next-line max-lines
         data: {
           status: paymentRecord.status,
           paymentLink: paymentLink ?? null,
