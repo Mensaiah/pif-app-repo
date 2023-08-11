@@ -107,6 +107,7 @@ const completeTransaction = async (
         const txFee = currency(paymentRecord.txFee)
           .multiply(item.amount)
           .divide(paymentRecord.amount).value;
+
         const netAmount = currency(item.amount).subtract(txFee).value;
 
         // TODO: fetch redemption code if applicable

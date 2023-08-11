@@ -1,10 +1,10 @@
+import Currency from 'currency.js';
 import { Document } from 'mongoose';
 import { Types } from 'mongoose';
 
 import PlatformModel from '../../components/v1/platform/platform.model';
 import { PaymentDriverType } from '../../components/v1/platform/platform.types';
 import { UserAttributes } from '../../components/v1/user/user.types';
-import { consoleLog } from '../../utils/helpers';
 
 import {
   InitiatePaymentReturnType,
@@ -46,7 +46,7 @@ export const initiatePayment = async ({
     };
   }
 
-  amount = amount * 100;
+  amount = Currency(amount).multiply(100).value;
 
   switch (driver) {
     case 'paystack':

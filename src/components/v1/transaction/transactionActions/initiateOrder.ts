@@ -1,3 +1,4 @@
+import Currency from 'currency.js';
 import { Response } from 'express';
 import parseNumber, { CountryCode } from 'libphonenumber-js';
 import mongoose, { Document } from 'mongoose';
@@ -223,14 +224,17 @@ const initiateOrder = async (req: IRequest, res: Response) => {
           if (isDiscountApplicable && discountCode) {
             unitPrice =
               discountCode.discountType === 'fixed'
-                ? unitPrice - discountCode.value
-                : unitPrice - (unitPrice * discountCode?.value) / 100;
+                ? Currency(unitPrice).subtract(discountCode.value).value
+                : Currency(unitPrice)
+                    .subtract(unitPrice)
+                    .multiply(discountCode?.value)
+                    .divide(100).value;
           }
 
           if (unitPrice < 0) unitPrice = 0;
 
           // calculate amount
-          const amount = unitPrice * item.quantity;
+          const amount = Currency(unitPrice).multiply(item.quantity).value;
 
           return {
             Partner: product.Partner,
@@ -263,7 +267,10 @@ const initiateOrder = async (req: IRequest, res: Response) => {
       }
 
       // calculate total amount
-      const amount = itemsData.reduce((acc, item) => acc + item.amount, 0);
+      const amount = itemsData.reduce(
+        (acc, item) => Currency(acc).add(item.amount).value,
+        0
+      );
 
       const currency = await getMarketplaceCurrency(currentMarketplace);
 
@@ -322,9 +329,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
         refId: paymentRecord._id,
         marketplace: paymentRecord.marketplace,
       }).catch(async (err) => {
-        await session.abortTransaction();
-        session.endSession();
-
         throw err;
       });
 
@@ -347,9 +351,6 @@ const initiateOrder = async (req: IRequest, res: Response) => {
     }
 
     await paymentRecord.save({ session }).catch(async (err) => {
-      await session.abortTransaction();
-      session.endSession();
-
       throw err;
     });
 
