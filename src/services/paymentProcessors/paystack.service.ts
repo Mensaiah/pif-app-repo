@@ -1,6 +1,7 @@
 import crypto from 'crypto';
 
 import axios from 'axios';
+import Currency from 'currency.js';
 import { Request, Response } from 'express';
 
 import completeTransactionFromPayment from '../../components/v1/transaction/transactionUtils/completeTransactionFromPayment';
@@ -77,9 +78,12 @@ const PaystackService = (() => {
 
         return {
           success: true,
-          grossAmount: responseData.amount / 100,
-          txFee: responseData.fees / 100,
-          netAmount: responseData.amount / 100 - responseData.fees / 100,
+          grossAmount: Currency(responseData.amount).divide(100).value,
+          txFee: Currency(responseData.fees).divide(100).value,
+          netAmount: Currency(responseData.amount)
+            .divide(100)
+            .subtract(responseData.fees)
+            .divide(100).value,
           receiptUrl: responseData.receipt_url,
           chargeCurrency: responseData.currency,
         };
