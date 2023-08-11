@@ -19,13 +19,16 @@ export const getSentPifs = async (req: IRequest, res: Response) => {
       User: user._id,
       ...(purchaseId && { _id: purchaseId }),
     };
-    const sentPifs = await PurchaseModel.find(
-      query,
-      null,
-      paginate.queryOptions
-    )
-      .populate('Partner', 'name')
-      .lean();
+    const sentPifs = purchaseId
+      ? await PurchaseModel.find(query, null, paginate.queryOptions)
+          .populate('Partner', 'name')
+          .populate('Receiver', 'name avatar')
+          .lean()
+      : await PurchaseModel.find(query, null, paginate.queryOptions)
+          .populate('Partner', 'name')
+          .populate('Receiver', 'name avatar')
+          .populate('Product', 'description')
+          .lean();
 
     if (purchaseId && sentPifs.length) {
       return handleResponse(res, { data: sentPifs[0] });

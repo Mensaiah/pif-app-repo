@@ -32,12 +32,11 @@ export const getReceivedPifs = async (req: IRequest, res: Response) => {
       ? await PurchaseModel.find(query, null, paginate.queryOptions)
           .populate('Partner', 'name')
           .populate('Receiver', 'name avatar')
-          .populate('Product', 'name photo')
           .lean()
       : await PurchaseModel.find(query, null, paginate.queryOptions)
           .populate('Partner', 'name')
           .populate('Receiver', 'name avatar')
-          .populate('Product', 'name description')
+          .populate('Product', 'description')
           .lean();
 
     if (purchaseId && receivedPifs.length) {
