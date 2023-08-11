@@ -6,7 +6,7 @@ import {
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
-import { getContacts, syncContacts } from './contact.actions';
+import { getContacts, syncContacts } from './contactActions';
 
 const router = Router();
 

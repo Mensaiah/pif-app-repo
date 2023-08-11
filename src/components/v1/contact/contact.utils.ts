@@ -75,7 +75,7 @@ export const getCountryFromFullPhoneNumber = (
   fullPhoneNumber: string
 ): string => {
   if (!fullPhoneNumber) return null;
-  if (!fullPhoneNumber.startsWith('+')) return null;
+  if (!fullPhoneNumber.startsWith('+')) fullPhoneNumber = '+' + fullPhoneNumber;
 
   return parsePhoneNumber(fullPhoneNumber)?.country;
 };
