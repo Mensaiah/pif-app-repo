@@ -79,7 +79,9 @@ export const getPurchase = async (req: IRequest, res: Response) => {
 
   const { isUserTopLevelAdmin, userType } = req;
   try {
-    const purchase = await PurchaseModel.findById(purchaseId);
+    const purchase = await PurchaseModel.findById(purchaseId)
+      .populate('SettlementStart')
+      .populate('SettlementEnd');
 
     if (!purchase) return handleResponse(res, 'Purchase not found', 404);
 
