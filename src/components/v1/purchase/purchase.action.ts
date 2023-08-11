@@ -81,7 +81,8 @@ export const getPurchase = async (req: IRequest, res: Response) => {
   try {
     const purchase = await PurchaseModel.findById(purchaseId)
       .populate('SettlementStart')
-      .populate('SettlementFinish');
+      .populate('SettlementFinish')
+      .populate('Partner', 'name');
 
     if (!purchase) return handleResponse(res, 'Purchase not found', 404);
 
