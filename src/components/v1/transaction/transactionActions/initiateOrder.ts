@@ -8,7 +8,7 @@ import {
   verifyPayment,
 } from '../../../../services/paymentProcessors';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { canDiscountCodeBeApplied } from '../../discountCode/discountCode.utils';
 import { PartnerModel } from '../../partner/partner.model';
 import { PaymentDriverType } from '../../platform/platform.types';

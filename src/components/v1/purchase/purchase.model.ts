@@ -90,7 +90,7 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>(
         to: String, // pifId or full phone number
         recipientPhonePrefix: String,
         recipientPhoneNumber: String,
-        redeemedAt: Date,
+        message: String,
       },
     ],
   },

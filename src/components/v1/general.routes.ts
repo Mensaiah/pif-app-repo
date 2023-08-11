@@ -1,16 +1,20 @@
 import { Router } from 'express';
 
+import policyMiddleware from '../../appMiddlewares/policy.middleware';
+
 import {
   mustBeCustomerMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
 } from './auth/authMiddlwares';
+import { passOnPifSchema } from './purchase/purchase.policy';
 import {
   getReceivedPifs,
   getSentPifs,
   redeemPif,
   unwrapGift,
 } from './purchase/userPifActions';
+import { passOnPif } from './purchase/userPifActions/passOnPif';
 
 const router = Router();
 
@@ -28,6 +32,15 @@ router.patch(
   requireAuthMiddleware,
   mustBeCustomerMiddleware,
   redeemPif
+);
+
+router.patch(
+  '/received-pifs/:purchaseId/pass-on',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  mustBeCustomerMiddleware,
+  policyMiddleware(passOnPifSchema),
+  passOnPif
 );
 
 router.get(
