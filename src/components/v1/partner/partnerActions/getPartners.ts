@@ -35,7 +35,11 @@ const getPartners = async (req: IRequest, res: Response) => {
       query,
       '-rolesAndPermissions',
       paginate.queryOptions
-    ).lean();
+    )
+      .sort({
+        createdAt: -1,
+      })
+      .lean();
     const count = await PartnerModel.countDocuments(query);
 
     return handleResponse(res, {
