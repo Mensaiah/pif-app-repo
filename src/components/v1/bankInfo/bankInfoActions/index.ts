@@ -3,13 +3,41 @@ import { z } from 'zod';
 
 import PaystackService from '../../../../services/paymentProcessors/paystack.service';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { handleReqSearch } from '../../../../utils/queryHelpers';
 import BankInfoModel from '../bankInfo.model';
 import {
   addBankAccountSchema,
   resolveBankAccountSchema,
 } from '../bankInfo.policy';
+
+const getPartnerId = (req: IRequest) => {
+  const { user, userType } = req;
+
+  const { Partner: partnerId } = user;
+
+  const { partner_id } = handleReqSearch(req, {
+    partner_id: 'string',
+  });
+
+  if (!partnerId && !partner_id)
+    return {
+      success: false,
+      message: 'partner is required',
+      status: 400,
+    };
+
+  if (userType !== 'partner-admin') {
+    if (partner_id && partner_id.toString() !== partnerId?.toString())
+      return {
+        success: false,
+        message: 'unauthorized',
+        status: 403,
+      };
+  }
+
+  return { partnerId: partnerId || partner_id, success: true };
+};
 
 export const resolveAccountNumber = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof resolveBankAccountSchema>;
@@ -20,8 +48,10 @@ export const resolveAccountNumber = async (req: IRequest, res: Response) => {
     return handleResponse(res, 'marketplace not supported', 400);
   }
 
-  const { user } = req;
-  const { Partner: partnerId } = user;
+  const { success, message, status } = getPartnerId(req);
+
+  if (!success) return handleResponse(res, message, status);
+
   try {
     const accountInfo = await PaystackService.resolveAccountNumber(
       bankCode,
@@ -45,27 +75,12 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
 
   const { accountNumber, bankCode, marketplace }: dataType = req.body;
 
-  const { partner_id } = handleReqSearch(req, {
-    partner_id: 'string',
-  });
+  const { success, message, partnerId, status } = getPartnerId(req);
+
+  if (!success) return handleResponse(res, message, status);
 
   if (marketplace !== 'ng') {
     return handleResponse(res, 'marketplace not supported', 400);
-  }
-
-  const { user, userType } = req;
-
-  const { Partner: partnerId } = user;
-
-  if (!partnerId && !partner_id) {
-    return handleResponse(res, 'partner is required', 404);
-  }
-
-  // TODO: make checking strict
-  if (userType === 'partner-admin') {
-    if (partnerId.toString() !== partner_id.toString()) {
-      return handleResponse(res, 'unauthorized', 401);
-    }
   }
 
   try {
@@ -93,10 +108,8 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
       return handleResponse(res, message, 400);
     }
 
-    consoleLog(JSON.stringify(speicifiedBank, null, 2));
-
     const newBankAccount = await new BankInfoModel({
-      Partner: partnerId || partner_id,
+      Partner: partnerId,
       accountName: data.account_name,
       accountNumber: data.account_number,
       bankCode: bankCode,
@@ -112,28 +125,13 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
 };
 
 export const listBankAccounts = async (req: IRequest, res: Response) => {
-  const { user, userType } = req;
+  const { success, message, partnerId, status } = getPartnerId(req);
 
-  const { partner_id } = handleReqSearch(req, {
-    partner_id: 'string',
-  });
-
-  const { Partner: partnerId } = user;
-
-  if (!partnerId && !partner_id) {
-    return handleResponse(res, 'partner is required', 404);
-  }
-
-  // TODO: make checking strict
-  if (userType === 'partner-admin') {
-    if (partnerId.toString() !== partner_id.toString()) {
-      return handleResponse(res, 'unauthorized', 401);
-    }
-  }
+  if (!success) return handleResponse(res, message, status);
 
   try {
     const bankAccounts = await BankInfoModel.find({
-      Partner: partnerId || partner_id,
+      Partner: partnerId,
     });
 
     return handleResponse(res, { data: bankAccounts });
