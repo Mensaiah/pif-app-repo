@@ -57,6 +57,10 @@ const marketplaceSchema = new Schema<MarketplaceAttributes>(
         url: String,
       },
     ],
+    allowPartnersToWithdrawEarning: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

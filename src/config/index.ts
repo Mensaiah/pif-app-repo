@@ -47,8 +47,6 @@ const appConfig = {
     maxInactivity: '3 hours',
     sessionLivespan: '2 days',
     jwtSecret: env.JWT_SECRET || 'UBUI2ZH22NH@IHI@2BB222',
-    permissionList,
-    allPermissions,
   },
   supportedLanguages: platformConstants.supportedLanguages,
   paymentProcessors: platformConstants.paymentProcessors,
@@ -93,6 +91,7 @@ const appConfig = {
   googleClientId: env.GOOGLE_CLIENT_ID || '',
   googleClientSecret: env.GOOGLE_CLIENT_SECRET || '',
   googleRedirectUrl: env.GOOGLE_REDIRECT_URL || '',
+  externalCronKey: env.CRON_KEY || '',
 };
 
 export default appConfig;

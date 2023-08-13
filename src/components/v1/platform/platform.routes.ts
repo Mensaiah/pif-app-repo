@@ -2,11 +2,20 @@ import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
+  cannotBeCustomerMiddleware,
   hasAnyPermissionMiddleware,
+  mustBePlatformAdminMiddleware,
   requireAuthMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
+import { verifyExternalCronMiddleware } from './platform.middlewares';
+import {
+  addMarketplaceSchema,
+  addPlatformSocialSchema,
+  updateMarketplaceSchema,
+  updatePlatformSocialSchema,
+} from './platform.policy';
 import {
   addMarketplace,
   addPlatformSocial,
@@ -14,13 +23,15 @@ import {
   getPlatformData,
   updateMarketplace,
   updatePlatformSocial,
-} from './platform.actions';
+} from './platformActions';
 import {
-  addMarketplaceSchema,
-  addPlatformSocialSchema,
-  updateMarketplaceSchema,
-  updatePlatformSocialSchema,
-} from './platform.policy';
+  getDashboardData,
+  getStatisticsData,
+} from './platformActions/dataActions';
+import {
+  generateKeyHashPair,
+  pifBiHourlyTasks,
+} from './platformActions/generalActions';
 
 const router = Router();
 
@@ -57,6 +68,32 @@ router.patch(
   policyMiddleware(updatePlatformSocialSchema),
   updatePlatformSocial
 );
+
+router.get(
+  '/gen-key-hash',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  mustBePlatformAdminMiddleware,
+  generateKeyHashPair
+);
+
+router.get(
+  '/dashboard-data',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  getDashboardData
+);
+
+router.get(
+  '/statistics-data',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  getStatisticsData
+);
+
+router.get('/pbht', verifyExternalCronMiddleware, pifBiHourlyTasks);
 
 router.get('/refresh', clearDBonDev);
 

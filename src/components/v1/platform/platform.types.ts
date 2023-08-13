@@ -14,6 +14,7 @@ export interface MarketplaceAttributes {
     name: string;
     url: string;
   }>;
+  allowPartnersToWithdrawEarning?: boolean;
 }
 export type PaymentDriverType =
   (typeof platformConstants.paymentProcessors)[number];
@@ -29,7 +30,4 @@ export interface PlatformAttributes {
     }>;
   }>;
   socials: MarketplaceAttributes['socials'];
-  numericIdTrackers?: {
-    lastPartnerId?: number;
-  };
 }

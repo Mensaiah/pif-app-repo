@@ -1,20 +1,19 @@
 import { Response } from 'express';
 import { z } from 'zod';
 
-import appConfig from '../../../config';
-import { IRequest } from '../../../types/global';
-import { handleResponse } from '../../../utils/helpers';
-import { useWord } from '../../../utils/wordSheet';
-import { OtpCodeModel, UserAccessModel } from '../auth/auth.models';
-import { UserInviteModel, UserModel } from '../user/user.model';
-
-import PlatformModel from './platform.model';
+import appConfig from '../../../../config';
+import { IRequest } from '../../../../types/global';
+import { handleResponse } from '../../../../utils/helpers';
+import { useWord } from '../../../../utils/wordSheet';
+import { OtpCodeModel, UserAccessModel } from '../../auth/auth.models';
+import { UserInviteModel, UserModel } from '../../user/user.model';
+import PlatformModel from '../platform.model';
 import {
   addMarketplaceSchema,
   addPlatformSocialSchema,
   updateMarketplaceSchema,
   updatePlatformSocialSchema,
-} from './platform.policy';
+} from '../platform.policy';
 
 export const getPlatformData = async (req: IRequest, res: Response) => {
   try {
