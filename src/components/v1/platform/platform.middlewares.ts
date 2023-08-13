@@ -14,7 +14,10 @@ export const verifyExternalCronMiddleware = (
 
   const { externalCronKey, authConfigs } = appConfig;
 
-  if (!bcrypt.compareSync(cronKey + authConfigs.hashPepper, externalCronKey)) {
+  if (
+    !cronKey ||
+    !bcrypt.compareSync(cronKey + authConfigs.hashPepper, externalCronKey)
+  ) {
     return handleResponse(res, 'Invalid cron key', 401);
   }
 
