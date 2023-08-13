@@ -21,9 +21,25 @@ export const getPlatformData = async (req: IRequest, res: Response) => {
       .sort({
         createdAt: -1,
       })
-      .select('-defaultUserTypesAndRoles');
+      .select('-defaultUserTypesAndRoles')
+      .lean();
 
-    return handleResponse(res, platform);
+    if (!platform) {
+      return handleResponse(
+        res,
+        'Could not retrieve platform data at this time',
+        404
+      );
+    }
+
+    return handleResponse(res, {
+      ...platform,
+      marketplaces: platform.marketplaces?.map((marketplace) => {
+        delete marketplace.allowPartnersToWithdrawEarning;
+
+        return marketplace;
+      }),
+    });
   } catch (err) {
     handleResponse(res, useWord('internalServerError', req.lang), 500, err);
   }
