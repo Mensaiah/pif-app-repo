@@ -1,3 +1,4 @@
+import Currency from 'currency.js';
 import { Response } from 'express';
 import mongoose from 'mongoose';
 import ms from 'ms';
@@ -107,6 +108,22 @@ const addPartner = async (req: IRequest, res: Response) => {
         'None of the marketplace(s) supplied exists or is missing',
         404
       );
+    }
+
+    if (startProportion) {
+      if (
+        Currency(startProportion).add(finishProportion).add(pifProportion)
+          .value !== 100
+      ) {
+        await session.abortTransaction();
+        session.endSession();
+
+        return handleResponse(
+          res,
+          'Your settlement proportions must add up to 100, please check your input',
+          400
+        );
+      }
     }
 
     const newPartner = new PartnerModel({

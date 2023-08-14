@@ -1,10 +1,18 @@
 import { Response } from 'express';
+import { Document, FilterQuery } from 'mongoose';
 import { z } from 'zod';
 
+import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
+import { handlePaginate } from '../../../../utils/handlePaginate';
 import { _omit, _pick, handleResponse } from '../../../../utils/helpers';
+import {
+  getMarketplaceQuery,
+  handleReqSearch,
+} from '../../../../utils/queryHelpers';
 import { PartnerPosUserModel, UserModel } from '../user.model';
 import { updateProfileSchema } from '../user.policy';
+import { UserAttributes } from '../user.types';
 
 export const getMyProfile = async (req: IRequest, res: Response) => {
   if ('userType' in req.user) {
@@ -193,13 +201,79 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
 };
 
 export const getUsers = async (req: IRequest, res: Response) => {
+  const { userType, searchQuery, currentMarketplace } = handleReqSearch(req, {
+    userType: 'string',
+    searchQuery: 'string',
+    currentMarketplace: 'string',
+  });
+
+  const paginate = handlePaginate(req);
+
+  const martketplaceQuery = getMarketplaceQuery(req, currentMarketplace);
+  if (req.sendEmptyData) {
+    return handleResponse(res, {
+      data: [],
+    });
+  }
+
+  if (userType) {
+    if (!platformConstants.platformUserTypes.includes(userType as any)) {
+      return handleResponse(res, {
+        data: [],
+      });
+    }
+
+    if (req.userType !== 'platform-admin') {
+      if (userType === 'platform-admin')
+        return handleResponse(res, {
+          data: [],
+        });
+    }
+  }
+
+  const query: FilterQuery<UserAttributes & Document> = {
+    ...martketplaceQuery,
+    ...(userType && {
+      userType,
+    }),
+  };
+  const textQuery: FilterQuery<UserAttributes & Document> = {
+    ...query,
+    ...(searchQuery && {
+      $text: { $search: searchQuery },
+    }),
+  };
+  const regexQuery: FilterQuery<UserAttributes & Document> = {
+    ...query,
+    ...(searchQuery && {
+      $or: [
+        { pifId: { $regex: new RegExp('^' + searchQuery, 'i') } },
+        { name: { $regex: new RegExp('^' + searchQuery, 'i') } },
+        { email: { $regex: new RegExp('^' + searchQuery, 'i') } },
+      ],
+    }),
+  };
+
+  let usedRegexSearch = false;
+  const selectFields = '-Partner -paymentConfigs -favoriteProducts';
+
   try {
-    const users = await UserModel.find({
-      userType: 'customer',
-    }).select('-Partner -paymentConfigs -favoriteProducts');
+    let users = await UserModel.find(textQuery).select(selectFields).lean();
+    // TODO: use only regex search after few considerations
+    // If no users are found using full-text search, try regex search
+    if (users.length === 0 && searchQuery) {
+      users = await UserModel.find(regexQuery).select(selectFields).lean();
+
+      usedRegexSearch = true;
+    }
+
+    const count = await UserModel.countDocuments(
+      usedRegexSearch ? regexQuery : textQuery
+    );
 
     return handleResponse(res, {
       data: users,
+      meta: paginate.getMeta(count),
     });
   } catch (err) {
     handleResponse(res, 'Error handling request at this time', 500, err);
@@ -207,6 +281,7 @@ export const getUsers = async (req: IRequest, res: Response) => {
 };
 
 export const getUser = async (req: IRequest, res: Response) => {
+  // TODO: ensure the user asking to see this user data is allowed to see it
   try {
     const user = await UserModel.findById(req.params.userId).populate(
       'Partner'

@@ -107,6 +107,21 @@ export const addPartnerSchema = partnerSchema
     {
       message: 'adminEmail or adminName is missing,',
     }
+  )
+  .refine(
+    ({ startProportion, finishProportion, pifProportion }) => {
+      if (startProportion && (!finishProportion || !pifProportion))
+        return false;
+
+      if (finishProportion && (!startProportion || !pifProportion))
+        return false;
+
+      if (pifProportion && (!startProportion || !finishProportion))
+        return false;
+
+      return true;
+    },
+    { message: 'you have to supply the proportions in full' }
   );
 
 export const updatePartnerSchema = z.object({
