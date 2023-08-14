@@ -249,14 +249,13 @@ export const getUsers = async (req: IRequest, res: Response) => {
       $text: { $search: searchQuery },
     }),
   };
+  const regexObj: FilterQuery<UserAttributes & Document> = {
+    $regex: new RegExp('^' + searchQuery, 'i'),
+  };
   const regexQuery: FilterQuery<UserAttributes & Document> = {
     ...query,
     ...(searchQuery && {
-      $or: [
-        { pifId: { $regex: new RegExp('^' + searchQuery, 'i') } },
-        { name: { $regex: new RegExp('^' + searchQuery, 'i') } },
-        { email: { $regex: new RegExp('^' + searchQuery, 'i') } },
-      ],
+      $or: [{ pifId: regexObj }, { name: regexObj }, { email: regexObj }],
     }),
   };
 
@@ -268,7 +267,9 @@ export const getUsers = async (req: IRequest, res: Response) => {
     // TODO: use only regex search after few considerations
     // If no users are found using full-text search, try regex search
     if (users.length === 0 && searchQuery) {
-      users = await UserModel.find(regexQuery).select(selectFields).lean();
+      users = await UserModel.find(regexQuery, null, paginate.queryOptions)
+        .select(selectFields)
+        .lean();
 
       usedRegexSearch = true;
     }

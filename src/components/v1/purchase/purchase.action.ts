@@ -22,14 +22,21 @@ import PurchaseModel from './purchase.model';
 import { PurchaseAttributes } from './purchase.types';
 
 export const getPurchases = async (req: IRequest, res: Response) => {
-  const { marketplace, partner_id, product_id, user_id, currency } =
-    handleReqSearch(req, {
-      marketplace: 'string',
-      partner_id: 'string',
-      product_id: 'string',
-      user_id: 'string',
-      currency: 'string',
-    });
+  const {
+    marketplace,
+    partner_id,
+    product_id,
+    user_id,
+    currency,
+    search_query: searchQuery,
+  } = handleReqSearch(req, {
+    marketplace: 'string',
+    partner_id: 'string',
+    product_id: 'string',
+    user_id: 'string',
+    currency: 'string',
+    search_query: 'string',
+  });
   const paginate = handlePaginate(req);
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
@@ -47,16 +54,52 @@ export const getPurchases = async (req: IRequest, res: Response) => {
     ...marketplaceQuery,
   };
 
+  const textQuery: FilterQuery<PurchaseAttributes & Document> = {
+    ...query,
+    ...(searchQuery && {
+      $text: { $search: searchQuery },
+    }),
+  };
+  const regexObj: FilterQuery<PurchaseAttributes & Document> = {
+    $regex: new RegExp(searchQuery, 'i'),
+  };
+  const regexQuery: FilterQuery<PurchaseAttributes & Document> = {
+    ...query,
+    ...(searchQuery && {
+      $or: [
+        { senderPifId: regexObj },
+        { recipientPifId: regexObj },
+        { recipientPhoneNumber: regexObj },
+      ],
+    }),
+  };
+
+  let usedRegexSearch = false;
+
   try {
-    const purchases = await PurchaseModel.find(
-      query,
+    let purchases = await PurchaseModel.find(
+      textQuery,
       null,
       paginate.queryOptions
     )
       .populate('Partner', 'name')
       .lean();
 
-    const count = await PurchaseModel.countDocuments(query);
+    if (!purchases.length) {
+      purchases = await PurchaseModel.find(
+        regexQuery,
+        null,
+        paginate.queryOptions
+      )
+        .populate('Partner', 'name')
+        .lean();
+
+      usedRegexSearch = true;
+    }
+
+    const count = await PurchaseModel.countDocuments(
+      usedRegexSearch ? regexQuery : textQuery
+    );
 
     return handleResponse(res, {
       data: purchases,

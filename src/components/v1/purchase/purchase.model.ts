@@ -99,6 +99,11 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>(
 
 purchaseSchema.index({ old_id: 1 }, { unique: true, sparse: true });
 purchaseSchema.index({
+  senderPifId: 'text',
+  recipientPifId: 'text',
+  recipientPhoneNumber: 'text',
+});
+purchaseSchema.index({
   marketplace: 1,
   Parner: 1,
   Product: 1,

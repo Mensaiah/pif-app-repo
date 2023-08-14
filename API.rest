@@ -51,7 +51,7 @@ Content-Type: application/json
 }
 
 ### Get users
-GET {{api}}/users?marketplace=ng
+GET {{api}}/users?search_query=hem
 Authorization: Bearer {{token}}
 
 ### Get user
@@ -497,6 +497,9 @@ GET {{api}}/tx/payment-webhook/paystack
 
 ### get purchases
 GET {{api}}/purchases?product_id=64b522bfc5cc776a57c2f12b
+Authorization: Bearer {{token}}
+### get purchases
+GET {{api}}/purchases?search_query=8168861541
 Authorization: Bearer {{token}}
 
 ### get purchases
