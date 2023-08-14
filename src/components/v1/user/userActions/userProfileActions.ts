@@ -201,15 +201,19 @@ export const updateMyProfile = async (req: IRequest, res: Response) => {
 };
 
 export const getUsers = async (req: IRequest, res: Response) => {
-  const { userType, searchQuery, currentMarketplace } = handleReqSearch(req, {
-    userType: 'string',
-    searchQuery: 'string',
-    currentMarketplace: 'string',
+  const {
+    user_type: userType,
+    search_query: searchQuery,
+    marketplace: currentMarketplace,
+  } = handleReqSearch(req, {
+    user_type: 'string',
+    search_query: 'string',
+    marketplace: 'string',
   });
 
   const paginate = handlePaginate(req);
 
-  const martketplaceQuery = getMarketplaceQuery(req, currentMarketplace);
+  const marketplaceQuery = getMarketplaceQuery(req, currentMarketplace);
   if (req.sendEmptyData) {
     return handleResponse(res, {
       data: [],
@@ -232,7 +236,9 @@ export const getUsers = async (req: IRequest, res: Response) => {
   }
 
   const query: FilterQuery<UserAttributes & Document> = {
-    ...martketplaceQuery,
+    ...(marketplaceQuery?.marketplace && {
+      currentMarketplace: marketplaceQuery.marketplace,
+    }),
     ...(userType && {
       userType,
     }),

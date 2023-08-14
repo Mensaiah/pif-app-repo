@@ -51,7 +51,7 @@ Content-Type: application/json
 }
 
 ### Get users
-GET {{api}}/users?searchQuery=semi
+GET {{api}}/users?marketplace=ng
 Authorization: Bearer {{token}}
 
 ### Get user
