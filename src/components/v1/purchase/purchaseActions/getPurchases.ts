@@ -4,7 +4,11 @@ import { FilterQuery, Document } from 'mongoose';
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
 import { handleTimeFilter } from '../../../../utils/handleTimeFilter';
-import { handleResponse, validateObjectId } from '../../../../utils/helpers';
+import {
+  consoleLog,
+  handleResponse,
+  validateObjectId,
+} from '../../../../utils/helpers';
 import {
   getCurrencyQuery,
   getMarketplaceQuery,
@@ -30,11 +34,14 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 
   const timeFilter = handleTimeFilter(req);
 
+  const userQuery = await getUserQuery(req, queryParams.user_id);
+  consoleLog({ userQuery });
+
   const query: FilterQuery<PurchaseAttributes & Document> = {
     ...(await getCurrencyQuery(req, queryParams.currency)),
     ...(await getPartnerQuery(req, queryParams.partner_id)),
     ...(await getProductQuery(req, queryParams.product_id)),
-    ...(await getUserQuery(req, queryParams.user_id)),
+    ...(userQuery?.user_id && { User: userQuery.user_id }),
     ...getMarketplaceQuery(req, queryParams.marketplace),
   };
 

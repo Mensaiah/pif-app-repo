@@ -498,7 +498,7 @@ GET {{api}}/tx/payment-webhook/paystack
 GET {{api}}/purchases?product_id=64b522bfc5cc776a57c2f12b
 Authorization: Bearer {{token}}
 ### get purchases
-GET {{api}}/purchases?search_query=chem
+GET {{api}}/purchases?duration=all_time
 Authorization: Bearer {{token}}
 
 ### get purchases
@@ -570,4 +570,8 @@ GET {{api}}/bank-info?partner_id=64b1101d3e5b42da83eb9425
 Authorization: Bearer {{token}}
 ###
 GET {{api}}/platform/gen-key-hash
+Authorization: Bearer {{token}}
+
+###
+GET https://pif-api.herokuapp.com/v1/en/purchases?page=1&per_page=20&user_id=64b52205c5cc776a57c2efbb
 Authorization: Bearer {{token}}
