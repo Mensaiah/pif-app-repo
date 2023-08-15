@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import policyMiddleware from '../../../appMiddlewares/policy.middleware';
 import {
+  cannotBeCustomerMiddleware,
   hasAnyPermissionMiddleware,
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
@@ -22,6 +23,7 @@ import {
   updateMyProfile,
   verifyPifId,
 } from './userActions';
+import getUserInvites from './userActions/getUserInvites';
 import { getUser, getUsers } from './userActions/userProfileActions';
 
 const router = Router();
@@ -55,6 +57,14 @@ router.put(
 );
 
 router.get(
+  '/user-invites',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  getUserInvites
+);
+
+router.get(
   '/my-profile',
   validateTokenMiddleware,
   requireAuthMiddleware,
@@ -69,13 +79,6 @@ router.patch(
   updateMyProfile
 );
 
-router.get(
-  '/',
-  validateTokenMiddleware,
-  requireAuthMiddleware,
-  // hasAnyPermissionMiddleware(['user.view']),
-  getUsers
-);
 router.get('/verify/:pifId', verifyPifId);
 
 router.get(
@@ -84,6 +87,14 @@ router.get(
   requireAuthMiddleware,
   hasAnyPermissionMiddleware(['user.view']),
   getUser
+);
+
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  // hasAnyPermissionMiddleware(['user.view']),
+  getUsers
 );
 
 export default router;
