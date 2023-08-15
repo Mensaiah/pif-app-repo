@@ -14,7 +14,6 @@ import ProductModel from '../product.model';
 import { ProductAttributes } from '../product.types';
 
 const getProducts = async (req: IRequest, res: Response) => {
-  const paginate = handlePaginate(req);
   const queryData = handleReqSearch(req, {
     marketplace: 'string',
     partner_id: 'string',
@@ -25,9 +24,12 @@ const getProducts = async (req: IRequest, res: Response) => {
     is_inactive: 'boolean',
     free_gift: 'boolean',
     regular_product: 'boolean',
+    search_query: 'string',
   });
 
-  const { marketplace, partner_id, low_stock } = queryData;
+  const paginate = handlePaginate(req);
+
+  const { marketplace, partner_id, low_stock, search_query } = queryData;
   let {
     is_approved,
     is_pending,
@@ -64,17 +66,53 @@ const getProducts = async (req: IRequest, res: Response) => {
     ...(regular_product && { productType: 'regular-product' }),
   };
 
+  if (req.sendEmptyData) return handleResponse(res, { data: [] });
+
+  const textQuery: FilterQuery<ProductAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      $text: { $search: search_query },
+    }),
+  };
+  const regex = new RegExp('^' + search_query, 'i');
+  const regexQuery: FilterQuery<ProductAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      $or: [
+        { name: { $regex: regex } },
+        { caption: { $regex: regex } },
+        { description: { $regex: regex } },
+      ],
+    }),
+  };
+
+  let usedRegexSearch = false;
+
   try {
     const selectedFields = '-isApproved -categories -internalCategory';
 
-    const allProducts = await ProductModel.find(
-      query,
+    let allProducts = await ProductModel.find(
+      textQuery,
       selectedFields,
       paginate.queryOptions
     )
       .populate('Partner', 'name')
       .lean();
-    const count = await ProductModel.countDocuments(query);
+
+    if (!allProducts.length) {
+      usedRegexSearch = true;
+      allProducts = await ProductModel.find(
+        regexQuery,
+        selectedFields,
+        paginate.queryOptions
+      )
+        .populate('Partner', 'name')
+        .lean();
+    }
+
+    const count = await ProductModel.countDocuments(
+      usedRegexSearch ? regexQuery : textQuery
+    );
 
     return handleResponse(res, {
       data: allProducts,

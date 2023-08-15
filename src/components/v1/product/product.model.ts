@@ -124,6 +124,13 @@ const productSchema = new Schema<ProductAttributes>(
   { timestamps: true }
 );
 
+productSchema.index({
+  'name.value': 'text',
+  'caption.value': 'text',
+  'description.value': 'text',
+  tags: 'text',
+});
+
 const ProductModel = model<ProductAttributes>('Product', productSchema);
 
 const changeStream = ProductModel.watch();

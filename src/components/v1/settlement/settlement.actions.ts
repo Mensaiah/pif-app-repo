@@ -3,7 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
-import { handleResponse } from '../../../utils/helpers';
+import { handleResponse, validateObjectId } from '../../../utils/helpers';
 import {
   getCurrencyQuery,
   getMarketplaceQuery,
@@ -21,36 +21,54 @@ import SettlementModel from './settlement.model';
 import { SettlementAttributes } from './settlement.types';
 
 export const getSettlements = async (req: IRequest, res: Response) => {
-  const { marketplace, partner_id, product_id, currency, status } =
-    handleReqSearch(req, {
-      marketplace: 'string',
-      partner_id: 'string',
-      product_id: 'string',
-      currency: 'string',
-      status: 'string',
-    });
+  const {
+    marketplace,
+    partner_id,
+    product_id,
+    currency,
+    status,
+    search_query,
+  } = handleReqSearch(req, {
+    marketplace: 'string',
+    partner_id: 'string',
+    product_id: 'string',
+    currency: 'string',
+    status: 'string',
+    search_query: 'string',
+  });
 
   const paginate = handlePaginate(req);
 
-  const marketplaceQuery = getMarketplaceQuery(req, marketplace);
-  const partnerQuery = await getPartnerQuery(req, partner_id);
-  const productQuery = await getProductQuery(req, product_id);
-  const currencyQuery = await getCurrencyQuery(req, currency);
-
   const query: FilterQuery<SettlementAttributes & Document> = {
-    ...marketplaceQuery,
-    ...partnerQuery,
-    ...productQuery,
-    ...currencyQuery,
+    ...getMarketplaceQuery(req, marketplace),
+    ...(await getPartnerQuery(req, partner_id)),
+    ...(await getProductQuery(req, product_id)),
+    ...(await getCurrencyQuery(req, currency)),
     ...(status &&
       (status === 'settled' || status === 'pending') && {
         isSettled: status === 'settled',
       }),
   };
 
+  if (req.sendEmptyData) return handleResponse(res, { data: [] });
+
+  const commonSearchConditions =
+    search_query && validateObjectId(search_query)
+      ? [
+          { _id: search_query },
+          { Purchase: search_query },
+          { Partner: search_query },
+        ]
+      : [];
+
   try {
     const settlements = await SettlementModel.find(
-      query,
+      {
+        ...query,
+        ...(commonSearchConditions.length && {
+          $or: commonSearchConditions,
+        }),
+      },
       null,
       paginate.queryOptions
     )

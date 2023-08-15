@@ -512,7 +512,7 @@ GET {{api}}/revenue/64ca1ce5796a7f6389b619b1
 Authorization: Bearer {{token}}
 
 ### get settlements
-GET {{api}}/settlements?currency=NGN
+GET {{api}}/settlements?currency=NGN&search_query=64da4a1e23eb1ad6632f74b7
 Authorization: Bearer {{token}}
 
 ### my sent PIFs

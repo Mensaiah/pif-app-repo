@@ -11,18 +11,22 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>(
     User: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      index: true,
     },
     Receiver: {
       type: Schema.Types.ObjectId,
       ref: 'User',
+      index: true,
     },
     Product: {
       type: Schema.Types.ObjectId,
       ref: 'Product',
+      index: true,
     },
     Partner: {
       type: Schema.Types.ObjectId,
       ref: 'Partner',
+      index: true,
     },
     productName: [languageValuePairSchema],
     productPhoto: String,

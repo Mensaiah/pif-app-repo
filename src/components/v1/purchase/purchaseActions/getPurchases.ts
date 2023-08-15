@@ -82,6 +82,7 @@ export const getPurchases = async (req: IRequest, res: Response) => {
       .lean();
 
     if (!purchases.length) {
+      usedRegexSearch = true;
       purchases = await PurchaseModel.find(
         regexQuery,
         null,
@@ -89,7 +90,6 @@ export const getPurchases = async (req: IRequest, res: Response) => {
       )
         .populate('Partner', 'name')
         .lean();
-      usedRegexSearch = true;
     }
 
     const count = await PurchaseModel.countDocuments(
