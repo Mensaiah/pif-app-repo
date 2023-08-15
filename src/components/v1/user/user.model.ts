@@ -94,6 +94,12 @@ const userSchema = new Schema<UserAttributes>(
       locale: { type: String, enum: appConfig.supportedLanguages },
       skip_sms: Boolean,
     },
+    oneSignalPlayerId: {
+      type: String,
+      index: true,
+      required: false,
+      unique: false,
+    },
     termsAccepted: [
       {
         termId: { type: ObjectId, ref: 'LegalPolicy', required: true },

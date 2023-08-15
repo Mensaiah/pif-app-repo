@@ -67,6 +67,7 @@ export interface UserAttributes {
     locale?: LanguageCode;
     skip_sms?: boolean;
   };
+  oneSignalPlayerId?: string;
   termsAccepted?: [
     {
       termId: ObjectId;
@@ -92,6 +93,7 @@ export interface PartnerPosUserAttributes {
   Pos: ObjectId;
   isConfirmed?: boolean;
   shouldEnforceConfirmation?: boolean;
+  oneSignalPlayerId?: string;
 }
 
 export interface UserInviteAttributes {
