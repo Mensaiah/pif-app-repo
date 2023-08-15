@@ -29,7 +29,10 @@ export const unwrapGift = async (req: IRequest, res: Response) => {
       $or: orConditions,
     };
 
-    let receivedPif = await PurchaseModel.findOne(query);
+    let receivedPif = await PurchaseModel.findOne(query).populate(
+      'Partner',
+      'name'
+    );
 
     if (!receivedPif) {
       return handleResponse(res, 'not found', 404);

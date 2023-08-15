@@ -15,6 +15,8 @@ export const hasAccessToMarketplaces = (
     ? marketplaces
     : [marketplaces];
 
+  if (!marketplacesArray.length) return false;
+
   return marketplacesArray.every((id) => userAccess.marketplaces.includes(id));
 };
 
