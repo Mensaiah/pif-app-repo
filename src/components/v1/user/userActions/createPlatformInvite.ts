@@ -41,7 +41,7 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
     const platform = await PlatformModel.findOne().sort({ createdAt: -1 });
 
     const sanitizedMarketplace = filterMarketplaces(
-      marketplaces.filter(Boolean),
+      marketplaces?.filter(Boolean),
       platform
     );
 
