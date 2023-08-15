@@ -3,6 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
+import { handleTimeFilter } from '../../../utils/handleTimeFilter';
 import { handleResponse } from '../../../utils/helpers';
 import {
   getMarketplaceQuery,
@@ -30,6 +31,7 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
     }
   );
   const paginate = handlePaginate(req);
+  const timeFilter = handleTimeFilter(req);
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
   const partnerQuery = await getPartnerQuery(req, partner_id);
@@ -40,6 +42,7 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
     ...partnerQuery,
     ...productQuery,
     ...(currency && { currency: currency.toLocaleLowerCase() }),
+    createdAt: timeFilter,
   };
 
   try {

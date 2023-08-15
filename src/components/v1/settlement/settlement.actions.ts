@@ -3,6 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../types/global';
 import { handlePaginate } from '../../../utils/handlePaginate';
+import { handleTimeFilter } from '../../../utils/handleTimeFilter';
 import { handleResponse, validateObjectId } from '../../../utils/helpers';
 import {
   getCurrencyQuery,
@@ -38,6 +39,7 @@ export const getSettlements = async (req: IRequest, res: Response) => {
   });
 
   const paginate = handlePaginate(req);
+  const timeFilter = handleTimeFilter(req);
 
   const query: FilterQuery<SettlementAttributes & Document> = {
     ...getMarketplaceQuery(req, marketplace),
@@ -48,6 +50,7 @@ export const getSettlements = async (req: IRequest, res: Response) => {
       (status === 'settled' || status === 'pending') && {
         isSettled: status === 'settled',
       }),
+    createdAt: timeFilter,
   };
 
   if (req.sendEmptyData) return handleResponse(res, { data: [] });

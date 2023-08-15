@@ -7,7 +7,7 @@ interface TimeFilter {
   $lte?: Date;
 }
 
-export const handleTimeFilter = (req: IRequest) => {
+export const handleTimeFilter = (req: IRequest): TimeFilter => {
   const { from, to, duration } = handleReqSearch(req, {
     from: 'string',
     to: 'string',
@@ -49,17 +49,16 @@ export const handleTimeFilter = (req: IRequest) => {
         endDate = currentDate;
         break;
       case 'all_time':
+      default:
         startDate = null;
         endDate = null;
-        break;
-      default:
-        // Handle cases where duration might not be in the expected values or if it's not provided
-        // Maybe you want to set a default range or throw an error
         break;
     }
   }
 
   // Construct the MongoDB time filter
+  if (!startDate && !endDate) return {};
+
   const timeFilter: TimeFilter = {};
   if (startDate) {
     timeFilter.$gte = startDate;

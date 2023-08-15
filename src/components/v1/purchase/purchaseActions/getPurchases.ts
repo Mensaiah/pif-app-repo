@@ -3,6 +3,7 @@ import { FilterQuery, Document } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
+import { handleTimeFilter } from '../../../../utils/handleTimeFilter';
 import { handleResponse, validateObjectId } from '../../../../utils/helpers';
 import {
   getCurrencyQuery,
@@ -27,12 +28,15 @@ export const getPurchases = async (req: IRequest, res: Response) => {
 
   const paginate = handlePaginate(req);
 
+  const timeFilter = handleTimeFilter(req);
+
   const query: FilterQuery<PurchaseAttributes & Document> = {
     ...(await getCurrencyQuery(req, queryParams.currency)),
     ...(await getPartnerQuery(req, queryParams.partner_id)),
     ...(await getProductQuery(req, queryParams.product_id)),
     ...(await getUserQuery(req, queryParams.user_id)),
     ...getMarketplaceQuery(req, queryParams.marketplace),
+    createdAt: timeFilter,
   };
 
   if (req.sendEmptyData) return handleResponse(res, { data: [] });
