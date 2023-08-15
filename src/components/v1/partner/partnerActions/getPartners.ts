@@ -64,11 +64,7 @@ const getPartners = async (req: IRequest, res: Response) => {
       textQuery,
       '-rolesAndPermissions',
       paginate.queryOptions
-    )
-      .sort({
-        createdAt: -1,
-      })
-      .lean();
+    ).lean();
 
     if (!allPartners.length) {
       useRegexSearch = true;
@@ -77,11 +73,7 @@ const getPartners = async (req: IRequest, res: Response) => {
         regexQuery,
         '-rolesAndPermissions',
         paginate.queryOptions
-      )
-        .sort({
-          createdAt: -1,
-        })
-        .lean();
+      ).lean();
     }
 
     const count = await PartnerModel.countDocuments(
