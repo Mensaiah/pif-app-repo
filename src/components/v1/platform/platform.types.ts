@@ -31,3 +31,12 @@ export interface PlatformAttributes {
   }>;
   socials: MarketplaceAttributes['socials'];
 }
+
+export interface DashboardCardData {
+  name: string;
+  value: number;
+  percentageChange: number;
+}
+export interface DashboardData {
+  cards: Array<DashboardCardData>;
+}
