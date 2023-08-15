@@ -79,9 +79,9 @@ const getProducts = async (req: IRequest, res: Response) => {
     ...query,
     ...(search_query && {
       $or: [
-        { name: { $regex: regex } },
-        { caption: { $regex: regex } },
-        { description: { $regex: regex } },
+        { 'name.value': { $regex: regex } },
+        { 'caption.value': { $regex: regex } },
+        { 'description.value': { $regex: regex } },
       ],
     }),
   };

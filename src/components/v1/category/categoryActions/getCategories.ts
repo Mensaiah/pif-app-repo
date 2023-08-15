@@ -2,6 +2,7 @@ import { Response } from 'express';
 import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
+import { handlePaginate } from '../../../../utils/handlePaginate';
 import { handleResponse } from '../../../../utils/helpers';
 import {
   handleReqSearch,
@@ -14,9 +15,14 @@ import { CategoryAttributes } from '../category.types';
 const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
 
-  const { marketplace } = handleReqSearch(req, { marketplace: 'string' });
+  const { marketplace, search_query } = handleReqSearch(req, {
+    marketplace: 'string',
+    search_query: 'string',
+  });
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
+
+  const paginate = handlePaginate(req);
 
   const query: FilterQuery<CategoryAttributes & Document> = {
     ...(userType !== 'platform-admin' && {
@@ -33,11 +39,47 @@ const getCategories = async (req: IRequest, res: Response) => {
     ],
   };
 
+  const textQuery: FilterQuery<CategoryAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      $text: { $search: search_query },
+    }),
+  };
+
+  const regex = new RegExp('^' + search_query, 'i');
+
+  const regexQuery: FilterQuery<CategoryAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      'name.value': { $regex: regex },
+    }),
+  };
+
+  let useRegexSearch = false;
+
   try {
-    const categories = await CategoryModel.find(query).lean();
+    let allCategories = await CategoryModel.find(
+      textQuery,
+      null,
+      paginate.queryOptions
+    ).lean();
+
+    if (!allCategories.length) {
+      useRegexSearch = true;
+      allCategories = await CategoryModel.find(
+        regexQuery,
+        null,
+        paginate.queryOptions
+      ).lean();
+    }
+
+    const count = await CategoryModel.countDocuments(
+      useRegexSearch ? regexQuery : textQuery
+    );
 
     return handleResponse(res, {
-      data: categories,
+      data: allCategories,
+      meta: paginate.getMeta(count),
     });
   } catch (err) {
     return handleResponse(

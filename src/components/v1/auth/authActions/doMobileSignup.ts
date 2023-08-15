@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 import appConfig from '../../../../config';
 import { IRequest } from '../../../../types/global';
-import { consoleLog, handleResponse } from '../../../../utils/helpers';
+import { handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import PurchaseModel from '../../purchase/purchase.model';
 import { UserModel } from '../../user/user.model';

@@ -105,7 +105,12 @@ const userSchema = new Schema<UserAttributes>(
   { timestamps: true }
 );
 
-userSchema.index({ pifId: 'text', name: 'text', email: 'text' });
+userSchema.index({
+  pifId: 'text',
+  name: 'text',
+  email: 'text',
+  'contact.phone': 'text',
+});
 
 const partnerPosUserSchema = new Schema<PartnerPosUserAttributes>(
   {

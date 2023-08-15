@@ -10,6 +10,8 @@ import {
   getMarketplaceQuery,
   handleReqSearch,
 } from '../../../../utils/queryHelpers';
+import { hasAccessToMarketplaces } from '../../../../utils/queryHelpers/helpers';
+import { UserAccessModel } from '../../auth/auth.models';
 import { PartnerPosUserModel, UserModel } from '../user.model';
 import { updateProfileSchema } from '../user.policy';
 import { UserAttributes } from '../user.types';
@@ -289,10 +291,36 @@ export const getUsers = async (req: IRequest, res: Response) => {
 
 export const getUser = async (req: IRequest, res: Response) => {
   // TODO: ensure the user asking to see this user data is allowed to see it
+
+  const { isUserTopLevelAdmin } = req;
+
   try {
     const user = await UserModel.findById(req.params.userId).populate(
       'Partner'
     );
+
+    if (!user) return handleResponse(res, 'User not found', 404);
+
+    const existingUserAccess = await UserAccessModel.findOne({
+      User: user._id,
+    });
+
+    if (!existingUserAccess) return handleResponse(res, 'invalid request', 404);
+
+    // user to be accessed marketplace (country-admin, partner-admin or customer)
+    const userMarketplace =
+      user.currentMarketplace || existingUserAccess.marketplaces;
+
+    if (
+      !isUserTopLevelAdmin &&
+      !hasAccessToMarketplaces(req, userMarketplace)
+    ) {
+      return handleResponse(
+        res,
+        "You don't have the permission to perform this operation.",
+        403
+      );
+    }
 
     return handleResponse(res, {
       data: user,

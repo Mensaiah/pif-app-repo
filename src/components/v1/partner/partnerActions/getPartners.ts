@@ -9,12 +9,14 @@ import {
   getMarketplaceQuery,
 } from '../../../../utils/queryHelpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { PartnerPosAttributes } from '../../partnerPos/partnerPos.types';
 import { PartnerModel } from '../partner.model';
+import { PartnerAttributes } from '../partner.types';
 
 const getPartners = async (req: IRequest, res: Response) => {
-  const { marketplace } = handleReqSearch(req, {
+  const { marketplace, status, search_query } = handleReqSearch(req, {
     marketplace: 'string',
+    status: 'string',
+    search_query: 'string',
   });
 
   const paginate = handlePaginate(req);
@@ -22,17 +24,44 @@ const getPartners = async (req: IRequest, res: Response) => {
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
   if (req.sendEmptyData) return handleResponse(res, { data: [] });
 
-  const query: FilterQuery<PartnerPosAttributes & Document> = {
+  const query: FilterQuery<PartnerAttributes & Document> = {
     ...(marketplaceQuery.marketplace &&
       (typeof marketplaceQuery.marketplace === 'object' &&
       '$in' in marketplaceQuery.marketplace
         ? { marketplaces: { $in: marketplaceQuery.marketplace.$in } }
         : { marketplaces: { $in: [marketplaceQuery.marketplace] } })),
+
+    ...(status &&
+      ['active', 'inactive', 'not-verified'].includes(status) && {
+        status,
+      }),
+  };
+
+  const textQuery: FilterQuery<PartnerAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      $text: { $search: search_query },
+    }),
+  };
+
+  const regex = new RegExp('^.*' + search_query, 'i');
+
+  const regexQuery: FilterQuery<PartnerAttributes & Document> = {
+    ...query,
+    ...(search_query && {
+      $or: [
+        { name: { $regex: regex } },
+        { email: { $regex: regex } },
+        { phone: { $regex: regex } },
+      ],
+    }),
   };
 
   try {
-    const partners = await PartnerModel.find(
-      query,
+    let useRegexSearch = false;
+
+    let allPartners = await PartnerModel.find(
+      textQuery,
       '-rolesAndPermissions',
       paginate.queryOptions
     )
@@ -40,10 +69,27 @@ const getPartners = async (req: IRequest, res: Response) => {
         createdAt: -1,
       })
       .lean();
-    const count = await PartnerModel.countDocuments(query);
+
+    if (!allPartners.length) {
+      useRegexSearch = true;
+
+      allPartners = await PartnerModel.find(
+        regexQuery,
+        '-rolesAndPermissions',
+        paginate.queryOptions
+      )
+        .sort({
+          createdAt: -1,
+        })
+        .lean();
+    }
+
+    const count = await PartnerModel.countDocuments(
+      useRegexSearch ? regexQuery : textQuery
+    );
 
     return handleResponse(res, {
-      data: partners,
+      data: allPartners,
       meta: paginate.getMeta(count),
     });
   } catch (err) {
