@@ -1,5 +1,6 @@
 import { IRequest } from '../types/global';
 
+import { consoleLog } from './helpers';
 import { handleReqSearch } from './queryHelpers';
 
 interface TimeFilter {
@@ -29,7 +30,8 @@ export const handleTimeFilter = (req: IRequest): TimeFilter => {
   } else {
     switch (duration) {
       case 'today':
-        startDate = new Date(currentDate.setHours(0, 0, 0, 0));
+        startDate = new Date(currentDate);
+        startDate.setHours(0, 0, 0, 0);
         endDate = currentDate;
         break;
       case 'this_week':
