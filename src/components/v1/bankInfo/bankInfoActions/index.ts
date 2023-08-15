@@ -1,18 +1,28 @@
 import { Response } from 'express';
+import { ObjectId } from 'mongoose';
 import { z } from 'zod';
 
 import PaystackService from '../../../../services/paymentProcessors/paystack.service';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { handleReqSearch } from '../../../../utils/queryHelpers';
+import { hasAccessToMarketplaces } from '../../../../utils/queryHelpers/helpers';
+import { PartnerModel } from '../../partner/partner.model';
 import BankInfoModel from '../bankInfo.model';
 import {
   addBankAccountSchema,
   resolveBankAccountSchema,
 } from '../bankInfo.policy';
 
-const getPartnerId = (req: IRequest) => {
-  const { user, userType } = req;
+const getPartnerId = async (
+  req: IRequest
+): Promise<{
+  success: boolean;
+  status?: number;
+  message?: string;
+  partnerId?: ObjectId;
+}> => {
+  const { user } = req;
 
   const { Partner: partnerId } = user;
 
@@ -27,16 +37,39 @@ const getPartnerId = (req: IRequest) => {
       status: 400,
     };
 
-  if (userType !== 'partner-admin') {
-    if (partner_id && partner_id.toString() !== partnerId?.toString())
-      return {
-        success: false,
-        message: 'unauthorized',
-        status: 403,
-      };
+  if (partnerId) {
+    return { partnerId, success: true };
   }
 
-  return { partnerId: partnerId || partner_id, success: true };
+  try {
+    if (!req.isUserTopLevelAdmin) {
+      const partner = await PartnerModel.findById(partner_id);
+      if (!partner) {
+        return {
+          success: false,
+          message: 'partner does not exist',
+          status: 404,
+        };
+      }
+      if (!hasAccessToMarketplaces(req, partner.marketplaces))
+        return {
+          success: false,
+          message: 'forbidden',
+          status: 403,
+        };
+    }
+
+    return {
+      partnerId: (partnerId || partner_id) as unknown as ObjectId,
+      success: true,
+    };
+  } catch (err) {
+    return {
+      success: false,
+      message: 'error validating request',
+      status: 500,
+    };
+  }
 };
 
 export const resolveAccountNumber = async (req: IRequest, res: Response) => {
@@ -48,7 +81,7 @@ export const resolveAccountNumber = async (req: IRequest, res: Response) => {
     return handleResponse(res, 'marketplace not supported', 400);
   }
 
-  const { success, message, status } = getPartnerId(req);
+  const { success, message, status } = await getPartnerId(req);
 
   if (!success) return handleResponse(res, message, status);
 
@@ -75,15 +108,15 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
 
   const { accountNumber, bankCode, marketplace }: dataType = req.body;
 
-  const { success, message, partnerId, status } = getPartnerId(req);
-
-  if (!success) return handleResponse(res, message, status);
-
-  if (marketplace !== 'ng') {
-    return handleResponse(res, 'marketplace not supported', 400);
-  }
-
   try {
+    const { success, message, partnerId, status } = await getPartnerId(req);
+
+    if (!success) return handleResponse(res, message, status);
+
+    if (marketplace !== 'ng') {
+      return handleResponse(res, 'marketplace not supported', 400);
+    }
+
     const accountInfo = await PaystackService.resolveAccountNumber(
       bankCode,
       accountNumber
@@ -102,10 +135,14 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
       return handleResponse(res, 'bank not found', 400);
     }
 
-    const { status, message, data } = accountInfo;
+    const {
+      status: accountInfoStatus,
+      message: accountInfoMessage,
+      data,
+    } = accountInfo;
 
-    if (!status) {
-      return handleResponse(res, message, 400);
+    if (!accountInfoStatus) {
+      return handleResponse(res, accountInfoMessage, 400);
     }
 
     const newBankAccount = await new BankInfoModel({
@@ -125,11 +162,10 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
 };
 
 export const listBankAccounts = async (req: IRequest, res: Response) => {
-  const { success, message, partnerId, status } = getPartnerId(req);
-
-  if (!success) return handleResponse(res, message, status);
-
   try {
+    const { success, message, partnerId, status } = await getPartnerId(req);
+
+    if (!success) return handleResponse(res, message, status);
     const bankAccounts = await BankInfoModel.find({
       Partner: partnerId,
     });
