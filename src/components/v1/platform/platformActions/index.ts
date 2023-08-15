@@ -58,6 +58,7 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
     languageCode,
     paymentProcessors,
     socials,
+    allowPartnersToWithdrawEarning,
   }: dataType = req.body;
 
   try {
@@ -84,6 +85,7 @@ export const addMarketplace = async (req: IRequest, res: Response) => {
       languageCode,
       paymentProcessors: paymentProcessors as any,
       socials: socials as any,
+      allowPartnersToWithdrawEarning,
     });
 
     await platformData.save();
@@ -112,6 +114,7 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     languageCode,
     paymentProcessors,
     socials,
+    allowPartnersToWithdrawEarning,
   }: dataType = req.body;
 
   try {
@@ -139,7 +142,9 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     if ('paymentProcessors' in req.body)
       marketplaceExists.paymentProcessors = [...new Set(paymentProcessors)];
     if ('socials' in req.body) (marketplaceExists as any).socials = socials;
-
+    if (allowPartnersToWithdrawEarning)
+      marketplaceExists.allowPartnersToWithdrawEarning =
+        allowPartnersToWithdrawEarning;
     platformData.marketplaces = platformData.marketplaces?.map(
       (marketplace) => {
         if (marketplace.code === code) {
@@ -150,7 +155,12 @@ export const updateMarketplace = async (req: IRequest, res: Response) => {
     );
 
     const changesMade =
-      name || currency || currencyCode || language || languageCode;
+      name ||
+      currency ||
+      currencyCode ||
+      language ||
+      languageCode ||
+      allowPartnersToWithdrawEarning;
 
     if (changesMade) {
       await platformData.save();
