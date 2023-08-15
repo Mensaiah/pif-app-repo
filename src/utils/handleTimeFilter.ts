@@ -1,6 +1,5 @@
 import { IRequest } from '../types/global';
 
-import { consoleLog } from './helpers';
 import { handleReqSearch } from './queryHelpers';
 
 interface TimeFilter {
