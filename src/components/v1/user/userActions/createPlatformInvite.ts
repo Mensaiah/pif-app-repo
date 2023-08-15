@@ -42,7 +42,7 @@ const createPlatformInvite = async (req: IRequest, res: Response) => {
 
     const sanitizedMarketplace = filterMarketplaces(marketplaces, platform);
 
-    if (!sanitizedMarketplace.length)
+    if (!sanitizedMarketplace.length && role !== 'admin')
       return handleResponse(
         res,
         'Either none of the marketplaces supplied does not exists or you did not supply any at all',
