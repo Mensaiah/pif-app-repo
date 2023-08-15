@@ -17,6 +17,7 @@ export const addMarketplaceSchema = z.object({
   currencySymbol: z.string(),
   paymentProcessors: z.array(paymentProcessor),
   socials: z.array(social).optional(),
+  allowPartnersToWithdrawEarning: z.boolean().optional(),
 });
 
 export const updateMarketplaceSchema = z.object({
@@ -29,6 +30,7 @@ export const updateMarketplaceSchema = z.object({
   currencySymbol: z.string().optional(),
   paymentProcessors: z.array(paymentProcessor).optional(),
   socials: z.array(social).optional(),
+  allowPartnersToWithdrawEarning: z.boolean().optional(),
 });
 
 export const addPlatformSocialSchema = z.object({

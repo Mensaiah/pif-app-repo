@@ -9,6 +9,8 @@ import { CategoryModel } from '../category.model';
 import { CategoryAttributes } from '../category.types';
 
 const getCategoryByMarketplace = async (req: IRequest, res: Response) => {
+  const { userType } = req;
+
   const { marketplace } = req.params;
 
   const { search_query } = handleReqSearch(req, {
@@ -20,11 +22,14 @@ const getCategoryByMarketplace = async (req: IRequest, res: Response) => {
 
   const paginate = handlePaginate(req);
 
-  const query: FilterQuery<CategoryAttributes & Document> = {
-    isEnabled: true,
-    isFunctional: true,
-    marketplaces: { $in: [marketplace] },
-  };
+  const query: FilterQuery<CategoryAttributes & Document> =
+    userType === 'platform-admin'
+      ? { marketplaces: { $in: [marketplace] } }
+      : {
+          isEnabled: true,
+          deletedAt: { $exists: false },
+          marketplaces: { $in: [marketplace] },
+        };
 
   const textQuery: FilterQuery<CategoryAttributes & Document> = {
     ...query,
@@ -49,7 +54,7 @@ const getCategoryByMarketplace = async (req: IRequest, res: Response) => {
       textQuery,
       'name Icon',
       paginate.queryOptions
-    ).lean();
+    );
 
     if (!allCategories.length) {
       useRegexSearch = true;
@@ -58,7 +63,7 @@ const getCategoryByMarketplace = async (req: IRequest, res: Response) => {
         regexQuery,
         'name Icon',
         paginate.queryOptions
-      ).lean();
+      );
     }
 
     const count = await CategoryModel.countDocuments(
