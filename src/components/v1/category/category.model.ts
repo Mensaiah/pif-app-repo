@@ -27,6 +27,10 @@ const categorySchema = new Schema<CategoryAttributes>(
   { timestamps: true }
 );
 
+categorySchema.index({
+  'name.value': 'text',
+});
+
 //  iconifyName: String,
 //     svg: String,
 //     url: String,

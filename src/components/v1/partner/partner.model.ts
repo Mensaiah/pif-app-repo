@@ -108,4 +108,10 @@ const partnerSchema = new Schema<PartnerAttributes>(
   { timestamps: true }
 );
 
+partnerSchema.index({
+  name: 'text',
+  email: 'text',
+  phone: 'text',
+});
+
 export const PartnerModel = model<PartnerAttributes>('Partner', partnerSchema);
