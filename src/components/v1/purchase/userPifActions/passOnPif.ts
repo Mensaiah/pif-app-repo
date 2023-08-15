@@ -10,6 +10,13 @@ import { UserModel } from '../../user/user.model';
 import PurchaseModel from '../purchase.model';
 import { passOnPifSchema } from '../purchase.policy';
 
+const formatPhoneNumber = (prefix?: string, number?: string) => {
+  if (prefix && number) {
+    return `${prefix}${number}`;
+  }
+  return null;
+};
+
 export const passOnPif = async (req: IRequest, res: Response) => {
   const { purchaseId } = req.params;
   const { user } = req;
@@ -105,8 +112,9 @@ export const passOnPif = async (req: IRequest, res: Response) => {
       from: req.pifId,
       to:
         recipientPifId ||
-        `${recipientPhonePrefix}${recipientPhoneNumber}` ||
-        `${contactPrefix}${contactNumber}`,
+        formatPhoneNumber(recipientPhonePrefix, recipientPhoneNumber) ||
+        formatPhoneNumber(contactPrefix, contactNumber) ||
+        '',
       recipientPhonePrefix: recipientPhonePrefix || contactPrefix,
       recipientPhoneNumber: recipientPhoneNumber || contactNumber,
       message: message || '',

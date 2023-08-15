@@ -24,6 +24,7 @@ import {
   verifyPifId,
 } from './userActions';
 import getUserInvites from './userActions/getUserInvites';
+import { updateOneSignalPlayerId } from './userActions/oneSignalActions';
 import { getUser, getUsers } from './userActions/userProfileActions';
 
 const router = Router();
@@ -34,6 +35,13 @@ router.post(
   validateTokenMiddleware,
   requireAuthMiddleware,
   createPlatformInvite
+);
+
+router.post(
+  '/one-signal-player-id',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  updateOneSignalPlayerId
 );
 
 router.get(

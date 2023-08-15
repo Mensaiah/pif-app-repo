@@ -51,6 +51,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.4.5",
     "node-fetch": "^3.3.1",
+    "onesignal-node": "^3.4.0",
     "qs": "^6.11.2",
     "rate-limiter-flexible": "^2.4.1",
     "redis": "^4.6.6",
