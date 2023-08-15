@@ -8,6 +8,8 @@ export async function connectMongoDb(): Promise<void> {
     if (appConfig.isDev) mongoose.set('debug', true);
     await mongoose.connect(appConfig.mongoDbURI, { family: 4 });
 
+    // consoleLog({ uri: appConfig.mongoDbURI });
+
     consoleLog('Database connected');
   } catch (error) {
     consoleLog('Error connecting to database:' + error, 'error');

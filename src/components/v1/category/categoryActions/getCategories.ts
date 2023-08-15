@@ -2,7 +2,6 @@ import { Response } from 'express';
 import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
-import { handlePaginate } from '../../../../utils/handlePaginate';
 import { handleResponse } from '../../../../utils/helpers';
 import {
   handleReqSearch,
@@ -21,35 +20,26 @@ const getCategories = async (req: IRequest, res: Response) => {
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
 
-  const paginate = handlePaginate(req);
-
   const query: FilterQuery<CategoryAttributes & Document> = {
     ...(userType !== 'platform-admin' && {
       isEnabled: true,
-      deletedAt: { $exists: false },
+      $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
     }),
     $and: [
       { 'marketplaces.0': { $exists: true } },
       {
         ...(marketplaceQuery.marketplace && {
-          marketplaces: marketplaceQuery.marketplace,
+          marketplaces: { $in: [marketplaceQuery.marketplace] },
         }),
       },
     ],
   };
 
   try {
-    const allCategories = await CategoryModel.find(
-      query,
-      null,
-      paginate.queryOptions
-    ).lean();
-
-    const count = await CategoryModel.countDocuments(query);
+    const allCategories = await CategoryModel.find(query, null).lean();
 
     return handleResponse(res, {
       data: allCategories,
-      meta: paginate.getMeta(count),
     });
   } catch (err) {
     return handleResponse(
