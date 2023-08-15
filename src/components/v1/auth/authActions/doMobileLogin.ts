@@ -232,6 +232,7 @@ const doMobileLogin = async (req: IRequest, res: Response) => {
           phone: existingUser.contact.phone,
           shouldEnforceConfirmation: existingUser.shouldEnforceConfirmation,
           isConfirmed: existingUser.isConfirmed,
+          hasOneSignalPlayerId: !!existingUser.oneSignalPlayerId,
         },
       },
     });

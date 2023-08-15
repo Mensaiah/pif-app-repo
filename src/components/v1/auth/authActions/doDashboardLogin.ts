@@ -169,6 +169,7 @@ const doDashboardLogin = async (req: IRequest, res: Response) => {
           role: userAccess.role,
           permissions: userAccess.permissions,
           marketplaces: userAccess.marketplaces,
+          hasOneSignalPlayerId: !!existingUser.oneSignalPlayerId,
         },
       },
     });
