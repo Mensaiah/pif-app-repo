@@ -27,7 +27,7 @@ export const doForgotPin = async (req: IRequest, res: Response) => {
       return handleResponse(res, 'Account does not exist', 401);
 
     if (existingUsers.length > 1 && !email) {
-      return handleResponse(res, 'Please, provide your email', 401);
+      return handleResponse(res, 'Please, provide your email');
     }
 
     const existingUser = existingUsers[0];
