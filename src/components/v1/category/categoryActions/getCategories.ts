@@ -15,9 +15,8 @@ import { CategoryAttributes } from '../category.types';
 const getCategories = async (req: IRequest, res: Response) => {
   const { userType } = req;
 
-  const { marketplace, search_query } = handleReqSearch(req, {
+  const { marketplace } = handleReqSearch(req, {
     marketplace: 'string',
-    search_query: 'string',
   });
 
   const marketplaceQuery = getMarketplaceQuery(req, marketplace);
@@ -39,43 +38,14 @@ const getCategories = async (req: IRequest, res: Response) => {
     ],
   };
 
-  const textQuery: FilterQuery<CategoryAttributes & Document> = {
-    ...query,
-    ...(search_query && {
-      $text: { $search: search_query },
-    }),
-  };
-
-  const regex = new RegExp('^' + search_query, 'i');
-
-  const regexQuery: FilterQuery<CategoryAttributes & Document> = {
-    ...query,
-    ...(search_query && {
-      'name.value': { $regex: regex },
-    }),
-  };
-
-  let useRegexSearch = false;
-
   try {
-    let allCategories = await CategoryModel.find(
-      textQuery,
+    const allCategories = await CategoryModel.find(
+      query,
       null,
       paginate.queryOptions
     ).lean();
 
-    if (!allCategories.length) {
-      useRegexSearch = true;
-      allCategories = await CategoryModel.find(
-        regexQuery,
-        null,
-        paginate.queryOptions
-      ).lean();
-    }
-
-    const count = await CategoryModel.countDocuments(
-      useRegexSearch ? regexQuery : textQuery
-    );
+    const count = await CategoryModel.countDocuments(query);
 
     return handleResponse(res, {
       data: allCategories,
