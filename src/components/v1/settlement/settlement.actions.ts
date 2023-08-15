@@ -50,8 +50,11 @@ export const getSettlements = async (req: IRequest, res: Response) => {
       (status === 'settled' || status === 'pending') && {
         isSettled: status === 'settled',
       }),
-    createdAt: timeFilter,
   };
+
+  if (timeFilter.$gte || timeFilter.$lte) {
+    query.createdAt = timeFilter;
+  }
 
   if (req.sendEmptyData) return handleResponse(res, { data: [] });
 

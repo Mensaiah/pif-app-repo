@@ -42,8 +42,11 @@ export const getRevenueList = async (req: IRequest, res: Response) => {
     ...partnerQuery,
     ...productQuery,
     ...(currency && { currency: currency.toLocaleLowerCase() }),
-    createdAt: timeFilter,
   };
+
+  if (timeFilter.$gte || timeFilter.$lte) {
+    query.createdAt = timeFilter;
+  }
 
   try {
     const revenueList = await RevenueModel.find(

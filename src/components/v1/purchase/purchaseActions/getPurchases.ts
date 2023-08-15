@@ -36,8 +36,11 @@ export const getPurchases = async (req: IRequest, res: Response) => {
     ...(await getProductQuery(req, queryParams.product_id)),
     ...(await getUserQuery(req, queryParams.user_id)),
     ...getMarketplaceQuery(req, queryParams.marketplace),
-    createdAt: timeFilter,
   };
+
+  if (timeFilter.$gte || timeFilter.$lte) {
+    query.createdAt = timeFilter;
+  }
 
   if (req.sendEmptyData) return handleResponse(res, { data: [] });
 
