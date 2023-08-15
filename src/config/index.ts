@@ -92,6 +92,8 @@ const appConfig = {
   googleClientSecret: env.GOOGLE_CLIENT_SECRET || '',
   googleRedirectUrl: env.GOOGLE_REDIRECT_URL || '',
   externalCronKey: env.CRON_KEY || '',
+  oneSignalAppId: env.ONESIGNAL_APP_ID || '',
+  oneSignalApiKey: env.ONESIGNAL_API_KEY || '',
 };
 
 export default appConfig;

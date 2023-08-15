@@ -3,7 +3,7 @@ import { FilterQuery } from 'mongoose';
 
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import {
   handleReqSearch,
   getMarketplaceQuery,
@@ -59,6 +59,16 @@ const getPartners = async (req: IRequest, res: Response) => {
 
   try {
     let useRegexSearch = false;
+    consoleLog(
+      JSON.stringify(
+        {
+          textQuery,
+          regexQuery,
+        },
+        null,
+        2
+      )
+    );
 
     let allPartners = await PartnerModel.find(
       textQuery,
