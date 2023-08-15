@@ -6,7 +6,7 @@ import {
   validateTokenMiddleware,
 } from '../auth/authMiddlwares';
 
-import { getPurchase, getPurchases } from './purchase.action';
+import { getPurchase, getPurchases } from './purchaseActions';
 
 const router = Router();
 

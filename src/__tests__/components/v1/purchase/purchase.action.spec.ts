@@ -2,7 +2,7 @@
 
 import { Response } from 'express';
 
-import { getPurchases } from '../../../../components/v1/purchase/purchase.action';
+import { getPurchases } from '../../../../components/v1/purchase/purchaseActions';
 import PurchaseModel from '../../../../components/v1/purchase/purchase.model';
 import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';

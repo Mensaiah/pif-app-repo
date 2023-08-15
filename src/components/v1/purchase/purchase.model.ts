@@ -102,6 +102,7 @@ purchaseSchema.index({
   senderPifId: 'text',
   recipientPifId: 'text',
   recipientPhoneNumber: 'text',
+  'productName.value': 'text',
 });
 purchaseSchema.index({
   marketplace: 1,

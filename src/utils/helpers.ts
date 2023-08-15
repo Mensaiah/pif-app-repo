@@ -372,7 +372,8 @@ export const checkLang = (value: checkLangParams) => {
   return appConfig.supportedLanguages.find((lang) => value[lang]);
 };
 
-export const validateObjectId = (val: string) => Types.ObjectId.isValid(val);
+export const validateObjectId = (val: string) =>
+  val && Types.ObjectId.isValid(val);
 
 export const validateDate = (val: string) => {
   const date = new Date(val);
