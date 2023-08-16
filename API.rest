@@ -2,8 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MjEzNTQyMCwiZXhwIjoxNjkyMzA4MjIwLCJpc3MiOiJQSUYtZGV2In0.AHnAVy6aQ1H3JrFZIAbDzeO8dH3cFW68ONoA58bx0NU
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmUwZjZmNDktM2VlZi00Njc3LWE0YWYtYzZjNWI3YTM2ZTMyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImZjNzg3Y2ZkLTI5MzYtNGUwOC1iMWEyLTEzZDUyMWY4ZjM0MyIsInJlZiI6IjY0ZGMxMGM1MWMxMTJiOTUzZmFkN2ZhMyIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MjE0NDE0MiwiZXhwIjoxNjkyMzE2OTQyLCJpc3MiOiJQSUYtZGV2In0.gYbAG_60KuLl8TOEPMkem1A-RMWGRoTJYlj0PM30szw
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MjE3MTYyMywiZXhwIjoxNjkyMzQ0NDIzLCJpc3MiOiJQSUYtZGV2In0.ekcz88nFKClEKxDRmsLIMJw3WouEbxgcsk41Bhna5Mc
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MjE0NzY0MywiZXhwIjoxNjkyMzIwNDQzLCJpc3MiOiJQSUYtZGV2In0.t2ZMdBemRwY3h8qZm2FklgM_dZ44W_5cR4At0-J7IWw
 
 GET {{server}}
 
@@ -460,32 +460,18 @@ POST {{api}}/tx/initiate
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-# {
-#   "idempotencyKey": "0cca28a2-2219-4b03-8607-98e971484046",
-#   "driver": "paystack",
-#   "items": [
-#     {
-#       "productId": "64be5c11d4deea51b30df9eb",
-#       "quantity": 1
-#     }
-#   ],
-#   "recipientPhonePrefix": "234",
-#   "recipientPhoneNumber": "8035353672",
-#   "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
-# }
 {
-  "idempotencyKey": "6b141cad-24e1-4f15-b992-7eec8c9e4c48",
+  "idempotencyKey": "96ec6f0a-b93f-4e17-b78e-1fd9cf604779",
   "items": [
     {
-      "productId": "64b55770c5cc776a57c32f76",
+      "productId": "64be36532976f1a339ed7b4d",
       "quantity": 1
     }
   ],
-  "recipientPifId": "wm543",
   "recipientPhonePrefix": "234",
-  "recipientPhoneNumber": "7065490069",
-  "message": "Just a message",
-  "toBeDeliveredAt": "2023-08-14T13:13:04.247Z",
+  "recipientPhoneNumber": "8063107175",
+  "message": "Just a gift",
+  "toBeDeliveredAt": "2023-08-24T13:13:04.247Z",
   "driver": "paystack"
 }
 
@@ -574,4 +560,8 @@ Authorization: Bearer {{token}}
 
 ###
 GET https://pif-api.herokuapp.com/v1/en/purchases?page=1&per_page=20&user_id=64b52205c5cc776a57c2efbb
+Authorization: Bearer {{token}}
+
+### get wallets
+GET {{api}}/wallets?marketplace=ng&has_money=true
 Authorization: Bearer {{token}}

@@ -1,6 +1,7 @@
 import Currency from 'currency.js';
 import mongoose, { ObjectId } from 'mongoose';
 
+import { PartnerModel } from '../../partner/partner.model';
 import SettlementModel from '../../settlement/settlement.model';
 import WalletModel from '../../wallet/wallet.model';
 
@@ -16,11 +17,18 @@ export default async function sortFinalSettlement(
     if (!settlement) {
       throw new Error('Settlement not found');
     }
+    const partnerInfo = await PartnerModel.findById(settlement.Partner).session(
+      session
+    );
+    if (!partnerInfo) {
+      throw new Error('Partner not found');
+    }
 
     const partnerWallet = await WalletModel.findOne({
       Partner: settlement.Partner,
       marketplace: settlement.marketplace,
       walletType: 'partner',
+      amountThreshold: partnerInfo.settlingDetails?.amountThreshold || 0,
     }).session(session);
 
     if (!partnerWallet) {

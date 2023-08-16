@@ -12,6 +12,7 @@ const walletSchema = new Schema<WalletAttributes>(
     marketplace: { type: String, required: true },
     totalIncome: { type: Number, default: 0 },
     totalWithdrawal: { type: Number, default: 0 },
+    amountThreshold: { type: Number, default: 0 },
     walletType: {
       type: String,
       enum: ['system', 'partner', 'user'],

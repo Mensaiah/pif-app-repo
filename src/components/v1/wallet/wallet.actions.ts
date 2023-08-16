@@ -20,15 +20,15 @@ type WalletStatusType = (typeof platformConstants.walletStatuses)[number];
 export const getWallets = async (req: IRequest, res: Response) => {
   try {
     const { user, userAccess, userType } = req;
-    const { marketplace, partner_id, wallet_type, status } = handleReqSearch(
-      req,
-      {
-        marketplace: 'string',
-        partner_id: 'string',
-        wallet_type: 'string',
-        status: 'string',
-      }
-    );
+    const queryParams = handleReqSearch(req, {
+      marketplace: 'string',
+      partner_id: 'string',
+      wallet_type: 'string',
+      status: 'string',
+      has_money: 'boolean',
+    });
+
+    const { marketplace, partner_id, wallet_type, status } = queryParams;
 
     const marketplaceQuery = getMarketplaceQuery(req, marketplace);
     const partnerQuery = await getPartnerQuery(req, partner_id);
@@ -67,9 +67,17 @@ export const getWallets = async (req: IRequest, res: Response) => {
       ...partnerQuery,
       ...(wallet_type && { walletType: wallet_type }),
       ...(status && { status }),
+      ...('has_money' in queryParams &&
+        queryParams.has_money && { balance: { $gt: 0 } }),
     };
 
-    let wallets = await WalletModel.find(query);
+    let wallets =
+      queryParams.has_money &&
+      wallet_type === 'partner' &&
+      marketplace &&
+      status === 'active'
+        ? await WalletModel.find(query).populate('Partner', 'name')
+        : await WalletModel.find(query);
 
     if (wallets.length === 0) {
       if (userType === 'partner-admin') {

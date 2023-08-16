@@ -11,6 +11,7 @@ export interface WalletAttributes {
   totalWithdrawal?: number;
   walletType?: 'system' | 'partner' | 'user';
   status?: 'active' | 'suspended' | 'closed';
+  amountThreshold?: number;
 }
 
 // a system wallet will be created for each marketplace and the amount field will be PIF income, the pendingAmount will be the escrow balance

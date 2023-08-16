@@ -22,6 +22,15 @@ const platformConstants = {
   },
   walletTypes: ['system', 'partner'] as const,
   walletStatuses: ['active', 'suspended', 'closed'] as const,
+  payoutStatuses: [
+    'pending',
+    'completed',
+    'cancelled',
+    'partially-paid',
+  ] as const,
+  partnerPayoutStatuses: ['pending', 'paid'] as const,
+  payoutTypes: ['manual', 'auto'] as const,
+  partnerPayoutItemTypes: ['start', 'finish', 'full'] as const,
   otpResendWaitingMinutes: 3,
 };
 
