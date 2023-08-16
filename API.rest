@@ -2,8 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MjEzNTQyMCwiZXhwIjoxNjkyMzA4MjIwLCJpc3MiOiJQSUYtZGV2In0.AHnAVy6aQ1H3JrFZIAbDzeO8dH3cFW68ONoA58bx0NU
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTMyMDMwOCwiZXhwIjoxNjkxNDkzMTA4LCJpc3MiOiJQSUYtZGV2In0.h97_Im-g3IcmUfuuGbLtx9Up7MdXfurrJsNqeMwf_A0
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MjEzNTQyMCwiZXhwIjoxNjkyMzA4MjIwLCJpc3MiOiJQSUYtZGV2In0.AHnAVy6aQ1H3JrFZIAbDzeO8dH3cFW68ONoA58bx0NU
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZmUwZjZmNDktM2VlZi00Njc3LWE0YWYtYzZjNWI3YTM2ZTMyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImZjNzg3Y2ZkLTI5MzYtNGUwOC1iMWEyLTEzZDUyMWY4ZjM0MyIsInJlZiI6IjY0ZGMxMGM1MWMxMTJiOTUzZmFkN2ZhMyIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MjE0NDE0MiwiZXhwIjoxNjkyMzE2OTQyLCJpc3MiOiJQSUYtZGV2In0.gYbAG_60KuLl8TOEPMkem1A-RMWGRoTJYlj0PM30szw
 
 GET {{server}}
 
@@ -163,7 +163,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8103498784",
+  "phone": "8063107175",
   "marketplace": "ng"
 }
 
@@ -195,12 +195,12 @@ POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Jimoh Aweda",
+ "name": "Ishola Jamiu",
  "dob": "1990-02-20",
- "pifId":"Aweda",
+ "pifId":"highshow",
  "zipCode":"12345",
- "email": "jimohafeez738@gmail.com",
- "referenceCode": "3664ca19d7796a7f6389b618f490202"
+ "email": "isholajamiusolihu@gmail.com",
+ "referenceCode": "8564dc10c51c112b953fad7fa372676"
 }
 ### mobile finalize signup (if user signup with phone and Google or has ever received a gift before joinning the platform)
 POST {{api}}/auth/finalize-m-signup
@@ -243,7 +243,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541"
+  "phone": "8063107175"
 }
 
 ### mobile - reset pin
