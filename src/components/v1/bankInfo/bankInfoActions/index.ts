@@ -1,76 +1,16 @@
 import { Response } from 'express';
-import { ObjectId } from 'mongoose';
 import { z } from 'zod';
 
 import PaystackService from '../../../../services/paymentProcessors/paystack.service';
 import { IRequest } from '../../../../types/global';
 import { handleResponse } from '../../../../utils/helpers';
 import { handleReqSearch } from '../../../../utils/queryHelpers';
-import { hasAccessToMarketplaces } from '../../../../utils/queryHelpers/helpers';
-import { PartnerModel } from '../../partner/partner.model';
 import BankInfoModel from '../bankInfo.model';
 import {
   addBankAccountSchema,
   resolveBankAccountSchema,
 } from '../bankInfo.policy';
-
-const getPartnerId = async (
-  req: IRequest
-): Promise<{
-  success: boolean;
-  status?: number;
-  message?: string;
-  partnerId?: ObjectId;
-}> => {
-  const { user } = req;
-
-  const { Partner: partnerId } = user;
-
-  const { partner_id } = handleReqSearch(req, {
-    partner_id: 'string',
-  });
-
-  if (!partnerId && !partner_id)
-    return {
-      success: false,
-      message: 'partner is required',
-      status: 400,
-    };
-
-  if (partnerId) {
-    return { partnerId, success: true };
-  }
-
-  try {
-    if (!req.isUserTopLevelAdmin) {
-      const partner = await PartnerModel.findById(partner_id);
-      if (!partner) {
-        return {
-          success: false,
-          message: 'partner does not exist',
-          status: 404,
-        };
-      }
-      if (!hasAccessToMarketplaces(req, partner.marketplaces))
-        return {
-          success: false,
-          message: 'forbidden',
-          status: 403,
-        };
-    }
-
-    return {
-      partnerId: (partnerId || partner_id) as unknown as ObjectId,
-      success: true,
-    };
-  } catch (err) {
-    return {
-      success: false,
-      message: 'error validating request',
-      status: 500,
-    };
-  }
-};
+import { getPartnerId } from '../bankInfo.utils';
 
 export const resolveAccountNumber = async (req: IRequest, res: Response) => {
   type dataType = z.infer<typeof resolveBankAccountSchema>;
@@ -164,14 +104,90 @@ export const addBankAccount = async (req: IRequest, res: Response) => {
 export const listBankAccounts = async (req: IRequest, res: Response) => {
   try {
     const { success, message, partnerId, status } = await getPartnerId(req);
+    const { status: accountStatus } = handleReqSearch(req, {
+      status: 'string',
+    });
+
+    if (
+      accountStatus &&
+      !['enabled', 'disabled', 'all'].includes(accountStatus)
+    ) {
+      return handleResponse(res, 'status can be enabled, disabled or all', 400);
+    }
 
     if (!success) return handleResponse(res, message, status);
+
     const bankAccounts = await BankInfoModel.find({
       Partner: partnerId,
+      ...(accountStatus && accountStatus === 'enabled'
+        ? { isDisabled: false }
+        : accountStatus === 'disabled'
+        ? { isDisabled: true }
+        : {}),
     });
 
     return handleResponse(res, { data: bankAccounts });
   } catch (err) {
     handleResponse(res, 'error listing bank accounts', 500, err);
+  }
+};
+
+export const disableBankAccount = async (req: IRequest, res: Response) => {
+  const { bankAccountId } = req.params;
+
+  try {
+    const { success, message, status, partnerId } = await getPartnerId(req);
+
+    if (!success) return handleResponse(res, message, status);
+
+    const bankAccount = await BankInfoModel.findById(bankAccountId);
+
+    if (!bankAccount) {
+      return handleResponse(res, 'bank account not found', 404);
+    }
+
+    if (bankAccount.Partner.toString() !== partnerId.toString()) {
+      return handleResponse(res, 'forbidden', 403);
+    }
+
+    if (!bankAccount.isDisabled) {
+      bankAccount.isDisabled = true;
+
+      await bankAccount.save();
+    }
+
+    return handleResponse(res, { data: bankAccount });
+  } catch (err) {
+    handleResponse(res, 'error disabling bank account', 500, err);
+  }
+};
+
+export const enableBankAccount = async (req: IRequest, res: Response) => {
+  const { bankAccountId } = req.params;
+
+  try {
+    const { success, message, status, partnerId } = await getPartnerId(req);
+
+    if (!success) return handleResponse(res, message, status);
+
+    const bankAccount = await BankInfoModel.findById(bankAccountId);
+
+    if (!bankAccount) {
+      return handleResponse(res, 'bank account not found', 404);
+    }
+
+    if (bankAccount.Partner.toString() !== partnerId.toString()) {
+      return handleResponse(res, 'forbidden', 403);
+    }
+
+    if (bankAccount.isDisabled) {
+      bankAccount.isDisabled = false;
+
+      await bankAccount.save();
+    }
+
+    return handleResponse(res, { data: bankAccount });
+  } catch (err) {
+    handleResponse(res, 'error enabling bank account', 500, err);
   }
 };
