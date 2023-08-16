@@ -27,6 +27,7 @@ const payoutSchema = new Schema<PayoutAttributes>(
       type: Schema.Types.ObjectId,
       ref: 'User',
     },
+    finalizedAt: Date,
   },
   { timestamps: true }
 );

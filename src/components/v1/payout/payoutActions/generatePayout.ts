@@ -74,7 +74,7 @@ export const generatePayout = async (req: IRequest, res: Response) => {
       amount: totalAmount,
       marketplace,
       currency: platform.marketplaces.find((m) => m.code === marketplace)
-        ?.currency,
+        ?.currencyCode,
       InitiatedBy: req.user._id,
     }).save({ session });
 

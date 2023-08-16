@@ -32,4 +32,5 @@ export interface PayoutAttributes {
   payoutType: (typeof platformConstants.payoutTypes)[number];
   InitiatedBy?: ObjectId;
   finalizedBy?: ObjectId;
+  finalizedAt?: Date;
 }
