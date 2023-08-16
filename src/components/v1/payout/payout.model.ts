@@ -19,7 +19,7 @@ const payoutSchema = new Schema<PayoutAttributes>(
       enum: platformConstants.payoutTypes,
       default: 'manual',
     },
-    initiatedBy: {
+    InitiatedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
     },

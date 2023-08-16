@@ -30,6 +30,6 @@ export interface PayoutAttributes {
   currency: string;
   status: (typeof platformConstants.payoutStatuses)[number];
   payoutType: (typeof platformConstants.payoutTypes)[number];
-  initiatedBy?: ObjectId;
+  InitiatedBy?: ObjectId;
   finalizedBy?: ObjectId;
 }

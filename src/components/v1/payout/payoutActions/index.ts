@@ -54,6 +54,7 @@ export const getPayouts = async (req: IRequest, res: Response) => {
         Payout: payout_id,
       })
         .populate('Partner', 'name')
+        .populate('InitiatedBy', 'name')
         .populate('items.Purchase');
 
       return handleResponse(res, {
