@@ -5,16 +5,19 @@ import platformConstants from '../../../../config/platformConstants';
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
 import { handleResponse, validateObjectId } from '../../../../utils/helpers';
-import { handleReqSearch } from '../../../../utils/queryHelpers';
+import {
+  getMarketplaceQuery,
+  handleReqSearch,
+} from '../../../../utils/queryHelpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { PartnerPayoutModel, PayoutModel } from '../payout.model';
 import { PayoutAttributes } from '../payout.types';
 
 export const getPayouts = async (req: IRequest, res: Response) => {
-  const { status, markeplace, type, payout_id } = handleReqSearch(req, {
+  const { status, marketplace, type, payout_id } = handleReqSearch(req, {
     status: 'string',
     type: 'string',
-    markeplace: 'string',
+    marketplace: 'string',
     payout_id: 'string',
   });
   const paginate = handlePaginate(req);
@@ -30,7 +33,7 @@ export const getPayouts = async (req: IRequest, res: Response) => {
   const query: FilterQuery<PayoutAttributes & Document> = {
     ...(status && { status }),
     ...(type && { type }),
-    ...(markeplace && { marketplace: markeplace }),
+    ...getMarketplaceQuery(req, marketplace),
     ...(payout_id && { _id: payout_id }),
   };
 
