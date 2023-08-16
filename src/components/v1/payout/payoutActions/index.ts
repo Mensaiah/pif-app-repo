@@ -38,23 +38,22 @@ export const getPayouts = async (req: IRequest, res: Response) => {
   };
 
   try {
-    const payoutList = await PayoutModel.find(
-      query,
-      null,
-      paginate.queryOptions
-    ).lean();
+    const payoutList = payout_id
+      ? await PayoutModel.findOne({ _id: payout_id })
+          .populate('InitiatedBy', 'name')
+          .lean()
+      : await PayoutModel.find(query, null, paginate.queryOptions).lean();
 
     if (payout_id) {
-      if (!payoutList.length) {
+      if (!payoutList) {
         return handleResponse(res, 'payout not found', 404);
       }
-      const payout = payoutList[0];
+      const payout = payoutList;
 
       const partnerPayouts = await PartnerPayoutModel.find({
         Payout: payout_id,
       })
         .populate('Partner', 'name')
-        .populate('InitiatedBy', 'name')
         .populate('items.Purchase');
 
       return handleResponse(res, {
