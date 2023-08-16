@@ -566,5 +566,5 @@ Authorization: Bearer {{token}}
 GET {{api}}/wallets?marketplace=ng&has_money=true
 Authorization: Bearer {{token}}
 ### payouts
-GET {{api}}/payouts
+GET {{api}}/payouts?payout_id=64dcd4b12aa801864012f568
 Authorization: Bearer {{token}}
