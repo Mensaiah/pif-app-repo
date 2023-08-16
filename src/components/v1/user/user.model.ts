@@ -175,6 +175,7 @@ export const UserInviteSchema = new Schema<UserInviteAttributes>(
   {
     code: { type: String, required: true },
     role: { type: String, required: true },
+    adminName: String,
     userType: { type: String, required: true },
     email: { type: String, lowercase: true, trim: true, required: true },
     invitedBy: { type: ObjectId, ref: 'User' },

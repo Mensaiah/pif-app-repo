@@ -102,6 +102,7 @@ export interface UserInviteAttributes {
   role: string;
   email: string;
   invitedBy: ObjectId;
+  adminName?: string;
   marketplaces?: string[];
   Partner?: ObjectId;
   PartnerPos?: ObjectId;
