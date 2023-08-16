@@ -24,11 +24,16 @@ export const getPurchases = async (req: IRequest, res: Response) => {
     user_id: 'string',
     currency: 'string',
     search_query: 'string',
+    purchase_id: 'string',
   });
 
   const paginate = handlePaginate(req);
 
   const timeFilter = handleTimeFilter(req);
+
+  if (queryParams.purchase_id && !validateObjectId(queryParams.purchase_id)) {
+    return handleResponse(res, { data: [] });
+  }
 
   const userQuery = await getUserQuery(req, queryParams.user_id);
 
@@ -45,6 +50,20 @@ export const getPurchases = async (req: IRequest, res: Response) => {
   }
 
   if (req.sendEmptyData) return handleResponse(res, { data: [] });
+
+  if (queryParams.purchase_id) {
+    const purchase = await PurchaseModel.findById(queryParams.purchase_id)
+      .populate('SettlementStart')
+      .populate('SettlementFinish')
+      .populate('Partner', 'name')
+      .populate('Product', 'name');
+
+    if (!purchase) {
+      return handleResponse(res, 'purchase not found', 404);
+    }
+
+    return handleResponse(res, { data: purchase });
+  }
 
   const commonSearchConditions =
     queryParams.search_query && validateObjectId(queryParams.search_query)
