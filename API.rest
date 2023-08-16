@@ -321,7 +321,7 @@ Authorization: Bearer {{token}}
   "headquarterCity": "Abuja",
   "headquarterCountry": "Nigeria",
   "headquarterZipCode": "242201",
-  "marketplaces": ["de"],
+  "marketplaces": ["ng"],
   "accountName": "Gift Enterprise",
   "accountNumber": "0123456789",
   "bankCountry": "Nigeria",
@@ -543,7 +543,7 @@ Authorization: Bearer {{token}}
 GET {{api}}/bank-info/list-banks?driver=paystack&marketplace=ng
 Authorization: Bearer {{token}}
 ###
-POST {{api}}/bank-info/resolve-account-number
+POST {{api}}/bank-info/resolve-account-number?partner_id=64dbf05ceb8530601705fde2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -566,7 +566,7 @@ Authorization: Bearer {{token}}
   "bankCode": "058"
 }
 ###
-GET {{api}}/bank-info?partner_id=64b1101d3e5b42da83eb9425
+GET {{api}}/bank-info?partner_id=64dbf05ceb8530601705fde2
 Authorization: Bearer {{token}}
 ###
 GET {{api}}/platform/gen-key-hash
