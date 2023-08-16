@@ -69,6 +69,14 @@ const addProduct = async (req: IRequest, res: Response) => {
         500
       );
 
+    if (marketplace && marketplace === 'ng' && price < 50) {
+      return handleResponse(
+        res,
+        'Price for products in the Nigerian marketplace must be greater than 50',
+        400
+      );
+    }
+
     const sanitizedMarketplace = filterMarketplaces([marketplace], platform);
 
     if (!sanitizedMarketplace.length)
