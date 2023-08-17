@@ -18,6 +18,12 @@ export const addCategorySchema = z
       })
     ),
   })
+  .refine(({ iconUrl, iconName }) => {
+    if (iconUrl && !iconName) return false;
+    if (!iconUrl && iconName) return false;
+
+    return true;
+  })
   .refine(
     ({ name }) => {
       if (checkLang(name)) return true;
@@ -44,6 +50,12 @@ export const updateCategorySchema = z
       .optional(),
     iconName: z.string().optional(),
     iconUrl: z.string().optional(),
+  })
+  .refine(({ iconUrl, iconName }) => {
+    if (iconUrl && !iconName) return false;
+    if (!iconUrl && iconName) return false;
+
+    return true;
   })
   .refine(
     ({ name }) => {
