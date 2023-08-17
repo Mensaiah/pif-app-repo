@@ -7,7 +7,7 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
+import { PartnerPosModel } from '../../discountCode/partnerPos/partnerPost.model';
 import { PartnerModel } from '../partner.model';
 
 const getPartnerPos = async (req: IRequest, res: Response) => {

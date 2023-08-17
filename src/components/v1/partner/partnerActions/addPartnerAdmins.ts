@@ -11,8 +11,8 @@ import {
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { sendPartnerAdminInviteMail } from '../../notification/notificationUtils';
-import { PartnerPosAttributes } from '../../partnerPos/partnerPos.types';
-import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
+import { PartnerPosAttributes } from '../../discountCode/partnerPos/partnerPos.types';
+import { PartnerPosModel } from '../../discountCode/partnerPos/partnerPost.model';
 import { UserModel, UserInviteModel } from '../../user/user.model';
 import { createInviteLink } from '../../user/user.utils';
 import { PartnerModel } from '../partner.model';

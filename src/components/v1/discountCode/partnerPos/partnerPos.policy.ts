@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { isValidId } from '../../../utils/validators';
+import { isValidId } from '../../../../utils/validators';
 
 export const addPartnerPosSchema = z
   .object({

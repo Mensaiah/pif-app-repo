@@ -8,8 +8,8 @@ import {
   hasAccessToPartner,
 } from '../../../../utils/queryHelpers/helpers';
 import { useWord } from '../../../../utils/wordSheet';
-import { addPartnerPosSchema } from '../../partnerPos/partnerPos.policy';
-import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
+import { addPartnerPosSchema } from '../../discountCode/partnerPos/partnerPos.policy';
+import { PartnerPosModel } from '../../discountCode/partnerPos/partnerPost.model';
 import { PartnerModel } from '../partner.model';
 
 const addPartnerPos = async (req: IRequest, res: Response) => {

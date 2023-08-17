@@ -16,6 +16,8 @@ export interface CategoryAttributes extends Document {
   deletedAt?: Date;
   marketplaces: Array<string>;
   Icon?: string;
+  iconName?: string;
+  iconUrl?: string;
 }
 export interface InternalCategoryAttributes extends Document {
   old_id: number;

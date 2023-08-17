@@ -20,6 +20,8 @@ const categorySchema = new Schema<CategoryAttributes>(
     isFunctional: Boolean,
     type: Number,
     Icon: String,
+    iconName: String,
+    iconUrl: String,
     isBirthday: Boolean,
     deletedAt: Date,
     marketplaces: [String],
@@ -59,7 +61,11 @@ export const InternalCategoryModel = model<InternalCategoryAttributes>(
 
 const categoryIconSchema = new Schema<CategoryIconAttributes>(
   {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+      unique: true,
+    },
     svg: String,
     url: String,
     isDisabled: Boolean,

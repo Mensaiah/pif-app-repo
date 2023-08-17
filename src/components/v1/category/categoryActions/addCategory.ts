@@ -19,20 +19,20 @@ const addCategory = async (req: IRequest, res: Response) => {
   const {
     name,
     isEnabled,
-    isFunctional,
     isBirthday,
     isMain,
     isPromoted,
-    isSupplierList,
-    type,
-    iconSvg,
     iconUrl,
-    iconifyName,
+    iconName,
     marketplaces,
   }: dataType = req.body;
 
   try {
     const langQuery = handleLangSearch(name, 'name.value');
+
+    const iconExists = await CategoryModel.findOne({ iconName });
+
+    if (!iconExists) return handleResponse(res, 'iconName must exist', 400);
 
     const existingCategory = await CategoryModel.findOne(langQuery);
 
@@ -59,26 +59,13 @@ const addCategory = async (req: IRequest, res: Response) => {
 
     const newCategory = new CategoryModel({
       isEnabled,
-      isFunctional,
       isBirthday,
-      isMain,
       isPromoted,
-      isSupplierList,
-      type,
+      iconName,
+      iconUrl,
+      isMain,
       marketplaces: sanitizedMarketplaces,
     });
-
-    if (iconifyName) {
-      newCategory.Icon = iconifyName;
-    }
-
-    if (iconSvg) {
-      newCategory.Icon = iconSvg;
-    }
-
-    if (iconUrl) {
-      newCategory.Icon = iconUrl;
-    }
 
     newCategory.name = addSupportedLang(name, newCategory.name);
 
