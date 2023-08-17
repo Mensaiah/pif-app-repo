@@ -10,7 +10,7 @@ import {
 import { useWord } from '../../../../utils/wordSheet';
 import PlatformModel from '../../platform/platform.model';
 import { filterMarketplaces } from '../../platform/platform.utils';
-import { CategoryModel } from '../category.model';
+import { CategoryIconModel, CategoryModel } from '../category.model';
 import { updateCategorySchema } from '../category.policy';
 
 const editCategory = async (req: IRequest, res: Response) => {
@@ -57,7 +57,7 @@ const editCategory = async (req: IRequest, res: Response) => {
     if ('isPromoted' in req.body) existingCategory.isPromoted = isPromoted;
 
     if (iconName) {
-      const iconExists = await CategoryModel.findOne({ iconName });
+      const iconExists = await CategoryIconModel.findOne({ name: iconName });
 
       if (!iconExists) return handleResponse(res, 'iconName must exist', 400);
 
