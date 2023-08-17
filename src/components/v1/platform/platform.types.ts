@@ -35,8 +35,25 @@ export interface PlatformAttributes {
 export interface DashboardCardData {
   name: string;
   value: number;
+  difference: number;
   percentageChange: number;
+}
+
+export interface DashboardGraphData {
+  title: string;
+  xAxis: Array<string>;
+  yAxis: Array<{
+    label: string;
+    data: Array<string>;
+  }>;
 }
 export interface DashboardData {
   cards: Array<DashboardCardData>;
+  graphs: Array<DashboardGraphData>;
+  tables: Array<any>;
+}
+
+export interface TimeFilter {
+  $gte?: Date;
+  $lte?: Date;
 }
