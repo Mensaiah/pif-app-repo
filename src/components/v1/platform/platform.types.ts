@@ -39,18 +39,14 @@ export interface DashboardCardData {
   percentageChange: number;
 }
 
-export interface DashboardGraphData {
-  title: string;
-  xAxis: Array<string>;
-  yAxis: Array<{
-    label: string;
-    data: Array<string>;
-  }>;
-}
+export type DashboardChartData = Record<string, Array<Record<string, string>>>;
+
+export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
 export interface DashboardData {
   cards: Array<DashboardCardData>;
-  graphs: Array<DashboardGraphData>;
+  charts: Array<DashboardChartData>;
   tables: Array<any>;
+  lowStockAlert: Array<LowStockAlertData>;
 }
 
 export interface TimeFilter {

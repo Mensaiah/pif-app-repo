@@ -2,7 +2,8 @@ import { Response } from 'express';
 
 import { IRequest } from '../../../../types/global';
 import getDashboardCardsData from '../../../../utils/getDashboardCardsData';
-import { getDashboardGraphData } from '../../../../utils/getDashboardGraphData';
+import { getDashboardChartData } from '../../../../utils/getDashboardChartData';
+import getLowStockProduct from '../../../../utils/getLowStockProduct';
 import { handleTimeFilter } from '../../../../utils/handleTimeFilter';
 import { handleTimeFilterInverse } from '../../../../utils/handleTimeFilterInverse';
 import { handleResponse } from '../../../../utils/helpers';
@@ -24,7 +25,8 @@ export const getDashboardData = async (req: IRequest, res: Response) => {
         timeFilterInverse,
         marketplace
       ),
-      graphs: await getDashboardGraphData(timeFilter),
+      charts: await getDashboardChartData(timeFilter),
+      lowStockAlert: await getLowStockProduct(req),
       tables: [],
     };
 

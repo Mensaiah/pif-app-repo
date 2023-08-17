@@ -1,13 +1,13 @@
 import {
-  DashboardGraphData,
+  DashboardChartData,
   TimeFilter,
 } from '../components/v1/platform/platform.types';
 import PurchaseModel from '../components/v1/purchase/purchase.model';
 
 export const getSaleChart = async (
   timeFilter: TimeFilter
-): Promise<DashboardGraphData> => {
-  const aggregate = (
+): Promise<DashboardChartData> => {
+  const aggregate: Array<Record<string, string>> =
     await PurchaseModel.aggregate([
       {
         $group: {
@@ -69,34 +69,16 @@ export const getSaleChart = async (
         },
       },
       {
-        $group: {
-          _id: null,
-          marketplace: {
-            $push: '$_id',
-          },
-          redemptions: {
-            $push: '$numberOfRedemptions',
-          },
-          sales: {
-            $push: '$numberOfSales',
-          },
+        $project: {
+          _id: 0,
+          marketplace: '$_id',
+          numberOfRedemptions: 1,
+          numberOfSales: 1,
         },
       },
-    ])
-  )[0];
+    ]);
 
   return {
-    title: 'Sales Chart',
-    xAxis: aggregate.marketplace,
-    yAxis: [
-      {
-        label: 'No. of redemptions',
-        data: aggregate.redemptions,
-      },
-      {
-        label: 'Sales',
-        data: aggregate.sales,
-      },
-    ],
+    salesChart: aggregate,
   };
 };

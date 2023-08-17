@@ -1,20 +1,21 @@
-import { DashboardGraphData } from '../components/v1/platform/platform.types';
+import { DashboardChartData } from '../components/v1/platform/platform.types';
 import { UserModel } from '../components/v1/user/user.model';
 
-export const getUserGraph = async (): Promise<DashboardGraphData> => {
+export const getUserChart = async (): Promise<DashboardChartData> => {
   const currentYear = new Date().getFullYear();
-  const aggregate = (
-    await UserModel.aggregate([
-      {
-        $match: {
-          $expr: {
-            $eq: [{ $year: '$createdAt' }, currentYear],
-          },
+  const aggregate: Array<Record<string, string>> = await UserModel.aggregate([
+    {
+      $match: {
+        $expr: {
+          $eq: [{ $year: '$createdAt' }, currentYear],
         },
       },
-      {
-        $group: {
-          _id: {
+    },
+    {
+      $group: {
+        _id: {
+          monthNumber: { $month: '$createdAt' },
+          month: {
             $switch: {
               branches: [
                 {
@@ -54,27 +55,26 @@ export const getUserGraph = async (): Promise<DashboardGraphData> => {
               default: 'Unknown',
             },
           },
-          count: { $sum: 1 },
         },
+        count: { $sum: 1 },
       },
-      {
-        $group: {
-          _id: null,
-          months: { $push: '$_id' },
-          data: { $push: '$count' },
-        },
+    },
+    {
+      $project: {
+        _id: 0,
+        month: '$_id.month',
+        monthNumber: '$_id.monthNumber',
+        count: '$count',
       },
-    ])
-  )[0];
+    },
+    {
+      $sort: {
+        monthNumber: 1,
+      },
+    },
+  ]);
 
   return {
-    title: 'Active User',
-    xAxis: aggregate.months,
-    yAxis: [
-      {
-        label: 'New Registrations',
-        data: aggregate.data,
-      },
-    ],
+    userCount: aggregate,
   };
 };
