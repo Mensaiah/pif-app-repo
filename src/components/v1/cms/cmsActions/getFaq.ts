@@ -9,11 +9,13 @@ export const getFaq = async (req: IRequest, res: Response) => {
   const { faqId } = req.params;
 
   try {
-    const faq = await (faqId ? FaqModel.findById(faqId) : FaqModel.find());
+    const faq = faqId ? await FaqModel.findById(faqId) : await FaqModel.find();
 
     if (!faq) return handleResponse(res, 'error getting faq', 404);
 
-    return handleResponse(res, faq);
+    return handleResponse(res, {
+      data: faq,
+    });
   } catch (err) {
     return handleResponse(
       res,
