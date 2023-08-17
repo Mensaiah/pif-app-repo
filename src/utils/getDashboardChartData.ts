@@ -10,9 +10,9 @@ export const getDashboardChartData = async (
   timeFilter: TimeFilter
 ): Promise<Array<DashboardChartData>> => {
   try {
-    const chart = await Promise.all([getUserChart(), getSaleChart(timeFilter)]);
+    const [userCount, salesCount] = await Promise.all([getUserChart(), getSaleChart(timeFilter)]);
 
-    return chart;
+    return { ...userCount , };
   } catch (err) {
     throw new Error(err);
   }

@@ -44,7 +44,7 @@ export type DashboardChartData = Record<string, Array<Record<string, string>>>;
 export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
 export interface DashboardData {
   cards: Array<DashboardCardData>;
-  charts: Array<DashboardChartData>;
+  charts: DashboardChartData;
   tables: Array<any>;
   lowStockAlert: Array<LowStockAlertData>;
 }
