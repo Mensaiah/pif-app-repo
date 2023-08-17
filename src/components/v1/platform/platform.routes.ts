@@ -35,7 +35,14 @@ import {
 
 const router = Router();
 
-router.get('/', getPlatformData);
+router.get(
+  '/',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  getPlatformData
+);
+router.get('/public', getPlatformData);
 router.post(
   '/marketplace',
   validateTokenMiddleware,
