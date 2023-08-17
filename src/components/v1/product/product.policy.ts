@@ -339,25 +339,21 @@ export const addProductSplitPriceSchema = z
     code: z.string(),
     discountType: z.enum(['fixed', 'percentage']),
     value: z.number(),
-    minimumOrderAmount: z.number(),
-    maximumUseCount: z.number(),
-    maximumUsePerCustomer: z.number(),
-    validityStart: z.string(),
-    validityEnd: z.string(),
+    minimumOrderAmount: z.number().optional(),
+    maximumUseCount: z.number().optional(),
+    maximumUsePerCustomer: z.number().optional(),
+    validityStart: z.string().optional(),
+    validityEnd: z.string().optional(),
   })
   .refine(
     ({ validityStart, validityEnd }) => {
-      if (
-        (!validityStart && !validityEnd) ||
-        !validateDate(validityStart) ||
-        !validateDate(validityEnd)
-      )
+      if (!validateDate(validityStart) || !validateDate(validityEnd))
         return false;
 
       return true;
     },
     {
-      message: 'either validity start or end is missing or has an invalid date',
+      message: 'either validity start or end date is invalid.',
     }
   );
 
