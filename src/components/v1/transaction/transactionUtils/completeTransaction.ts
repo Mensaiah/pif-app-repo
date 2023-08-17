@@ -49,7 +49,6 @@ const completeTransaction = async (
             'contact.phone': paymentRecord.recipientPhonePrefix,
             'contact.phonePrefix': paymentRecord.recipientPhoneNumber,
           },
-          { pifId: paymentRecord.recipientPifId },
         ],
       },
       'id'

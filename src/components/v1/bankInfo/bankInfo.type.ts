@@ -8,4 +8,5 @@ export interface BankInfoAttributes {
   currency: string;
   accountName: string;
   accountNumber: string;
+  isDisabled?: boolean;
 }

@@ -11,6 +11,10 @@ const bankInfoSchema = new Schema<BankInfoAttributes>(
     currency: String,
     accountName: String,
     accountNumber: String,
+    isDisabled: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

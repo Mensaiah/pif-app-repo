@@ -15,19 +15,22 @@ export const handleTimeFilter = (req: IRequest): TimeFilter => {
   });
 
   const currentDate = new Date();
-  const startOfDay = new Date(currentDate);
-  startOfDay.setHours(0, 0, 0, 0);
 
   let startDate: Date | null = null;
   let endDate: Date | null = null;
 
-  if (from && to) {
+  if (from) {
     startDate = new Date(from);
+    startDate.setHours(0, 0, 0, 0); // Adjust to the start of the day
+  }
+  if (to) {
     endDate = new Date(to);
+    endDate.setHours(23, 59, 59, 999); // Adjust to the end of the day
   } else {
     switch (duration) {
       case 'today':
-        startDate = startOfDay;
+        startDate = new Date(currentDate);
+        startDate.setHours(0, 0, 0, 0);
         endDate = currentDate;
         break;
       case 'this_week':
@@ -57,8 +60,6 @@ export const handleTimeFilter = (req: IRequest): TimeFilter => {
   }
 
   // Construct the MongoDB time filter
-  if (!startDate && !endDate) return {};
-
   const timeFilter: TimeFilter = {};
   if (startDate) {
     timeFilter.$gte = startDate;

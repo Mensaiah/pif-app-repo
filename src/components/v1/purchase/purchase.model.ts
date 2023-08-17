@@ -48,6 +48,8 @@ const purchaseSchema = new Schema<PurchaseAttributes & Document>(
       type: Schema.Types.ObjectId,
       ref: 'Settlement',
     },
+    startSettlementPaidAt: Date,
+    finishSettlementPaidAt: Date,
     Revenue: {
       type: Schema.Types.ObjectId,
       ref: 'Revenue',

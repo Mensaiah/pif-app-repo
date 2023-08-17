@@ -14,6 +14,8 @@ import {
 } from './bankInfo.policy';
 import {
   addBankAccount,
+  disableBankAccount,
+  enableBankAccount,
   listBankAccounts,
   resolveAccountNumber,
 } from './bankInfoActions';
@@ -46,6 +48,21 @@ router.post(
   policyMiddleware(addBankAccountSchema),
   cannotBeCustomerMiddleware,
   addBankAccount
+);
+
+router.post(
+  '/:bankAccountId/enable',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  enableBankAccount
+);
+router.post(
+  '/:bankAccountId/disable',
+  validateTokenMiddleware,
+  requireAuthMiddleware,
+  cannotBeCustomerMiddleware,
+  disableBankAccount
 );
 
 router.get(

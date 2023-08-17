@@ -1,6 +1,7 @@
 import currency from 'currency.js';
 import mongoose, { Document } from 'mongoose';
 
+import { PartnerModel } from '../../partner/partner.model';
 import { PurchaseAttributes } from '../../purchase/purchase.types';
 import RevenueModel from '../../revenue/revenue.model';
 import SettlementModel from '../../settlement/settlement.model';
@@ -63,11 +64,20 @@ const sortTxCashFlows = async (
           marketplace: purchase.marketplace,
         }).session(session);
 
+        const partnerInfo = await PartnerModel.findById(
+          purchase.Partner
+        ).session(session);
+
+        if (!partnerInfo) {
+          throw new Error('Partner not found');
+        }
+
         if (!partnerWallet) {
           partnerWallet = await new WalletModel({
             Partner: purchase.Partner,
             currency: tx.currency,
             marketplace: purchase.marketplace,
+            amountThreshold: partnerInfo.settlingDetails?.amountThreshold || 0,
           }).save({ session });
         }
 

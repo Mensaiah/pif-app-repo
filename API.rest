@@ -2,9 +2,8 @@
 @server = http://localhost:3000
 @api = {{server}}/v1/en
 
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiOTY5YTIyOGQtN2NlYi00Y2NmLTlhZWQtZTI0MDQxODViOGYyIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJhZG1pbiIsInNlc3Npb25JZCI6IjdmNjdhZGYwLTcyMjMtNDk4ZS04YzNhLWNhNGNjOGQxNjllYSIsInJlZiI6IjY0ZGI1NGM2YmIzMmY2MmMxYjA0ZmQzOCIsImlhdCI6MTY5MjI1Mzk4NywiZXhwIjoxNjkyNDI2Nzg3LCJpc3MiOiJQSUYtZGV2In0.nZhNooD5KYuwcEaZDRMf_YOHlW5o1e-YjkjEHumAUGY
-
-# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MTMyMDMwOCwiZXhwIjoxNjkxNDkzMTA4LCJpc3MiOiJQSUYtZGV2In0.h97_Im-g3IcmUfuuGbLtx9Up7MdXfurrJsNqeMwf_A0
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiZjBjNmM3ZWUtYmMyNS00NjA5LTk5NWYtNGRlNjAxNjBiNTdjIiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJwbGF0Zm9ybS1hZG1pbiIsInJvbGUiOiJzdXBlci1hZG1pbiIsInNlc3Npb25JZCI6ImUzYjM3ZDg1LTNjNzQtNDgwYi1iOTEwLWM2YzMwMGI4M2MzZSIsInJlZiI6IjY0YWYyNzI5NDk1YjcyOGI1ODNlMzBlYyIsImlhdCI6MTY5MjE5NTIzMCwiZXhwIjoxNjkyMzY4MDMwLCJpc3MiOiJQSUYtZGV2In0.wmDg-8XeN2LcA64eMmCO7scNWac6vEWKQJvc43fgmXc
+# @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRoS2V5IjoiMDRjMDA2Y2YtMTk4ZC00N2NmLTg4ZDktYzVmMTlhYWRkNjM2IiwiZGV2aWNlSWQiOiI0YTdiZDM0MTk4ZWJlMmVmMjgzNjAzYzU3ZWQ2MzZkMzI0Y2FmOTQ3MzhhNGFlYzFjNTFhMGQ0N2Y0NTQyOTJlIiwidXNlclR5cGUiOiJjdXN0b21lciIsInNlc3Npb25JZCI6ImJmMmVlMTg2LTRlZTYtNDBiMy1hZWIwLWE4NzUyMDg0ZWUyNyIsInJlZiI6IjY0Y2FiNThhYTFlMGExMmM5OGY5ZGNkMiIsInJvbGUiOiJjdXN0b21lciIsImlhdCI6MTY5MjE5NzA4OSwiZXhwIjoxNjkyMzY5ODg5LCJpc3MiOiJQSUYtZGV2In0.KGBmIcyzZ9fisHwOAl9pChGQcoXxpyxa3v5ECWCvy1k
 
 GET {{server}}
 
@@ -164,7 +163,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8103498784",
+  "phone": "8063107175",
   "marketplace": "ng"
 }
 
@@ -196,12 +195,12 @@ POST {{api}}/auth/finalize-m-signup
 Content-Type: application/json
 
 {
- "name": "Jimoh Aweda",
+ "name": "Ishola Jamiu",
  "dob": "1990-02-20",
- "pifId":"Aweda",
+ "pifId":"highshow",
  "zipCode":"12345",
- "email": "jimohafeez738@gmail.com",
- "referenceCode": "3664ca19d7796a7f6389b618f490202"
+ "email": "isholajamiusolihu@gmail.com",
+ "referenceCode": "8564dc10c51c112b953fad7fa372676"
 }
 ### mobile finalize signup (if user signup with phone and Google or has ever received a gift before joinning the platform)
 POST {{api}}/auth/finalize-m-signup
@@ -244,7 +243,7 @@ Content-Type: application/json
 
 {
   "phonePrefix": "234",
-  "phone": "8168861541"
+  "phone": "8063107175"
 }
 
 ### mobile - reset pin
@@ -322,7 +321,7 @@ Authorization: Bearer {{token}}
   "headquarterCity": "Abuja",
   "headquarterCountry": "Nigeria",
   "headquarterZipCode": "242201",
-  "marketplaces": ["de"],
+  "marketplaces": ["ng"],
   "accountName": "Gift Enterprise",
   "accountNumber": "0123456789",
   "bankCountry": "Nigeria",
@@ -461,32 +460,18 @@ POST {{api}}/tx/initiate
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
-# {
-#   "idempotencyKey": "0cca28a2-2219-4b03-8607-98e971484046",
-#   "driver": "paystack",
-#   "items": [
-#     {
-#       "productId": "64be5c11d4deea51b30df9eb",
-#       "quantity": 1
-#     }
-#   ],
-#   "recipientPhonePrefix": "234",
-#   "recipientPhoneNumber": "8035353672",
-#   "toBeDeliveredAt": "2023-08-31T20:38:37.820Z"
-# }
 {
-  "idempotencyKey": "6b141cad-24e1-4f15-b992-7eec8c9e4c48",
+  "idempotencyKey": "96ec6f0a-b93f-4e17-b78e-1fd9cf604779",
   "items": [
     {
-      "productId": "64b55770c5cc776a57c32f76",
+      "productId": "64be36532976f1a339ed7b4d",
       "quantity": 1
     }
   ],
-  "recipientPifId": "wm543",
   "recipientPhonePrefix": "234",
-  "recipientPhoneNumber": "7065490069",
-  "message": "Just a message",
-  "toBeDeliveredAt": "2023-08-14T13:13:04.247Z",
+  "recipientPhoneNumber": "8063107175",
+  "message": "Just a gift",
+  "toBeDeliveredAt": "2023-08-24T13:13:04.247Z",
   "driver": "paystack"
 }
 
@@ -499,7 +484,7 @@ GET {{api}}/tx/payment-webhook/paystack
 GET {{api}}/purchases?product_id=64b522bfc5cc776a57c2f12b
 Authorization: Bearer {{token}}
 ### get purchases
-GET {{api}}/purchases?duration=all_time
+GET {{api}}/purchases?duration=today
 Authorization: Bearer {{token}}
 
 ### get purchases
@@ -544,7 +529,7 @@ Authorization: Bearer {{token}}
 GET {{api}}/bank-info/list-banks?driver=paystack&marketplace=ng
 Authorization: Bearer {{token}}
 ###
-POST {{api}}/bank-info/resolve-account-number
+POST {{api}}/bank-info/resolve-account-number?partner_id=64dbf05ceb8530601705fde2
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -570,6 +555,9 @@ Authorization: Bearer {{token}}
 GET {{api}}/bank-info?partner_id=64b1101d3e5b42da83eb9425
 Authorization: Bearer {{token}}
 ###
+POST {{api}}/bank-info/64d60c2bf5a6730f2b558133/enable?partner_id=64b1101d3e5b42da83eb9425
+Authorization: Bearer {{token}}
+###
 GET {{api}}/platform/gen-key-hash
 Authorization: Bearer {{token}}
 
@@ -580,4 +568,11 @@ Authorization: Bearer {{token}}
 
 ### Get dashboard Data
 GET {{api}}/platform/dashboard-data?duration=this_month
+Authorization: Bearer {{token}}
+
+### get wallets
+GET {{api}}/wallets?marketplace=ng&has_money=true
+Authorization: Bearer {{token}}
+### payouts
+GET {{api}}/payouts?payout_id=64dcd4b12aa801864012f568
 Authorization: Bearer {{token}}

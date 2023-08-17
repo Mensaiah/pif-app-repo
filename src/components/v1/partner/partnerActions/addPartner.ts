@@ -201,6 +201,7 @@ const addPartner = async (req: IRequest, res: Response) => {
 
       const newInvite = await new UserInviteModel({
         email: adminEmail,
+        adminName,
         code: uuid(),
         role: 'partner-admin',
         Partner: newPartner._id,

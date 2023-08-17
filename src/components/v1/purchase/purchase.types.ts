@@ -23,6 +23,8 @@ export interface PurchaseAttributes {
   pifIncome: number;
   SettlementStart: ObjectId;
   SettlementFinish: ObjectId;
+  startSettlementPaidAt?: Date;
+  finishSettlementPaidAt?: Date;
   Revenue: ObjectId;
   proportion: {
     proportionStart: number;
