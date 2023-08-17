@@ -1,6 +1,6 @@
 import axios from 'axios';
 import jwt from 'jsonwebtoken';
-import mongoose, { Document, mongo } from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import ms from 'ms';
 
 import appConfig from '../../../../config';
