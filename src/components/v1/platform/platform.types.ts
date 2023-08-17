@@ -31,3 +31,25 @@ export interface PlatformAttributes {
   }>;
   socials: MarketplaceAttributes['socials'];
 }
+
+export interface DashboardCardData {
+  name: string;
+  value: number;
+  difference: number;
+  percentageChange: number;
+}
+
+export type DashboardChartData = Record<string, Array<Record<string, string>>>;
+
+export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
+export interface DashboardData {
+  cards: Array<DashboardCardData>;
+  charts: Array<DashboardChartData>;
+  tables: Array<any>;
+  lowStockAlert: Array<LowStockAlertData>;
+}
+
+export interface TimeFilter {
+  $gte?: Date;
+  $lte?: Date;
+}
