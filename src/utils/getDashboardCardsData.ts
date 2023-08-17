@@ -50,7 +50,9 @@ const getDashboardCardsData = async (
     }
 
     return cards;
-  } catch (error) {}
+  } catch (err) {
+    throw new Error(err);
+  }
 };
 
 export default getDashboardCardsData;
