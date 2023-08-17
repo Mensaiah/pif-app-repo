@@ -8,11 +8,14 @@ import { getUserChart } from './getUserChartData';
 
 export const getDashboardChartData = async (
   timeFilter: TimeFilter
-): Promise<Array<DashboardChartData>> => {
+): Promise<DashboardChartData> => {
   try {
-    const [userCount, salesCount] = await Promise.all([getUserChart(), getSaleChart(timeFilter)]);
+    const [userCount, salesCount] = await Promise.all([
+      getUserChart(),
+      getSaleChart(timeFilter),
+    ]);
 
-    return { ...userCount , };
+    return { ...userCount, ...salesCount };
   } catch (err) {
     throw new Error(err);
   }
