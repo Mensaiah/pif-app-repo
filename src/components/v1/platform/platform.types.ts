@@ -41,23 +41,16 @@ export interface DashboardCardData {
 
 export type DashboardChartData = Record<string, Array<Record<string, string>>>;
 
-<<<<<<< HEAD
 export type MarketPlaceBreakdown = Record<string, number>;
 
-export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
 export interface DashboardData {
   cards: Array<DashboardCardData>;
   charts: DashboardChartData;
-  marketPlaceBreakDown: Array<MarketPlaceBreakdown>;
-=======
-export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
-export interface DashboardData {
-  cards: Array<DashboardCardData>;
-  charts: Array<DashboardChartData>;
-  tables: Array<any>;
->>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
   lowStockAlert: Array<LowStockAlertData>;
+  marketPlaceBreakDown: Array<MarketPlaceBreakdown>;
 }
+
+export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
 
 export interface TimeFilter {
   $gte?: Date;

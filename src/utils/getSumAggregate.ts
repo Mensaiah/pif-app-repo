@@ -151,11 +151,6 @@ export const getSumAggregate = async (
         },
       ])
     )[0];
-
-<<<<<<< HEAD
-    console.log('aggregate:', aggregate);
-=======
->>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
     return [
       {
         name: 'PIF Sales',
