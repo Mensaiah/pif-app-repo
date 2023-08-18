@@ -22,9 +22,9 @@ const getCategories = async (req: IRequest, res: Response) => {
 
   const query: FilterQuery<CategoryAttributes & Document> = {
     ...(userType !== 'platform-admin' && {
-      isEnabled: true,
       $or: [{ deletedAt: null }, { deletedAt: { $exists: false } }],
     }),
+    isEnabled: true,
     $and: [
       { 'marketplaces.0': { $exists: true } },
       {
