@@ -13,11 +13,15 @@ export const getCountAggregate = async (
   name: string,
   Model: Model<any>,
   timeFilter: TimeFilter,
-  inverseTimeFiler: TimeFilter
+  inverseTimeFiler: TimeFilter,
+  query: Record<string, string>
 ): Promise<DashboardCardData> => {
   try {
     const aggregate = (
       await Model.aggregate([
+        {
+          $match: query,
+        },
         {
           $group: {
             _id: null,
@@ -48,7 +52,7 @@ export const getCountAggregate = async (
                 },
               },
             },
-            previous: {
+            previousValue: {
               $sum: {
                 $cond: {
                   if: {

@@ -152,6 +152,7 @@ export const getSumAggregate = async (
       ])
     )[0];
 
+    console.log('aggregate:', aggregate);
     return [
       {
         name: 'PIF Sales',

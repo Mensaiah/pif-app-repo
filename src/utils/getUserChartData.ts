@@ -3,7 +3,7 @@ import { UserModel } from '../components/v1/user/user.model';
 
 export const getUserChart = async (): Promise<DashboardChartData> => {
   const currentYear = new Date().getFullYear();
-  const aggregate: Array<Record<string, string>> = await UserModel.aggregate([
+  const aggregate: Array<Record<string, string | number>> = await UserModel.aggregate([
     {
       $match: {
         $expr: {
@@ -73,8 +73,32 @@ export const getUserChart = async (): Promise<DashboardChartData> => {
       },
     },
   ]);
+  const result = aggregate;
+  const months = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const counts = Array(12).fill(0);
+  result.forEach(({ monthNumber, count }) => {
+    counts[Number(monthNumber) - 1] = count;
+  });
+
+  const output = months.map((month, i) => ({
+    month,
+    count: counts[i],
+  }));
 
   return {
-    userCount: aggregate,
+    userCount: output,
   };
 };

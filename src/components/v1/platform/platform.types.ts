@@ -41,11 +41,13 @@ export interface DashboardCardData {
 
 export type DashboardChartData = Record<string, Array<Record<string, string>>>;
 
+export type MarketPlaceBreakdown = Record<string, number>;
+
 export type LowStockAlertData = Record<string, Array<Record<string, string>>>;
 export interface DashboardData {
   cards: Array<DashboardCardData>;
   charts: DashboardChartData;
-  tables: Array<any>;
+  marketPlaceBreakDown: Array<MarketPlaceBreakdown>;
   lowStockAlert: Array<LowStockAlertData>;
 }
 

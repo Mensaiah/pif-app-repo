@@ -18,12 +18,15 @@ const getDashboardCardsData = async (
 ): Promise<Array<DashboardCardData>> => {
   try {
     let cards: Array<DashboardCardData> = await Promise.all([
-      getCountAggregate('Users', UserModel, timeFilter, timeFilterInverse),
+      getCountAggregate('Users', UserModel, timeFilter, timeFilterInverse, {
+        userType: 'customer',
+      }),
       getCountAggregate(
         'Suppliers',
         PartnerModel,
         timeFilter,
-        timeFilterInverse
+        timeFilterInverse,
+        {}
       ),
       {
         name: 'Unresolved tickets',

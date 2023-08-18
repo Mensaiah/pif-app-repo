@@ -10,6 +10,7 @@ export const getGrowthBreakdown = (
   previousValue: number
 ): GrowthBreakdown => {
   const difference = currentValue - previousValue;
+
   const percentageChange = ((difference / (previousValue || 1)) * 100).toFixed(
     2
   );

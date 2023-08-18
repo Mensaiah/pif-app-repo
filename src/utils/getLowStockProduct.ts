@@ -9,15 +9,7 @@ const getLowStockProduct = async (
     {
       $project: {
         _id: 0,
-        name: {
-          $filter: {
-            input: '$name',
-            as: 'nameItem',
-            cond: {
-              $eq: ['$$nameItem.lang', req.lang],
-            },
-          },
-        },
+        name: 1,
         quantity: 1,
         quantityAlert: 1,
       },
@@ -27,18 +19,10 @@ const getLowStockProduct = async (
         $expr: {
           $and: [
             { $ne: ['$quantityAlert', 0] },
+            { $ne: ['$quantity', -1] },
             { $lte: ['$quantity', '$quantityAlert'] },
           ],
         },
-      },
-    },
-    {
-      $project: {
-        name: {
-          $arrayElemAt: ['$name.value', 0],
-        },
-        quantity: 1,
-        quantityAlert: 1,
       },
     },
     {
