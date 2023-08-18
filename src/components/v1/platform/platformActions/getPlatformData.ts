@@ -1,11 +1,12 @@
 import { Response } from 'express';
 
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { consoleLog, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import PlatformModel from '../platform.model';
 
 export const getPlatformData = async (req: IRequest, res: Response) => {
+  const { path } = req;
   try {
     const platform = await PlatformModel.findOne()
       .sort({
@@ -25,7 +26,8 @@ export const getPlatformData = async (req: IRequest, res: Response) => {
     return handleResponse(res, {
       ...platform,
       marketplaces: platform.marketplaces?.map((marketplace) => {
-        delete marketplace.allowPartnersToWithdrawEarning;
+        if (path.includes('public'))
+          delete marketplace.allowPartnersToWithdrawEarning;
 
         return marketplace;
       }),

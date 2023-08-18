@@ -3,7 +3,11 @@ import { UserModel } from '../components/v1/user/user.model';
 
 export const getUserChart = async (): Promise<DashboardChartData> => {
   const currentYear = new Date().getFullYear();
+<<<<<<< HEAD
   const aggregate: Array<Record<string, string | number>> = await UserModel.aggregate([
+=======
+  const aggregate: Array<Record<string, string>> = await UserModel.aggregate([
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
     {
       $match: {
         $expr: {
@@ -73,6 +77,7 @@ export const getUserChart = async (): Promise<DashboardChartData> => {
       },
     },
   ]);
+<<<<<<< HEAD
   const result = aggregate;
   const months = [
     'January',
@@ -100,5 +105,10 @@ export const getUserChart = async (): Promise<DashboardChartData> => {
 
   return {
     userCount: output,
+=======
+
+  return {
+    userCount: aggregate,
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
   };
 };

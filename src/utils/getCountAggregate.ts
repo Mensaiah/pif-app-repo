@@ -13,16 +13,23 @@ export const getCountAggregate = async (
   name: string,
   Model: Model<any>,
   timeFilter: TimeFilter,
+<<<<<<< HEAD
   inverseTimeFiler: TimeFilter,
   query: Record<string, string>
+=======
+  inverseTimeFiler: TimeFilter
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
 ): Promise<DashboardCardData> => {
   try {
     const aggregate = (
       await Model.aggregate([
         {
+<<<<<<< HEAD
           $match: query,
         },
         {
+=======
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
           $group: {
             _id: null,
             total: {
@@ -52,7 +59,11 @@ export const getCountAggregate = async (
                 },
               },
             },
+<<<<<<< HEAD
             previousValue: {
+=======
+            previous: {
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
               $sum: {
                 $cond: {
                   if: {

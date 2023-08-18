@@ -513,7 +513,7 @@ PATCH {{api}}/received-pifs/64cabb481886e1c8b409e044/unwrap
 Authorization: Bearer {{token}}
 
 ###
-GET {{api}}/categories/marketplaces/gb
+GET {{api}}/categories/marketplaces/ng
 
 ### 
 GET {{api}}/partners/marketplaces/dk/categories/64c7d903597cad7ddb548079
@@ -575,4 +575,10 @@ GET {{api}}/wallets?marketplace=ng&has_money=true
 Authorization: Bearer {{token}}
 ### payouts
 GET {{api}}/payouts?payout_id=64dcd4b12aa801864012f568
+Authorization: Bearer {{token}}
+###
+GET {{api}}/platform/dashboard-data
+Authorization: Bearer {{token}}
+### 
+GET {{api}}/purchases?page=1&per_page=20&user_id=64cab58aa1e0a12c98f9dcd2
 Authorization: Bearer {{token}}

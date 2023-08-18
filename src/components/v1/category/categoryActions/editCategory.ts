@@ -10,7 +10,7 @@ import {
 import { useWord } from '../../../../utils/wordSheet';
 import PlatformModel from '../../platform/platform.model';
 import { filterMarketplaces } from '../../platform/platform.utils';
-import { CategoryModel } from '../category.model';
+import { CategoryIconModel, CategoryModel } from '../category.model';
 import { updateCategorySchema } from '../category.policy';
 
 const editCategory = async (req: IRequest, res: Response) => {
@@ -21,16 +21,12 @@ const editCategory = async (req: IRequest, res: Response) => {
   const {
     name,
     isEnabled,
-    isFunctional,
     isBirthday,
     isMain,
     isPromoted,
-    isSupplierList,
-    type,
-    marketplaces,
-    iconSvg,
     iconUrl,
-    iconifyName,
+    iconName,
+    marketplaces,
   }: dataType = req.body;
 
   try {
@@ -52,31 +48,23 @@ const editCategory = async (req: IRequest, res: Response) => {
       existingCategory.name = addSupportedLang(name, existingCategory.name);
     }
 
-    existingCategory.isEnabled = isEnabled;
+    if ('isEnabled' in req.body) existingCategory.isEnabled = isEnabled;
 
-    existingCategory.isFunctional = isFunctional;
+    if ('isBirthday' in req.body) existingCategory.isBirthday = isBirthday;
 
-    existingCategory.isBirthday = isBirthday;
+    if ('isMain' in req.body) existingCategory.isMain = isMain;
 
-    existingCategory.isMain = isMain;
+    if ('isPromoted' in req.body) existingCategory.isPromoted = isPromoted;
 
-    existingCategory.isPromoted = isPromoted;
+    if (iconName) {
+      const iconExists = await CategoryIconModel.findOne({ name: iconName });
 
-    existingCategory.isSupplierList = isSupplierList;
+      if (!iconExists) return handleResponse(res, 'iconName must exist', 400);
 
-    existingCategory.type = type;
-
-    if (iconifyName) {
-      existingCategory.Icon = iconifyName;
+      existingCategory.iconName = iconName;
     }
 
-    if (iconSvg) {
-      existingCategory.Icon = iconSvg;
-    }
-
-    if (iconUrl) {
-      existingCategory.Icon = iconUrl;
-    }
+    if (iconUrl) existingCategory.iconUrl = iconUrl;
 
     if (marketplaces) {
       const sanitizedMarketplaces = filterMarketplaces(marketplaces, platform);

@@ -11,7 +11,7 @@ import requireAuth from '../auth/authMiddlwares/requireAuth';
 import {
   addPartnerPosSchema,
   updatePartnerPosSchema,
-} from '../partnerPos/partnerPos.policy';
+} from '../discountCode/partnerPos/partnerPos.policy';
 
 import {
   addPartnerSchema,

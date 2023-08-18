@@ -5,7 +5,7 @@ import { Document } from 'mongoose';
 import { IRequest } from '../../../../types/global';
 import { handlePaginate } from '../../../../utils/handlePaginate';
 import { handleResponse } from '../../../../utils/helpers';
-import { PartnerPosModel } from '../../partnerPos/partnerPost.model';
+import { PartnerPosModel } from '../../discountCode/partnerPos/partnerPost.model';
 import PurchaseModel from '../purchase.model';
 import { PurchaseAttributes } from '../purchase.types';
 

@@ -13,7 +13,6 @@ export const getUserQuery = async <T extends Document>(
   const { userAccess } = req;
 
   if (!user_id) return query;
-
   try {
     const queriedUser = await UserModel.findById(user_id);
 
@@ -30,7 +29,7 @@ export const getUserQuery = async <T extends Document>(
     if (
       isPlatformAdminWithMarketplaceAccess(req, queriedUser.currentMarketplace)
     ) {
-      query.user_id;
+      query.user_id = user_id;
     }
 
     if (userAccess.marketplaces?.includes(queriedUser.currentMarketplace)) {

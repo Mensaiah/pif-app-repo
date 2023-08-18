@@ -35,8 +35,8 @@ export const updateLegalPolicySchema = z.object({
 });
 
 export const addFaqSchema = z.object({
-  question: z.string(),
-  answer: z.string(),
+  question: z.object(langSchema),
+  answer: z.object(langSchema),
   isDraft: z.boolean().optional(),
 });
 

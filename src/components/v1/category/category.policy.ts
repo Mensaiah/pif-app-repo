@@ -8,19 +8,21 @@ export const addCategorySchema = z
     name: z.object(langSchema),
     isEnabled: z.boolean(),
     isPromoted: z.boolean().optional(),
-    isSupplierList: z.boolean().optional(),
     isMain: z.boolean().optional(),
-    isFunctional: z.boolean().optional(),
-    type: z.number().optional(),
-    iconifyName: z.string().optional(),
-    iconSvg: z.string().optional(),
-    iconUrl: z.string().optional(),
+    iconUrl: z.string().url(),
+    iconName: z.string(),
     isBirthday: z.boolean().optional(),
     marketplaces: z.array(
       z.string().length(2, {
         message: 'max-length should be two for each marketplace.',
       })
     ),
+  })
+  .refine(({ iconUrl, iconName }) => {
+    if (iconUrl && !iconName) return false;
+    if (!iconUrl && iconName) return false;
+
+    return true;
   })
   .refine(
     ({ name }) => {
@@ -36,10 +38,8 @@ export const updateCategorySchema = z
     name: z.object(langSchema).optional(),
     isEnabled: z.boolean().optional(),
     isPromoted: z.boolean().optional(),
-    isSupplierList: z.boolean().optional(),
+    // isSupplierList: z.boolean().optional(),
     isMain: z.boolean().optional(),
-    isFunctional: z.boolean().optional(),
-    type: z.number().optional(),
     isBirthday: z.boolean().optional(),
     marketplaces: z
       .array(
@@ -48,9 +48,14 @@ export const updateCategorySchema = z
         })
       )
       .optional(),
-    iconifyName: z.string().optional(),
-    iconSvg: z.string().optional(),
+    iconName: z.string().optional(),
     iconUrl: z.string().optional(),
+  })
+  .refine(({ iconUrl, iconName }) => {
+    if (iconUrl && !iconName) return false;
+    if (!iconUrl && iconName) return false;
+
+    return true;
   })
   .refine(
     ({ name }) => {

@@ -26,8 +26,8 @@ export interface LegalPolicyAttributes extends Document {
 }
 
 export interface FaqAttribute extends Document {
-  question: string;
-  answer: string;
+  question: LanguageValuePair[];
+  answer: LanguageValuePair[];
   isDraft: boolean;
   AddedBy: ObjectId;
   LastEditedBy: ObjectId;

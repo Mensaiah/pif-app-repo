@@ -51,8 +51,8 @@ const legalPolicySchema = new Schema<LegalPolicyAttributes>(
 
 const faqSchema = new Schema<FaqAttribute>(
   {
-    question: String,
-    answer: String,
+    question: [languageValuePairSchema],
+    answer: [languageValuePairSchema],
     isDraft: Boolean,
     AddedBy: {
       type: Schema.Types.ObjectId,

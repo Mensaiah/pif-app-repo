@@ -4,7 +4,10 @@ import { IRequest } from '../../../../types/global';
 import getDashboardCardsData from '../../../../utils/getDashboardCardsData';
 import { getDashboardChartData } from '../../../../utils/getDashboardChartData';
 import getLowStockProduct from '../../../../utils/getLowStockProduct';
+<<<<<<< HEAD
 import getMarketplaceBreakdown from '../../../../utils/getMarketplaceBreakdown';
+=======
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
 import { handleTimeFilter } from '../../../../utils/handleTimeFilter';
 import { handleTimeFilterInverse } from '../../../../utils/handleTimeFilterInverse';
 import { handleResponse } from '../../../../utils/helpers';
@@ -28,10 +31,14 @@ export const getDashboardData = async (req: IRequest, res: Response) => {
       ),
       charts: await getDashboardChartData(timeFilter),
       lowStockAlert: await getLowStockProduct(req),
+<<<<<<< HEAD
       marketPlaceBreakDown: await getMarketplaceBreakdown(
         timeFilter,
         timeFilterInverse
       ),
+=======
+      tables: [],
+>>>>>>> 656f2222fa4ae4aebad8f31b2d4bb00ce330dabc
     };
 
     return handleResponse(res, dashboardData, 200);

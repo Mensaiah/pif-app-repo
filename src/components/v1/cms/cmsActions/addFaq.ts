@@ -2,22 +2,20 @@ import { Response } from 'express';
 import { z } from 'zod';
 
 import { IRequest } from '../../../../types/global';
-import { handleResponse } from '../../../../utils/helpers';
+import { handleLangSearch, handleResponse } from '../../../../utils/helpers';
 import { useWord } from '../../../../utils/wordSheet';
 import { FaqModel } from '../cms.models';
 import { addFaqSchema } from '../cms.policy';
 
 const addFaq = async (req: IRequest, res: Response) => {
-  type addFaqDataType = z.infer<typeof addFaqSchema>;
-
-  const { question, answer, isDraft }: addFaqDataType = req.body;
+  const { question, answer, isDraft }: z.infer<typeof addFaqSchema> = req.body;
 
   try {
     const { _id: userId } = req.user;
 
-    const faqExists = await FaqModel.findOne({
-      question: question.toLowerCase(),
-    });
+    const langQuery = handleLangSearch(question, 'question.value');
+
+    const faqExists = await FaqModel.findOne(langQuery);
 
     if (faqExists && !isDraft)
       return handleResponse(
