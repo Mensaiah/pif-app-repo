@@ -40,7 +40,10 @@ const getCategoryByMarketplace = async (req: IRequest, res: Response) => {
   };
 
   try {
-    let allCategories = await CategoryModel.find(textQuery, 'name Icon');
+    let allCategories = await CategoryModel.find(
+      textQuery,
+      'name Icon iconName iconUrl'
+    );
 
     if (!allCategories.length) {
       allCategories = await CategoryModel.find(regexQuery, 'name Icon');
