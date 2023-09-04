@@ -14,10 +14,6 @@ GET {{api}}
 POST {{api}}/auth/login
 Content-Type: application/json
 
-{
-  "email": "oseimensahisaiah@gmail.com",
-  "password": "BIRAPOMSosei1!"
-}
 
 # "email": "piftech@pif-app.com",
 
